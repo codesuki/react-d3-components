@@ -90,9 +90,6 @@ var ScatterPlot = React.createClass({
 								      });
 								  })));
 	    
-	    // if we have no negative values set 0 as the minimum y-value to make the graph nicer
-	    yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
-	    
 	    yScale = d3.scale.linear()
 		.domain(yExtents)
 		.range([innerHeight, 0]);

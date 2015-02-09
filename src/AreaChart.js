@@ -78,7 +78,7 @@ var AreaChart = React.createClass({
 	     offset} = this.props;
 
 	var stack = d3.layout.stack()
-		.offset("zero")
+		.offset(offset)
 		.x(e => { return e.x; })
 		.y(e => { return e.y; })
 		.values(e => { return e.values; });
