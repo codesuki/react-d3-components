@@ -1,0 +1,52 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>React D3 Components Examples</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+  <script src="react-d3-components.js"></script>
+</head>
+<body>
+  <div id="barchart"></div>
+  <div id="stackedbarchart"></div>
+  <div id="piechart"></div>
+  <div id="scatterplot"></div>
+  <div id="linechart"></div>
+  <div id="areachart"></div>
+  <div id="stackedareachart"></div>
+
+  <script type="text/jsx;harmony=true">
+    var BarChart = ReactD3.BarChart;
+
+    var data = [['SomethingA', 10], ['SomethingB', 4], ['SomethingC', 9]];
+    React.render(
+    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('barchart')
+    );
+
+    var PieChart = ReactD3.PieChart;
+    React.render(<PieChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('piechart')
+    );
+
+    data = [[1, 10], [2, 4], [3, 9], [1.5, -5]];
+    var ScatterPlot = ReactD3.ScatterPlot;
+    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('scatterplot')
+    );
+
+    data = [[1, 10], [2, 8], [3, 9], [4, 7], [5, 3], [6, 3], [6, 3]];
+    var LineChart = ReactD3.LineChart;
+    React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('linechart')
+    );
+
+    var AreaChart = ReactD3.AreaChart;
+    React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('areachart')
+    );
+
+  </script>
+</body>
+</html>

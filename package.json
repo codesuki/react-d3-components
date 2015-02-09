@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "D3 components for React",
   "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/codesuki/react-d3-components.git"
@@ -21,5 +18,21 @@
   "bugs": {
     "url": "https://github.com/codesuki/react-d3-components/issues"
   },
-  "homepage": "https://github.com/codesuki/react-d3-components"
+  "homepage": "https://github.com/codesuki/react-d3-components",
+  "dependencies": {
+    "6to5ify": "^4.1.0",
+    "browserify": "^8.1.3",
+    "d3": "^3.5.3",
+    "react": "^0.12.2",
+    "reactify": "^1.0.0"
+  },
+  "scripts": {
+    "build:js": "browserify src/index.js --standalone ReactD3 > dist/react-d3-components.js"
+  },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "6to5ify"
+    ]
+  }
 }
