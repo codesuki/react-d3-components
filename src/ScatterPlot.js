@@ -19,15 +19,17 @@ var DataSet = React.createClass({
     render() {
 	var {data, symbol, xScale, yScale, colorScale} = this.props;
 
-	var circles = data.map(e => {
-	    var translate = "translate(" + xScale(e[0]) + ", " + yScale(e[1]) + ")";
-	    return (
-		    <path
-		d={symbol()}
-		transform={translate}
-		fill={colorScale(e[0])}
-		    />
-	    );
+	var circles = data.map(stack => {
+	    return stack.values.map(e => {
+		var translate = "translate(" + xScale(e.x) + ", " + yScale(e.y) + ")";
+		return (
+			<path
+		    d={symbol()}
+		    transform={translate}
+		    fill={colorScale(stack.label)}
+			/>
+		);
+	    });
 	});
 
 	return (
@@ -66,15 +68,36 @@ var ScatterPlot = React.createClass({
 	     rScale,
 	     shape} = this.props;
 
+	if (!Array.isArray(data)) {
+	    data = [data];
+	}
+
 	if (!xScale) {
+	    var xExtents = d3.extent(Array.prototype.concat.apply([],
+								  data.map(stack => {
+								      return stack.values.map(e => {
+									  return e.x;
+								      });
+								  })));
+	    
 	    xScale = d3.scale.linear()
-		.domain(d3.extent(data, e => { return e[0]; }))
+		.domain(xExtents)
 		.range([0, innerWidth]);
 	}   
 
 	if (!yScale) {
+	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+								  data.map(stack => {
+								      return stack.values.map(e => {
+									  return e.y;
+								      });
+								  })));
+	    
+	    // if we have no negative values set 0 as the minimum y-value to make the graph nicer
+	    yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
+	    
 	    yScale = d3.scale.linear()
-		.domain(d3.extent(data, e => { return e[1]; }))
+		.domain(yExtents)
 		.range([innerHeight, 0]);
 	}
 

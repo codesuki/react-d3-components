@@ -19,16 +19,18 @@ var DataSet = React.createClass({
     render() {
 	var {data, xScale, yScale, colorScale} = this.props;
 
-	var bars = data.map(e => {
-	    return (
-		    <Bar
-		x={xScale(e[0])}
-		width={xScale.rangeBand()}
-		y={yScale(e[1])}
-		height={yScale(yScale.domain()[0]) - yScale(e[1])}
-		fill={colorScale(e[0])}
-		    />
-	    );
+	var bars = data.map(stack => {
+	    return stack.values.map(e => {
+		return (
+			<Bar
+		    x={xScale(e.x)}
+		    width={xScale.rangeBand()}
+		    y={yScale(e.y0 + e.y)}
+		    height={yScale(yScale.domain()[0]) - yScale(e.y)}
+		    fill={colorScale(stack.label)}
+			/>
+		);
+	    });
 	});
 			    
 	return (
@@ -41,20 +43,59 @@ var DataSet = React.createClass({
 
 var BarChart = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin],
+    
+    propTypes: {
+	barPadding: React.PropTypes.number,
+	offset: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+	return {
+	    barPadding: 0.5,
+	    offset: 'zero'
+	};
+    },
 
     render() {
-	var {data, height, width, innerHeight, innerWidth, margin, xScale, yScale, colorScale}
-		= this.props;
+	var {data,
+	     height,
+	     width,
+	     innerHeight,
+	     innerWidth,
+	     margin,
+	     xScale,
+	     yScale,
+	     colorScale,
+	     barPadding,
+	     offset} = this.props;
+
+	var stack = d3.layout.stack()
+		.offset(offset)
+		.x(e => { return e.x; })
+		.y(e => { return e.y; })
+		.values(stack => { return stack.values; });
+
+	var stackedData = stack(data);
 
 	if (!xScale) {
 	    xScale = d3.scale.ordinal()
-		.domain(data.map(e => { return e[0]; }))
-		.rangeRoundBands([0, innerWidth], 0.5);
+		.domain(stackedData[0].values.map(e => { return e.x; }))
+		.rangeRoundBands([0, innerWidth], barPadding);
 	}
 
 	if (!yScale) {
+	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+								  stackedData.map(stack => {
+								      return stack.values.map(e => {
+									  return e.y0 + e.y;
+								      });
+								  })));
+	    
+	    // if we have no negative values set 0 as the minimum y-value to make the graph nicer
+	    yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
+	    
 	    yScale = d3.scale.linear()
-		.domain([0, d3.max(data, (e) => { return e[1]; })])
+		.domain(yExtents)
 		.range([innerHeight, 0]);
 	}
 

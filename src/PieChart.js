@@ -32,7 +32,6 @@ var DataSet = React.createClass({
 	var {pie, arc, colorScale} = this.props;
 	
 	var wedges = pie.map(e => {
-	    // TODO is it necessary to call so many times?
 	    var wedgeArc = arc.startAngle(e.startAngle)
 		    .endAngle(e.endAngle)
 		    .padAngle(e.padAngle);
@@ -43,8 +42,8 @@ var DataSet = React.createClass({
 	    
 	    return (
 		    <g>
-		    <Wedge fill={colorScale(e.data[0])} d={d}/>
-		    <text x={centroid[0]} y={centroid[1]} textAnchor="middle">{e.data[0]}</text>
+		    <Wedge fill={colorScale(e.data.x)} d={d}/>
+		    <text x={centroid[0]} y={centroid[1]} textAnchor="middle">{e.data.x}</text>
 		    </g>
 	    );
 	});
@@ -76,7 +75,7 @@ var PieChart = React.createClass({
 	var {width, height, innerWidth, innerHeight, margin, data, colorScale, innerRadius, outerRadius}
 		= this.props;
 	
-	var pie = d3.layout.pie().value(e => { return e[1]; });
+	var pie = d3.layout.pie().value(e => { return e.y; });
 
 	var radius = Math.min(innerWidth, innerHeight) / 2;
 	if (!innerRadius) {
@@ -91,7 +90,7 @@ var PieChart = React.createClass({
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
 
-	var pieData = pie(data);
+	var pieData = pie(data.values);
 
 	var translation = "translate(" + innerWidth/2 + ", " + innerHeight/2 + ")";
 	
