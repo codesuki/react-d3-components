@@ -13,7 +13,7 @@ npm install react-d3-components
 Description
 ===========
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
-I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked varient when given an array as input.
+I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked variant when given an array as input.
 
 If you like the project please consider a pull request. I am open for any additions.
 
