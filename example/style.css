@@ -2,6 +2,10 @@ body {
     text-align: center;
 }
 
+div {
+    float: left;
+}
+
 .axis {
     fill: none;
     stroke: #000;

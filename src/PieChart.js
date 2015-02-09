@@ -56,7 +56,7 @@ var DataSet = React.createClass({
 		    <g>
 		    <Wedge fill={colorScale(e.data.x)} d={d}/>
 		    <polyline opacity={opacity} strokeWidth={strokeWidth} stroke={stroke} fill={fill} points={[arc.centroid(e), outerArc.centroid(e), linePos]}/>
-		    <text x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{e.data.x}</text>	
+		    <text dy=".35em" x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{e.data.x}</text>	
 		    </g>
 	    );
 	});
