@@ -1,0 +1,24 @@
+body {
+    text-align: center;
+}
+
+div {
+    float: left;
+}
+
+.axis {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font: 11px sans-serif;
+    fill: #000;
+    stroke: none;
+    font-weight: bold;
+}
+
+.axis line {
+  stroke: #ccc;
+}
