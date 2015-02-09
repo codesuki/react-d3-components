@@ -27833,7 +27833,7 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var offset = this.props.offset;
 
 
-		var stack = d3.layout.stack().offset("zero").x(function (e) {
+		var stack = d3.layout.stack().offset(offset).x(function (e) {
 			return e.x;
 		}).y(function (e) {
 			return e.y;
@@ -28420,95 +28420,135 @@ var HeightWidthMixin = require("./HeightWidthMixin");
 var Chart = require("./Chart");
 
 var Wedge = React.createClass({ displayName: "Wedge",
-			propTypes: {
-						d: React.PropTypes.string.isRequired,
-						fill: React.PropTypes.string.isRequired
-			},
+	propTypes: {
+		d: React.PropTypes.string.isRequired,
+		fill: React.PropTypes.string.isRequired
+	},
 
-			render: function render() {
-						var fill = this.props.fill;
-						var d = this.props.d;
+	render: function render() {
+		var fill = this.props.fill;
+		var d = this.props.d;
 
 
-						return React.createElement("path", { fill: fill, d: d });
-			}
+		return React.createElement("path", { fill: fill, d: d });
+	}
 });
 
 var DataSet = React.createClass({ displayName: "DataSet",
-			propTypes: {
-						pie: React.PropTypes.array.isRequired,
-						arc: React.PropTypes.func.isRequired,
-						colorScale: React.PropTypes.func.isRequired
-			},
+	propTypes: {
+		pie: React.PropTypes.array.isRequired,
+		arc: React.PropTypes.func.isRequired,
+		outerArc: React.PropTypes.func.isRequired,
+		colorScale: React.PropTypes.func.isRequired,
+		radius: React.PropTypes.number.isRequired,
+		strokeWidth: React.PropTypes.number.isRequired,
+		stroke: React.PropTypes.string.isRequired,
+		fill: React.PropTypes.string.isRequired,
+		opacity: React.PropTypes.number.isRequired
+	},
 
-			render: function render() {
-						var pie = this.props.pie;
-						var arc = this.props.arc;
-						var colorScale = this.props.colorScale;
+	render: function render() {
+		var pie = this.props.pie;
+		var arc = this.props.arc;
+		var outerArc = this.props.outerArc;
+		var colorScale = this.props.colorScale;
+		var radius = this.props.radius;
+		var strokeWidth = this.props.strokeWidth;
+		var stroke = this.props.stroke;
+		var fill = this.props.fill;
+		var opacity = this.props.opacity;
 
 
-						var wedges = pie.map(function (e) {
-									var wedgeArc = arc.startAngle(e.startAngle).endAngle(e.endAngle).padAngle(e.padAngle);
-
-									var centroid = wedgeArc.centroid();
-
-									var d = wedgeArc();
-
-									return React.createElement("g", null, React.createElement(Wedge, { fill: colorScale(e.data.x), d: d }), React.createElement("text", { x: centroid[0], y: centroid[1], textAnchor: "middle" }, e.data.x));
-						});
-
-						return React.createElement("g", null, wedges);
+		var wedges = pie.map(function (e) {
+			function midAngle(d) {
+				return d.startAngle + (d.endAngle - d.startAngle) / 2;
 			}
+
+			var d = arc(e);
+
+			var labelPos = outerArc.centroid(e);
+			labelPos[0] = radius * (midAngle(e) < Math.PI ? 1 : -1);
+
+			var textAnchor = midAngle(e) < Math.PI ? "start" : "end";
+
+			var linePos = outerArc.centroid(e);
+			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
+
+			return React.createElement("g", null, React.createElement(Wedge, { fill: colorScale(e.data.x), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, e.data.x));
+		});
+
+		return React.createElement("g", null, wedges);
+	}
 });
 
 var PieChart = React.createClass({ displayName: "PieChart",
-			mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin],
 
-			propTypes: {
-						innerRadius: React.PropTypes.number,
-						outerRadius: React.PropTypes.number
-			},
+	propTypes: {
+		innerRadius: React.PropTypes.number,
+		outerRadius: React.PropTypes.number,
+		labelRadius: React.PropTypes.number,
+		strokeWidth: React.PropTypes.number,
+		stroke: React.PropTypes.string,
+		fill: React.PropTypes.string,
+		opacity: React.PropTypes.number
+	},
 
-			getDefaultProps: function getDefaultProps() {
-						return {
-									innerRadius: null,
-									outerRadius: null
-						};
-			},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			innerRadius: null,
+			outerRadius: null,
+			labelRadius: null,
+			strokeWidth: 2,
+			stroke: "#000",
+			fill: "none",
+			opacity: 0.3
+		};
+	},
 
-			render: function render() {
-						var width = this.props.width;
-						var height = this.props.height;
-						var innerWidth = this.props.innerWidth;
-						var innerHeight = this.props.innerHeight;
-						var margin = this.props.margin;
-						var data = this.props.data;
-						var colorScale = this.props.colorScale;
-						var innerRadius = this.props.innerRadius;
-						var outerRadius = this.props.outerRadius;
+	render: function render() {
+		var width = this.props.width;
+		var height = this.props.height;
+		var innerWidth = this.props.innerWidth;
+		var innerHeight = this.props.innerHeight;
+		var margin = this.props.margin;
+		var data = this.props.data;
+		var colorScale = this.props.colorScale;
+		var innerRadius = this.props.innerRadius;
+		var outerRadius = this.props.outerRadius;
+		var labelRadius = this.props.labelRadius;
+		var strokeWidth = this.props.strokeWidth;
+		var stroke = this.props.stroke;
+		var fill = this.props.fill;
+		var opacity = this.props.opacity;
 
 
-						var pie = d3.layout.pie().value(function (e) {
-									return e.y;
-						});
+		var pie = d3.layout.pie().value(function (e) {
+			return e.y;
+		});
 
-						var radius = Math.min(innerWidth, innerHeight) / 2;
-						if (!innerRadius) {
-									innerRadius = radius * 0.8;
-						}
+		var radius = Math.min(innerWidth, innerHeight) / 2;
+		if (!innerRadius) {
+			innerRadius = radius * 0.8;
+		}
 
-						if (!outerRadius) {
-									outerRadius = radius * 0.4;
-						}
+		if (!outerRadius) {
+			outerRadius = radius * 0.4;
+		}
 
-						var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+		if (!labelRadius) {
+			labelRadius = radius * 0.9;
+		}
 
-						var pieData = pie(data.values);
+		var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
 
-						var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
+		var outerArc = d3.svg.arc().innerRadius(labelRadius).outerRadius(labelRadius);
 
-						return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc })));
-			}
+		var pieData = pie(data.values);
+
+		var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, strokeWidth: strokeWidth, stroke: stroke, fill: fill, opacity: opacity })));
+	}
 });
 
 module.exports = PieChart;
