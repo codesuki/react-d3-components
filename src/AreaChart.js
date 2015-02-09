@@ -7,6 +7,7 @@ var Path = require('./Path');
 
 var DefaultPropsMixin = require('./DefaultPropsMixin');
 var HeightWidthMixin = require('./HeightWidthMixin');
+var ArrayifyMixin = require('./ArrayifyMixin');
 
 var DataSet = React.createClass({
     propTypes: {
@@ -42,7 +43,7 @@ var DataSet = React.createClass({
 });
 
 var AreaChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
     propTypes: {
 	interpolate: React.PropTypes.string,
@@ -75,10 +76,6 @@ var AreaChart = React.createClass({
 	     strokeWidth,
 	     stroke,
 	     offset} = this.props;
-
-	if (!Array.isArray(data)) {
-	    data = [data];
-	}
 
 	var stack = d3.layout.stack()
 		.offset("zero")

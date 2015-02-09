@@ -7,6 +7,7 @@ var Bar = require('./Bar');
 
 var DefaultPropsMixin = require('./DefaultPropsMixin');
 var HeightWidthMixin = require('./HeightWidthMixin');
+var ArrayifyMixin = require('./ArrayifyMixin');
 
 var DataSet = React.createClass({
     propTypes: {
@@ -42,7 +43,7 @@ var DataSet = React.createClass({
 });
 
 var BarChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
     
     propTypes: {
 	barPadding: React.PropTypes.number,

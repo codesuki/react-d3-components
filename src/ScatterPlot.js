@@ -6,6 +6,7 @@ var Axis = require('./Axis');
 
 var DefaultPropsMixin = require('./DefaultPropsMixin');
 var HeightWidthMixin = require('./HeightWidthMixin');
+var ArrayifyMixin = require('./ArrayifyMixin');
 
 var DataSet = React.createClass({
     propTypes: {
@@ -41,7 +42,7 @@ var DataSet = React.createClass({
 });
 
 var ScatterPlot = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
     propTypes: {
 	rScale: React.PropTypes.func,
@@ -67,10 +68,6 @@ var ScatterPlot = React.createClass({
 	     colorScale,
 	     rScale,
 	     shape} = this.props;
-
-	if (!Array.isArray(data)) {
-	    data = [data];
-	}
 
 	if (!xScale) {
 	    var xExtents = d3.extent(Array.prototype.concat.apply([],

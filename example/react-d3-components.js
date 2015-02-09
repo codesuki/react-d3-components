@@ -27764,6 +27764,7 @@ var Path = require("./Path");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
+var ArrayifyMixin = require("./ArrayifyMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -27797,7 +27798,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var AreaChart = React.createClass({ displayName: "AreaChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -27831,10 +27832,6 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var stroke = this.props.stroke;
 		var offset = this.props.offset;
 
-
-		if (!Array.isArray(data)) {
-			data = [data];
-		}
 
 		var stack = d3.layout.stack().offset("zero").x(function (e) {
 			return e.x;
@@ -27897,7 +27894,24 @@ module.exports = AreaChart;
 
 
 
-},{"./Axis":150,"./Chart":153,"./DefaultPropsMixin":154,"./HeightWidthMixin":155,"./Path":157,"d3":2,"react":148}],150:[function(require,module,exports){
+},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"./Path":158,"d3":2,"react":148}],150:[function(require,module,exports){
+"use strict";
+
+var ArrayifyMixin = {
+    componentWillMount: function componentWillMount() {
+        if (!Array.isArray(this.props.data)) {
+            this.props.data = [this.props.data];
+        }
+    },
+
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {}
+};
+
+module.exports = ArrayifyMixin;
+
+
+
+},{}],151:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28003,7 +28017,7 @@ module.exports = Axis;
 
 
 
-},{"d3":2,"react":148}],151:[function(require,module,exports){
+},{"d3":2,"react":148}],152:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28044,7 +28058,7 @@ module.exports = Bar;
 
 
 
-},{"d3":2,"react":148}],152:[function(require,module,exports){
+},{"d3":2,"react":148}],153:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28056,6 +28070,7 @@ var Bar = require("./Bar");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
+var ArrayifyMixin = require("./ArrayifyMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28088,7 +28103,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var BarChart = React.createClass({ displayName: "BarChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
 	propTypes: {
 		barPadding: React.PropTypes.number,
@@ -28163,7 +28178,7 @@ module.exports = BarChart;
 
 
 
-},{"./Axis":150,"./Bar":151,"./Chart":153,"./DefaultPropsMixin":154,"./HeightWidthMixin":155,"d3":2,"react":148}],153:[function(require,module,exports){
+},{"./ArrayifyMixin":150,"./Axis":151,"./Bar":152,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],154:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28195,7 +28210,7 @@ module.exports = Chart;
 
 
 
-},{"react":148}],154:[function(require,module,exports){
+},{"react":148}],155:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28231,29 +28246,26 @@ module.exports = DefaultPropsMixin;
 
 
 
-},{"d3":2,"react":148}],155:[function(require,module,exports){
+},{"d3":2,"react":148}],156:[function(require,module,exports){
 "use strict";
 
 var HeightWidthMixin = {
-   componentWillMount: function componentWillMount() {
-      var height = this.props.height;
-      var width = this.props.width;
-      var margin = this.props.margin;
-      this.props.innerHeight = height - margin.top - margin.bottom;
-      this.props.innerWidth = width - margin.left - margin.right;
-   },
+    componentWillMount: function componentWillMount() {
+        var height = this.props.height;
+        var width = this.props.width;
+        var margin = this.props.margin;
+        this.props.innerHeight = height - margin.top - margin.bottom;
+        this.props.innerWidth = width - margin.left - margin.right;
+    },
 
-   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-      console.log("componentWillReceiveProps");
-      console.log(nextProps);
-   }
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {}
 };
 
 module.exports = HeightWidthMixin;
 
 
 
-},{}],156:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28265,6 +28277,7 @@ var Path = require("./Path");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
+var ArrayifyMixin = require("./ArrayifyMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28290,7 +28303,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var LineChart = React.createClass({ displayName: "LineChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -28318,10 +28331,6 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
 
-
-		if (!Array.isArray(data)) {
-			data = [data];
-		}
 
 		if (!xScale) {
 			var xExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
@@ -28362,7 +28371,7 @@ module.exports = LineChart;
 
 
 
-},{"./Axis":150,"./Chart":153,"./DefaultPropsMixin":154,"./HeightWidthMixin":155,"./Path":157,"d3":2,"react":148}],157:[function(require,module,exports){
+},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"./Path":158,"d3":2,"react":148}],158:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28399,7 +28408,7 @@ module.exports = Path;
 
 
 
-},{"d3":2,"react":148}],158:[function(require,module,exports){
+},{"d3":2,"react":148}],159:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28506,7 +28515,7 @@ module.exports = PieChart;
 
 
 
-},{"./Chart":153,"./DefaultPropsMixin":154,"./HeightWidthMixin":155,"d3":2,"react":148}],159:[function(require,module,exports){
+},{"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],160:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28517,6 +28526,7 @@ var Axis = require("./Axis");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
+var ArrayifyMixin = require("./ArrayifyMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28550,7 +28560,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
-	mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
 	propTypes: {
 		rScale: React.PropTypes.func,
@@ -28577,10 +28587,6 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 		var rScale = this.props.rScale;
 		var shape = this.props.shape;
 
-
-		if (!Array.isArray(data)) {
-			data = [data];
-		}
 
 		if (!xScale) {
 			var xExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
@@ -28630,7 +28636,7 @@ module.exports = ScatterPlot;
 
 
 
-},{"./Axis":150,"./Chart":153,"./DefaultPropsMixin":154,"./HeightWidthMixin":155,"d3":2,"react":148}],160:[function(require,module,exports){
+},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],161:[function(require,module,exports){
 "use strict";
 
 var BarChart = require("./BarChart");
@@ -28649,5 +28655,5 @@ module.exports = {
 
 
 
-},{"./AreaChart":149,"./BarChart":152,"./LineChart":156,"./PieChart":158,"./ScatterPlot":159}]},{},[160])(160)
+},{"./AreaChart":149,"./BarChart":153,"./LineChart":157,"./PieChart":159,"./ScatterPlot":160}]},{},[161])(161)
 });

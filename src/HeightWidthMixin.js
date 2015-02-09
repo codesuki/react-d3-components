@@ -6,8 +6,6 @@ var HeightWidthMixin = {
     },
     
     componentWillReceiveProps(nextProps) {
-	console.log("componentWillReceiveProps");
-	console.log(nextProps);
     }
 };
 
