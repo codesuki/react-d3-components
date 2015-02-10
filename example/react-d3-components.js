@@ -27786,11 +27786,11 @@ var DataSet = React.createClass({ displayName: "DataSet",
 
 
 		var areas = data.map(function (stack) {
-			return React.createElement(Path, { stroke: "none", fill: colorScale(stack.label), d: area(stack.values) });
+			return React.createElement(Path, { className: "area", stroke: "none", fill: colorScale(stack.label), d: area(stack.values) });
 		});
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { d: line(stack.values), strokeWidth: strokeWidth, stroke: stroke(stack.label) });
+			return React.createElement(Path, { className: "line", d: line(stack.values), strokeWidth: strokeWidth, stroke: stroke(stack.label) });
 		});
 
 		return React.createElement("g", null, areas, lines);
@@ -27926,6 +27926,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		tickPadding: React.PropTypes.number,
 		outerTickSize: React.PropTypes.number,
 		scale: React.PropTypes.func.isRequired,
+		className: React.PropTypes.string,
 		orientation: function (props, propName, componentName) {
 			if (["top", "bottom", "left", "right"].indexOf(props[propName]) == -1) {
 				return new Error("Not a valid orientation!");
@@ -27942,7 +27943,8 @@ var Axis = React.createClass({ displayName: "Axis",
 			},
 			innerTickSize: 6,
 			tickPadding: 3,
-			outerTickSize: 6
+			outerTickSize: 6,
+			className: "axis"
 		};
 	},
 
@@ -27965,6 +27967,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		var outerTickSize = this.props.outerTickSize;
 		var scale = this.props.scale;
 		var orientation = this.props.orientation;
+		var className = this.props.className;
 
 
 		var ticks = tickValues == null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
@@ -27990,16 +27993,18 @@ var Axis = React.createClass({ displayName: "Axis",
 				return React.createElement("g", { className: "tick", transform: "translate(" + activeScale(tick) + ",0)" }, React.createElement("line", { x2: 0, y2: sign * innerTickSize }), React.createElement("text", { x: 0, y: sign * tickSpacing, dy: sign < 0 ? "0em" : ".71em", textAnchor: "middle" }, tickFormat(tick)));
 			});
 
-			pathElement = React.createElement("path", { className: "domain", d: "M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize });
+			var d = "M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+			pathElement = React.createElement("path", { className: "domain", d: d });
 		} else {
 			tickElements = ticks.map(function (tick) {
 				return React.createElement("g", { className: "tick", transform: "translate(0, " + activeScale(tick) + ")" }, React.createElement("line", { y2: 0, x2: sign * innerTickSize }), React.createElement("text", { y: 0, x: sign * tickSpacing, dy: ".32em", textAnchor: sign < 0 ? "end" : "start" }, tickFormat(tick)));
 			});
 
-			pathElement = React.createElement("path", { className: "domain", d: "M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize });
+			var d = "M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+			pathElement = React.createElement("path", { className: "domain", d: d });
 		}
 
-		return React.createElement("g", { ref: "axis", className: "axis", transform: this._getTranslateString() }, tickElements, pathElement);
+		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString() }, tickElements, pathElement);
 	},
 
 	_d3_scaleExtent: function _d3_scaleExtent(domain) {
@@ -28050,7 +28055,7 @@ var Bar = React.createClass({ displayName: "Bar",
 						var fill = this.props.fill;
 
 
-						return React.createElement("rect", { x: x, y: y, width: width, height: height, fill: fill });
+						return React.createElement("rect", { className: "bar", x: x, y: y, width: width, height: height, fill: fill });
 			}
 });
 
@@ -28295,7 +28300,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { d: line(stack.values), strokeWidth: strokeWidth, stroke: colorScale(stack.label) });
+			return React.createElement(Path, { className: "line", d: line(stack.values), strokeWidth: strokeWidth, stroke: colorScale(stack.label) });
 		});
 
 		return React.createElement("g", null, lines);
@@ -28382,7 +28387,8 @@ var Path = React.createClass({ displayName: "Path",
 						strokeWidth: React.PropTypes.string,
 						stroke: React.PropTypes.string,
 						d: React.PropTypes.string.isRequired,
-						fill: React.PropTypes.string
+						fill: React.PropTypes.string,
+						className: React.PropTypes.string
 			},
 
 			getDefaultProps: function getDefaultProps() {
@@ -28398,9 +28404,10 @@ var Path = React.createClass({ displayName: "Path",
 						var stroke = this.props.stroke;
 						var d = this.props.d;
 						var fill = this.props.fill;
+						var className = this.props.className;
 
 
-						return React.createElement("g", null, React.createElement("path", { strokeWidth: strokeWidth, stroke: stroke, fill: fill, d: d }));
+						return React.createElement("g", null, React.createElement("path", { className: className, strokeWidth: strokeWidth, stroke: stroke, fill: fill, d: d }));
 			}
 });
 
@@ -28474,7 +28481,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 			var linePos = outerArc.centroid(e);
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
-			return React.createElement("g", null, React.createElement(Wedge, { fill: colorScale(e.data.x), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { dy: ".35em", x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, e.data.x));
+			return React.createElement("g", { className: "arc" }, React.createElement(Wedge, { fill: colorScale(e.data.x), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { dy: ".35em", x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, e.data.x));
 		});
 
 		return React.createElement("g", null, wedges);
@@ -28589,6 +28596,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 			return stack.values.map(function (e) {
 				var translate = "translate(" + xScale(e.x) + ", " + yScale(e.y) + ")";
 				return React.createElement("path", {
+					className: "dot",
 					d: symbol(),
 					transform: translate,
 					fill: colorScale(stack.label) });

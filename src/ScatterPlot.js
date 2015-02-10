@@ -25,6 +25,7 @@ var DataSet = React.createClass({
 		var translate = "translate(" + xScale(e.x) + ", " + yScale(e.y) + ")";
 		return (
 			<path
+		    className="dot"
 		    d={symbol()}
 		    transform={translate}
 		    fill={colorScale(stack.label)}

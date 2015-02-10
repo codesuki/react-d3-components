@@ -24,7 +24,7 @@ var Bar = React.createClass({
 	var {x, y, width, height, fill} = this.props;
 	
 	return (
-		<rect x={x} y={y} width={width} height={height} fill={fill}/>
+		<rect className="bar" x={x} y={y} width={width} height={height} fill={fill}/>
 	);
     }
 });

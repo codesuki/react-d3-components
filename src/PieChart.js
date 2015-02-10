@@ -53,7 +53,7 @@ var DataSet = React.createClass({
 	    linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 	    
 	    return (
-		    <g>
+		    <g className="arc">
 		    <Wedge fill={colorScale(e.data.x)} d={d}/>
 		    <polyline opacity={opacity} strokeWidth={strokeWidth} stroke={stroke} fill={fill} points={[arc.centroid(e), outerArc.centroid(e), linePos]}/>
 		    <text dy=".35em" x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{e.data.x}</text>	

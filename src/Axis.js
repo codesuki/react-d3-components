@@ -10,6 +10,7 @@ var Axis = React.createClass({
 	tickPadding: React.PropTypes.number,
 	outerTickSize: React.PropTypes.number,
 	scale: React.PropTypes.func.isRequired,
+	className: React.PropTypes.string,
 	orientation: function(props, propName, componentName) {
 	    if (['top', 'bottom', 'left', 'right'].indexOf(props[propName]) == -1) {
 		return new Error('Not a valid orientation!');
@@ -24,7 +25,8 @@ var Axis = React.createClass({
 	    tickFormat: x => { return x; },
 	    innerTickSize: 6,
 	    tickPadding: 3,
-	    outerTickSize: 6
+	    outerTickSize: 6,
+	    className: "axis"
 	};
     },
     
@@ -39,7 +41,15 @@ var Axis = React.createClass({
     },
 
     render() {
-	var {tickArguments, tickValues, tickFormat, innerTickSize, tickPadding, outerTickSize, scale, orientation} = this.props;
+	var {tickArguments,
+	     tickValues,
+	     tickFormat,
+	     innerTickSize,
+	     tickPadding,
+	     outerTickSize,
+	     scale,
+	     orientation,
+	     className} = this.props;
 	
 	var ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
 
@@ -68,7 +78,8 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    pathElement = <path className="domain" d={"M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize}/>;
+	    var d = "M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+	    pathElement = <path className="domain" d={d}/>;
 	} else {
 	    tickElements = ticks.map(tick => {
 		return (
@@ -80,11 +91,12 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    pathElement = <path className="domain" d={"M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize}/>;
+	    var d = "M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+	    pathElement = <path className="domain" d={d}/>;
 	}
 	
 	return (
-		<g ref="axis" className="axis" transform={this._getTranslateString()}>
+		<g ref="axis" className={className} transform={this._getTranslateString()}>
 		{tickElements}
 	        {pathElement}
 		</g>

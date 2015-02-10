@@ -24,13 +24,13 @@ var DataSet = React.createClass({
 	
 	var areas = data.map(stack => {
 	    return (
-		    <Path stroke="none" fill={colorScale(stack.label)} d={area(stack.values)}/>
+		    <Path className="area" stroke="none" fill={colorScale(stack.label)} d={area(stack.values)}/>
 	    );
 	});
 
 	var lines = data.map(stack => {
 	    return (
-		    <Path d={line(stack.values)} strokeWidth={strokeWidth} stroke={stroke(stack.label)}/>
+		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={stroke(stack.label)}/>
 	    );
 	});
 	

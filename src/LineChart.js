@@ -22,7 +22,7 @@ var DataSet = React.createClass({
 
 	var lines = data.map(stack => {
 	    return (
-		    <Path d={line(stack.values)} strokeWidth={strokeWidth} stroke={colorScale(stack.label)}/>
+		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={colorScale(stack.label)}/>
 	    );
 	});
 	    
