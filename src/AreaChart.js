@@ -1,15 +1,15 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Chart = require('./Chart');
-var Axis = require('./Axis');
-var Path = require('./Path');
+let Chart = require('./Chart');
+let Axis = require('./Axis');
+let Path = require('./Path');
 
-var DefaultPropsMixin = require('./DefaultPropsMixin');
-var HeightWidthMixin = require('./HeightWidthMixin');
-var ArrayifyMixin = require('./ArrayifyMixin');
+let DefaultPropsMixin = require('./DefaultPropsMixin');
+let HeightWidthMixin = require('./HeightWidthMixin');
+let ArrayifyMixin = require('./ArrayifyMixin');
 
-var DataSet = React.createClass({
+let DataSet = React.createClass({
     propTypes: {
 	data: React.PropTypes.array.isRequired,
 	area: React.PropTypes.func.isRequired,
@@ -20,15 +20,15 @@ var DataSet = React.createClass({
     },
     
     render() {
-	var {data, area, line, colorScale, strokeWidth, stroke} = this.props;
+	let {data, area, line, colorScale, strokeWidth, stroke} = this.props;
 	
-	var areas = data.map(stack => {
+	let areas = data.map(stack => {
 	    return (
 		    <Path className="area" stroke="none" fill={colorScale(stack.label)} d={area(stack.values)}/>
 	    );
 	});
 
-	var lines = data.map(stack => {
+	let lines = data.map(stack => {
 	    return (
 		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={stroke(stack.label)}/>
 	    );
@@ -42,7 +42,7 @@ var DataSet = React.createClass({
     }
 });
 
-var AreaChart = React.createClass({
+let AreaChart = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
     propTypes: {
@@ -63,7 +63,7 @@ var AreaChart = React.createClass({
     },
     
     render() {
-	var {data,
+	let {data,
 	     height,
 	     width,
 	     innerHeight,
@@ -77,16 +77,16 @@ var AreaChart = React.createClass({
 	     stroke,
 	     offset} = this.props;
 
-	var stack = d3.layout.stack()
+	let stack = d3.layout.stack()
 		.offset(offset)
 		.x(e => { return e.x; })
 		.y(e => { return e.y; })
 		.values(e => { return e.values; });
 
-	var stackedData = stack(data);
+	let stackedData = stack(data);
 
 	if (!xScale) {
-	    var xExtents = d3.extent(Array.prototype.concat.apply([],
+	    let xExtents = d3.extent(Array.prototype.concat.apply([],
 								  stackedData.map(stack => {
 								      return stack.values.map(e => {
 									  return e.x;
@@ -99,7 +99,7 @@ var AreaChart = React.createClass({
 	}
 
 	if (!yScale) {
-	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+	    let yExtents = d3.extent(Array.prototype.concat.apply([],
 								  stackedData.map(stack => {
 								      return stack.values.map(e => {
 									  return e.y0 + e.y;
@@ -114,12 +114,12 @@ var AreaChart = React.createClass({
 		.range([innerHeight, 0]);
 	}
 
-	var line = d3.svg.line()
+	let line = d3.svg.line()
 		.x(function(e) { return xScale(e.x); })
 		.y(function(e) { return yScale(e.y0 + e.y); })
 		.interpolate(interpolate);
 
-	var area = d3.svg.area()
+	let area = d3.svg.area()
 		.x(function(e) { return xScale(e.x); })
 		.y0(function(e) { return yScale(yScale.domain()[0] + e.y0); })
 		.y1(function(e) { return yScale(e.y0 + e.y); })

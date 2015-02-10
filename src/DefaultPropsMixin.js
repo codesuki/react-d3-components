@@ -1,7 +1,7 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var DefaultPropsMixin = {
+let DefaultPropsMixin = {
     propTypes: {
 	data: React.PropTypes.array.isRequired,
 	height: React.PropTypes.number.isRequired,

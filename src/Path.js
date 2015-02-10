@@ -1,7 +1,7 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Path = React.createClass({
+let Path = React.createClass({
     propTypes: {
 	strokeWidth: React.PropTypes.string,
 	stroke: React.PropTypes.string,
@@ -19,7 +19,7 @@ var Path = React.createClass({
     },
 
     render() {
-	var {strokeWidth, stroke, d, fill, className} = this.props;
+	let {strokeWidth, stroke, d, fill, className} = this.props;
 	
 	return (
 		<g>

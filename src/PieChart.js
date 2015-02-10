@@ -1,19 +1,19 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var DefaultPropsMixin = require('./DefaultPropsMixin');
-var HeightWidthMixin = require('./HeightWidthMixin');
+let DefaultPropsMixin = require('./DefaultPropsMixin');
+let HeightWidthMixin = require('./HeightWidthMixin');
 
-var Chart = require('./Chart');
+let Chart = require('./Chart');
 
-var Wedge = React.createClass({
+let Wedge = React.createClass({
     propTypes: {
 	d: React.PropTypes.string.isRequired,
 	fill: React.PropTypes.string.isRequired
     },
     
     render() {
-	var {fill, d} = this.props;
+	let {fill, d} = this.props;
 	
 	return (
 		<path fill={fill} d={d}/>
@@ -21,7 +21,7 @@ var Wedge = React.createClass({
     }
 });
 
-var DataSet = React.createClass({
+let DataSet = React.createClass({
     propTypes: {
 	pie: React.PropTypes.array.isRequired,
 	arc: React.PropTypes.func.isRequired,
@@ -35,21 +35,21 @@ var DataSet = React.createClass({
     },
     
     render() {
-	var {pie, arc, outerArc, colorScale, radius, strokeWidth, stroke, fill, opacity} = this.props;
+	let {pie, arc, outerArc, colorScale, radius, strokeWidth, stroke, fill, opacity} = this.props;
 	
-	var wedges = pie.map(e => {
+	let wedges = pie.map(e => {
 	    function midAngle(d){
 		return d.startAngle + (d.endAngle - d.startAngle)/2;
 	    }
 	    
-	    var d = arc(e);
+	    let d = arc(e);
 
-	    var labelPos = outerArc.centroid(e);
+	    let labelPos = outerArc.centroid(e);
 	    labelPos[0] = radius * (midAngle(e) < Math.PI ? 1 : -1);
 	    
-	    var textAnchor = midAngle(e) < Math.PI ? "start" : "end";
+	    let textAnchor = midAngle(e) < Math.PI ? "start" : "end";
 	    
-	    var linePos = outerArc.centroid(e);
+	    let linePos = outerArc.centroid(e);
 	    linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 	    
 	    return (
@@ -69,7 +69,7 @@ var DataSet = React.createClass({
     }
 });
 
-var PieChart = React.createClass({
+let PieChart = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin],
 
     propTypes: {
@@ -95,7 +95,7 @@ var PieChart = React.createClass({
     },
     
     render() {
-	var {width,
+	let {width,
 	     height,
 	     innerWidth,
 	     innerHeight,
@@ -110,9 +110,9 @@ var PieChart = React.createClass({
 	     fill,
 	     opacity} = this.props;
 	
-	var pie = d3.layout.pie().value(e => { return e.y; });
+	let pie = d3.layout.pie().value(e => { return e.y; });
 
-	var radius = Math.min(innerWidth, innerHeight) / 2;
+	let radius = Math.min(innerWidth, innerHeight) / 2;
 	if (!innerRadius) {
 	    innerRadius = radius * 0.8;
 	}
@@ -125,17 +125,17 @@ var PieChart = React.createClass({
 	    labelRadius = radius * 0.9;
 	}
 	
-	var arc = d3.svg.arc()
+	let arc = d3.svg.arc()
 		.innerRadius(innerRadius)
 		.outerRadius(outerRadius);
 
-	var outerArc = d3.svg.arc()
+	let outerArc = d3.svg.arc()
 		.innerRadius(labelRadius)
 		.outerRadius(labelRadius);
 
-	var pieData = pie(data.values);
+	let pieData = pie(data.values);
 
-	var translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
+	let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
 	return (
 		<Chart height={height} width={width} margin={margin}>
 		<g transform={translation}>

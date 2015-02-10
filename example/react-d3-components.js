@@ -27986,8 +27986,8 @@ var Axis = React.createClass({ displayName: "Axis",
 			return scale(e) + scale.rangeBand() / 2;
 		} : scale;
 
-		var tickElements;
-		var pathElement;
+		var tickElements = undefined;
+		var pathElement = undefined;
 		if (orientation === "bottom" || orientation === "top") {
 			tickElements = ticks.map(function (tick) {
 				return React.createElement("g", { className: "tick", transform: "translate(" + activeScale(tick) + ", 0)" }, React.createElement("line", { x2: 0, y2: sign * innerTickSize }), React.createElement("text", { x: 0, y: sign * tickSpacing, dy: sign < 0 ? "0em" : ".71em", textAnchor: "middle" }, tickFormat(tick)));

@@ -1,15 +1,15 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Chart = require('./Chart');
-var Axis = require('./Axis');
-var Bar = require('./Bar');
+let Chart = require('./Chart');
+let Axis = require('./Axis');
+let Bar = require('./Bar');
 
-var DefaultPropsMixin = require('./DefaultPropsMixin');
-var HeightWidthMixin = require('./HeightWidthMixin');
-var ArrayifyMixin = require('./ArrayifyMixin');
+let DefaultPropsMixin = require('./DefaultPropsMixin');
+let HeightWidthMixin = require('./HeightWidthMixin');
+let ArrayifyMixin = require('./ArrayifyMixin');
 
-var DataSet = React.createClass({
+let DataSet = React.createClass({
     propTypes: {
 	data: React.PropTypes.array.isRequired,
 	xScale: React.PropTypes.func.isRequired,
@@ -18,9 +18,9 @@ var DataSet = React.createClass({
     },
     
     render() {
-	var {data, xScale, yScale, colorScale} = this.props;
+	let {data, xScale, yScale, colorScale} = this.props;
 
-	var bars = data.map(stack => {
+	let bars = data.map(stack => {
 	    return stack.values.map(e => {
 		return (
 			<Bar
@@ -42,7 +42,7 @@ var DataSet = React.createClass({
     }
 });
 
-var BarChart = React.createClass({
+let BarChart = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
     
     propTypes: {
@@ -58,7 +58,7 @@ var BarChart = React.createClass({
     },
 
     render() {
-	var {data,
+	let {data,
 	     height,
 	     width,
 	     innerHeight,
@@ -70,13 +70,13 @@ var BarChart = React.createClass({
 	     barPadding,
 	     offset} = this.props;
 
-	var stack = d3.layout.stack()
+	let stack = d3.layout.stack()
 		.offset(offset)
 		.x(e => { return e.x; })
 		.y(e => { return e.y; })
 		.values(stack => { return stack.values; });
 
-	var stackedData = stack(data);
+	let stackedData = stack(data);
 
 	if (!xScale) {
 	    xScale = d3.scale.ordinal()
@@ -85,7 +85,7 @@ var BarChart = React.createClass({
 	}
 
 	if (!yScale) {
-	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+	    let yExtents = d3.extent(Array.prototype.concat.apply([],
 								  stackedData.map(stack => {
 								      return stack.values.map(e => {
 									  return e.y0 + e.y;

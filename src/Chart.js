@@ -1,6 +1,6 @@
-var React = require('react');
+let React = require('react');
 
-var Chart = React.createClass({
+let Chart = React.createClass({
     propTypes: {
 	height: React.PropTypes.number.isRequired,
 	width: React.PropTypes.number.isRequired,

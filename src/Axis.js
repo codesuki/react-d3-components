@@ -1,7 +1,7 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Axis = React.createClass({
+let Axis = React.createClass({
     propTypes: {
 	tickArguments: React.PropTypes.array,
 	tickValues: React.PropTypes.array,
@@ -41,7 +41,7 @@ var Axis = React.createClass({
     },
 
     render() {
-	var {tickArguments,
+	let {tickArguments,
 	     tickValues,
 	     tickFormat,
 	     innerTickSize,
@@ -51,22 +51,22 @@ var Axis = React.createClass({
 	     orientation,
 	     className} = this.props;
 	
-	var ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
+	let ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
 
 	if (scale.tickFormat) {
 	    tickFormat = scale.tickFormat.apply(scale, tickArguments);
 	}
 
-	var tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
+	let tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
 	
-	var sign = orientation === "top" || orientation === "left" ? -1 : 1;
+	let sign = orientation === "top" || orientation === "left" ? -1 : 1;
 	
-	var range = this._d3_scaleRange(scale);
+	let range = this._d3_scaleRange(scale);
 
-	var activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
+	let activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
 
-	var tickElements;
-	var pathElement;
+	let tickElements;
+	let pathElement;
 	if (orientation === "bottom" || orientation === "top") {
 	    tickElements = ticks.map(tick => {
 		return (
@@ -78,7 +78,7 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    var d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
+	    let d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
 	    pathElement = <path className="domain" d={d}/>;
 	} else {
 	    tickElements = ticks.map(tick => {
@@ -91,7 +91,7 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    var d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
+	    let d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
 	    pathElement = <path className="domain" d={d}/>;
 	}
 	
@@ -104,7 +104,7 @@ var Axis = React.createClass({
     },
 
     _d3_scaleExtent(domain) {
-	var start = domain[0], stop = domain[domain.length - 1];
+	let start = domain[0], stop = domain[domain.length - 1];
 	return start < stop ? [start, stop] : [stop, start];
     },
     

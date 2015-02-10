@@ -1,14 +1,14 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Chart = require('./Chart');
-var Axis = require('./Axis');
+let Chart = require('./Chart');
+let Axis = require('./Axis');
 
-var DefaultPropsMixin = require('./DefaultPropsMixin');
-var HeightWidthMixin = require('./HeightWidthMixin');
-var ArrayifyMixin = require('./ArrayifyMixin');
+let DefaultPropsMixin = require('./DefaultPropsMixin');
+let HeightWidthMixin = require('./HeightWidthMixin');
+let ArrayifyMixin = require('./ArrayifyMixin');
 
-var DataSet = React.createClass({
+let DataSet = React.createClass({
     propTypes: {
 	data: React.PropTypes.array.isRequired,
 	symbol: React.PropTypes.func.isRequired,
@@ -18,11 +18,11 @@ var DataSet = React.createClass({
     },
     
     render() {
-	var {data, symbol, xScale, yScale, colorScale} = this.props;
+	let {data, symbol, xScale, yScale, colorScale} = this.props;
 
-	var circles = data.map(stack => {
+	let circles = data.map(stack => {
 	    return stack.values.map(e => {
-		var translate = `translate(${xScale(e.x)}, ${yScale(e.y)})`;
+		let translate = `translate(${xScale(e.x)}, ${yScale(e.y)})`;
 		return (
 			<path
 		    className="dot"
@@ -42,7 +42,7 @@ var DataSet = React.createClass({
     }
 });
 
-var ScatterPlot = React.createClass({
+let ScatterPlot = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
     propTypes: {
@@ -58,7 +58,7 @@ var ScatterPlot = React.createClass({
     },
     
     render() {
-	var {data,
+	let {data,
 	     height,
 	     width,
 	     innerHeight,
@@ -71,7 +71,7 @@ var ScatterPlot = React.createClass({
 	     shape} = this.props;
 
 	if (!xScale) {
-	    var xExtents = d3.extent(Array.prototype.concat.apply([],
+	    let xExtents = d3.extent(Array.prototype.concat.apply([],
 								  data.map(stack => {
 								      return stack.values.map(e => {
 									  return e.x;
@@ -84,7 +84,7 @@ var ScatterPlot = React.createClass({
 	}   
 
 	if (!yScale) {
-	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+	    let yExtents = d3.extent(Array.prototype.concat.apply([],
 								  data.map(stack => {
 								      return stack.values.map(e => {
 									  return e.y;
@@ -96,7 +96,7 @@ var ScatterPlot = React.createClass({
 		.range([innerHeight, 0]);
 	}
 
-	var symbol = d3.svg.symbol().type(shape);
+	let symbol = d3.svg.symbol().type(shape);
 
 	if (rScale) {
 	    symbol = symbol.size(rScale);

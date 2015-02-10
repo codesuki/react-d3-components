@@ -1,4 +1,4 @@
-var ArrayifyMixin = {
+let ArrayifyMixin = {
     componentWillMount() {
 	if (!Array.isArray(this.props.data)) {
 	    this.props.data = [this.props.data];

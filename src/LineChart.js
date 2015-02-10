@@ -1,15 +1,15 @@
-var React = require('react');
-var d3 = require('d3');
+let React = require('react');
+let d3 = require('d3');
 
-var Chart = require('./Chart');
-var Axis = require('./Axis');
-var Path = require('./Path');
+let Chart = require('./Chart');
+let Axis = require('./Axis');
+let Path = require('./Path');
 
-var DefaultPropsMixin = require('./DefaultPropsMixin');
-var HeightWidthMixin = require('./HeightWidthMixin');
-var ArrayifyMixin = require('./ArrayifyMixin');
+let DefaultPropsMixin = require('./DefaultPropsMixin');
+let HeightWidthMixin = require('./HeightWidthMixin');
+let ArrayifyMixin = require('./ArrayifyMixin');
 
-var DataSet = React.createClass({
+let DataSet = React.createClass({
     propTypes: {
 	data: React.PropTypes.array.isRequired,
 	line: React.PropTypes.func.isRequired,
@@ -18,9 +18,9 @@ var DataSet = React.createClass({
     },
     
     render() {
-	var {data, line, strokeWidth, colorScale} = this.props;
+	let {data, line, strokeWidth, colorScale} = this.props;
 
-	var lines = data.map(stack => {
+	let lines = data.map(stack => {
 	    return (
 		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={colorScale(stack.label)}/>
 	    );
@@ -34,7 +34,7 @@ var DataSet = React.createClass({
     }
 });
 
-var LineChart = React.createClass({
+let LineChart = React.createClass({
     mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
 
     propTypes: {
@@ -50,7 +50,7 @@ var LineChart = React.createClass({
     },
     
     render() {
-	var {data,
+	let {data,
 	     height,
 	     width,
 	     innerHeight,
@@ -64,7 +64,7 @@ var LineChart = React.createClass({
 	     stroke} = this.props;
 
 	if (!xScale) {
-	    var xExtents = d3.extent(Array.prototype.concat.apply([],
+	    let xExtents = d3.extent(Array.prototype.concat.apply([],
 								  data.map(stack => {
 								      return stack.values.map(e => {
 									  return e.x;
@@ -76,7 +76,7 @@ var LineChart = React.createClass({
 	}
 
 	if (!yScale) {
-	    var yExtents = d3.extent(Array.prototype.concat.apply([],
+	    let yExtents = d3.extent(Array.prototype.concat.apply([],
 								  data.map(stack => {
 								      return stack.values.map(e => {
 									  return e.y;
@@ -88,7 +88,7 @@ var LineChart = React.createClass({
 		.range([innerHeight, 0]);
 	}
 
-	var line = d3.svg.line()
+	let line = d3.svg.line()
 		.x(function(e) { return xScale(e.x); })
 		.y(function(e) { return yScale(e.y); })
 		.interpolate(interpolate);
