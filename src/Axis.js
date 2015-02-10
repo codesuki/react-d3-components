@@ -32,9 +32,9 @@ var Axis = React.createClass({
     
     _getTranslateString() {
 	if (this.props.orientation === "bottom") {
-	    return "translate(0," + this.props.height + ")";
+	    return `translate(0, ${this.props.height})`;
 	} else if (this.props.orientation === "right") {
-	    return "translate(" + this.props.width  + ", 0)";
+	    return `translate(${this.props.width}, 0)`;
 	} else {
 	    return "";
 	}
@@ -70,7 +70,7 @@ var Axis = React.createClass({
 	if (orientation === "bottom" || orientation === "top") {
 	    tickElements = ticks.map(tick => {
 		return (
-			<g className="tick" transform={"translate(" + activeScale(tick) + ",0)"}>
+			<g className="tick" transform={`translate(${activeScale(tick)}, 0)`}>
 			<line x2={0} y2={sign * innerTickSize}/>
 			<text x={0} y={sign * tickSpacing} dy={sign < 0 ? "0em" : ".71em"} textAnchor="middle">
 			{tickFormat(tick)}</text>
@@ -78,12 +78,12 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    var d = "M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+	    var d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
 	    pathElement = <path className="domain" d={d}/>;
 	} else {
 	    tickElements = ticks.map(tick => {
 		return (
-			<g className="tick" transform={"translate(0, " + activeScale(tick) + ")"}>
+			<g className="tick" transform={`translate(0, ${activeScale(tick)})`}>
 			<line y2={0} x2={sign * innerTickSize}/>
 			<text y={0} x={sign * tickSpacing} dy=".32em" textAnchor={sign < 0 ? "end" : "start"}>
 			{tickFormat(tick)}</text>
@@ -91,7 +91,7 @@ var Axis = React.createClass({
 		);
 	    });
 
-	    var d = "M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+	    var d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
 	    pathElement = <path className="domain" d={d}/>;
 	}
 	

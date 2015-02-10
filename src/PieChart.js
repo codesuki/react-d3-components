@@ -135,7 +135,7 @@ var PieChart = React.createClass({
 
 	var pieData = pie(data.values);
 
-	var translation = "translate(" + innerWidth/2 + ", " + innerHeight/2 + ")";
+	var translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
 	return (
 		<Chart height={height} width={width} margin={margin}>
 		<g transform={translation}>

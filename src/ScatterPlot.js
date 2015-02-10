@@ -22,7 +22,7 @@ var DataSet = React.createClass({
 
 	var circles = data.map(stack => {
 	    return stack.values.map(e => {
-		var translate = "translate(" + xScale(e.x) + ", " + yScale(e.y) + ")";
+		var translate = `translate(${xScale(e.x)}, ${yScale(e.y)})`;
 		return (
 			<path
 		    className="dot"

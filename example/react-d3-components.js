@@ -27950,7 +27950,7 @@ var Axis = React.createClass({ displayName: "Axis",
 
 	_getTranslateString: function _getTranslateString() {
 		if (this.props.orientation === "bottom") {
-			return "translate(0," + this.props.height + ")";
+			return "translate(0, " + this.props.height + ")";
 		} else if (this.props.orientation === "right") {
 			return "translate(" + this.props.width + ", 0)";
 		} else {
@@ -27990,17 +27990,17 @@ var Axis = React.createClass({ displayName: "Axis",
 		var pathElement;
 		if (orientation === "bottom" || orientation === "top") {
 			tickElements = ticks.map(function (tick) {
-				return React.createElement("g", { className: "tick", transform: "translate(" + activeScale(tick) + ",0)" }, React.createElement("line", { x2: 0, y2: sign * innerTickSize }), React.createElement("text", { x: 0, y: sign * tickSpacing, dy: sign < 0 ? "0em" : ".71em", textAnchor: "middle" }, tickFormat(tick)));
+				return React.createElement("g", { className: "tick", transform: "translate(" + activeScale(tick) + ", 0)" }, React.createElement("line", { x2: 0, y2: sign * innerTickSize }), React.createElement("text", { x: 0, y: sign * tickSpacing, dy: sign < 0 ? "0em" : ".71em", textAnchor: "middle" }, tickFormat(tick)));
 			});
 
-			var d = "M" + range[0] + "," + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+			var d = "M" + range[0] + ", " + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
 			pathElement = React.createElement("path", { className: "domain", d: d });
 		} else {
 			tickElements = ticks.map(function (tick) {
 				return React.createElement("g", { className: "tick", transform: "translate(0, " + activeScale(tick) + ")" }, React.createElement("line", { y2: 0, x2: sign * innerTickSize }), React.createElement("text", { y: 0, x: sign * tickSpacing, dy: ".32em", textAnchor: sign < 0 ? "end" : "start" }, tickFormat(tick)));
 			});
 
-			var d = "M" + sign * outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+			var d = "M" + sign * outerTickSize + ", " + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
 			pathElement = React.createElement("path", { className: "domain", d: d });
 		}
 
@@ -28189,26 +28189,20 @@ module.exports = BarChart;
 var React = require("react");
 
 var Chart = React.createClass({ displayName: "Chart",
-			propTypes: {
-						height: React.PropTypes.number.isRequired,
-						width: React.PropTypes.number.isRequired,
-						margin: React.PropTypes.shape({
-									top: React.PropTypes.number,
-									bottom: React.PropTypes.number,
-									left: React.PropTypes.number,
-									right: React.PropTypes.number
-						})
-			},
+	propTypes: {
+		height: React.PropTypes.number.isRequired,
+		width: React.PropTypes.number.isRequired,
+		margin: React.PropTypes.shape({
+			top: React.PropTypes.number,
+			bottom: React.PropTypes.number,
+			left: React.PropTypes.number,
+			right: React.PropTypes.number
+		}).isRequired
+	},
 
-			getDefaultProps: function getDefaultProps() {
-						return {
-									margin: { top: 0, bottom: 0, left: 0, right: 0 }
-						};
-			},
-
-			render: function render() {
-						return React.createElement("svg", { ref: "svg", width: this.props.width, height: this.props.height }, React.createElement("g", { transform: "translate(" + this.props.margin.left + "," + this.props.margin.top + ")" }, this.props.children));
-			}
+	render: function render() {
+		return React.createElement("svg", { ref: "svg", width: this.props.width, height: this.props.height }, React.createElement("g", { transform: "translate(" + this.props.margin.left + ", " + this.props.margin.top + ")" }, this.props.children));
+	}
 });
 
 module.exports = Chart;

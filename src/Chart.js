@@ -9,19 +9,13 @@ var Chart = React.createClass({
 	    bottom: React.PropTypes.number,
 	    left: React.PropTypes.number,
 	    right: React.PropTypes.number
-	})
+	}).isRequired
     },
-    
-    getDefaultProps() {
-	return {
-	    margin: {top: 0, bottom: 0, left: 0, right:0}
-	};
-    },
-    
+
     render() {
 	return (
 		<svg ref="svg" width={this.props.width} height={this.props.height}>
-		<g transform={"translate(" + this.props.margin.left + "," + this.props.margin.top + ")"}>
+		<g transform={`translate(${this.props.margin.left}, ${this.props.margin.top})`}>
 		{this.props.children}
 	        </g>
 		</svg>
