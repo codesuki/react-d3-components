@@ -8,6 +8,9 @@ let Bar = require('./Bar');
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
+let AccessorMixin = require('./AccessorMixin');
+let StackDataMixin = require('./StackDataMixin');
+let DefaultScalesMixin = require('./DefaultScalesMixin');
 
 let DataSet = React.createClass({
     propTypes: {
@@ -43,7 +46,12 @@ let DataSet = React.createClass({
 });
 
 let BarChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+    mixins: [DefaultPropsMixin,
+	     HeightWidthMixin,
+	     ArrayifyMixin,
+	     AccessorMixin,
+	     StackDataMixin,
+	     DefaultScalesMixin],
     
     propTypes: {
 	barPadding: React.PropTypes.number,
@@ -69,36 +77,6 @@ let BarChart = React.createClass({
 	     colorScale,
 	     barPadding,
 	     offset} = this.props;
-
-	let stack = d3.layout.stack()
-		.offset(offset)
-		.x(e => { return e.x; })
-		.y(e => { return e.y; })
-		.values(stack => { return stack.values; });
-
-	let stackedData = stack(data);
-
-	if (!xScale) {
-	    xScale = d3.scale.ordinal()
-		.domain(stackedData[0].values.map(e => { return e.x; }))
-		.rangeRoundBands([0, innerWidth], barPadding);
-	}
-
-	if (!yScale) {
-	    let yExtents = d3.extent(Array.prototype.concat.apply([],
-								  stackedData.map(stack => {
-								      return stack.values.map(e => {
-									  return e.y0 + e.y;
-								      });
-								  })));
-	    
-	    // if we have no negative values set 0 as the minimum y-value to make the graph nicer
-	    yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
-	    
-	    yScale = d3.scale.linear()
-		.domain(yExtents)
-		.range([innerHeight, 0]);
-	}
 
 	return (
 		<Chart height={height} width={width} margin={margin}>

@@ -46,3 +46,10 @@ div {
 .arc path:hover {
     fill: #E55;
 }
+
+.arc text {
+    font: 11px sans-serif;
+    fill: #000;
+    stroke: none;
+    font-weight: bold;
+}

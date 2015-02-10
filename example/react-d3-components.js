@@ -27756,6 +27756,49 @@ module.exports = require('./lib/React');
 "use strict";
 
 var React = require("react");
+
+var AccessorMixin = {
+			propTypes: {
+						label: React.PropTypes.func,
+						values: React.PropTypes.func,
+						x: React.PropTypes.func,
+						y: React.PropTypes.func,
+						y0: React.PropTypes.func
+			},
+
+			getDefaultProps: function getDefaultProps() {
+						return {
+									label: function (stack) {
+												return stack.label;
+									},
+									values: function (stack) {
+												return stack.values;
+									},
+									x: function (e) {
+												return e.x;
+									},
+									y: function (e) {
+												return e.y;
+									},
+									y0: function (e) {
+												if (e.hasOwnProperty("y0")) {
+															return e.y0;
+												} else {
+															return 0;
+												}
+									}
+						};
+			}
+};
+
+module.exports = AccessorMixin;
+
+
+
+},{"react":148}],150:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
 var d3 = require("d3");
 
 var Chart = require("./Chart");
@@ -27765,6 +27808,9 @@ var Path = require("./Path");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
+var AccessorMixin = require("./AccessorMixin");
+var StackDataMixin = require("./StackDataMixin");
+var DefaultScalesMixin = require("./DefaultScalesMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -27798,7 +27844,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var AreaChart = React.createClass({ displayName: "AreaChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, StackDataMixin, DefaultScalesMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -27831,62 +27877,36 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
 		var offset = this.props.offset;
+		var xIntercept = this.props.xIntercept;
+		var yIntercept = this.props.yIntercept;
+		var x = this.props.x;
+		var y = this.props.y;
+		var y0 = this.props.y0;
 
-
-		var stack = d3.layout.stack().offset(offset).x(function (e) {
-			return e.x;
-		}).y(function (e) {
-			return e.y;
-		}).values(function (e) {
-			return e.values;
-		});
-
-		var stackedData = stack(data);
-
-		if (!xScale) {
-			var xExtents = d3.extent(Array.prototype.concat.apply([], stackedData.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.x;
-				});
-			})));
-
-			xScale = d3.scale.linear().domain(xExtents).range([0, innerWidth]);
-		}
-
-		if (!yScale) {
-			var yExtents = d3.extent(Array.prototype.concat.apply([], stackedData.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.y0 + e.y;
-				});
-			})));
-
-			// if we have no negative values set 0 as the minimum y-value to make the graph nicer
-			yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
-
-			yScale = d3.scale.linear().domain(yExtents).range([innerHeight, 0]);
-		}
 
 		var line = d3.svg.line().x(function (e) {
-			return xScale(e.x);
+			return xScale(x(e));
 		}).y(function (e) {
-			return yScale(e.y0 + e.y);
+			return yScale(y0(e) + y(e));
 		}).interpolate(interpolate);
 
 		var area = d3.svg.area().x(function (e) {
-			return xScale(e.x);
+			return xScale(x(e));
 		}).y0(function (e) {
-			return yScale(yScale.domain()[0] + e.y0);
+			return yScale(yScale.domain()[0] + y0(e));
 		}).y1(function (e) {
-			return yScale(e.y0 + e.y);
+			return yScale(y0(e) + y(e));
 		}).interpolate(interpolate);
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, { data: stackedData, line: line, area: area, colorScale: colorScale, strokeWidth: strokeWidth, stroke: stroke }), React.createElement(Axis, {
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, { data: data, line: line, area: area, colorScale: colorScale, strokeWidth: strokeWidth, stroke: stroke }), React.createElement(Axis, {
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
+			height: innerHeight,
+			zero: yIntercept }), React.createElement(Axis, {
 			orientation: "left",
 			scale: yScale,
-			width: innerWidth }));
+			width: innerWidth,
+			zero: xIntercept }));
 	}
 });
 
@@ -27894,7 +27914,7 @@ module.exports = AreaChart;
 
 
 
-},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"./Path":158,"d3":2,"react":148}],150:[function(require,module,exports){
+},{"./AccessorMixin":149,"./ArrayifyMixin":151,"./Axis":152,"./Chart":155,"./DefaultPropsMixin":156,"./DefaultScalesMixin":157,"./HeightWidthMixin":158,"./Path":160,"./StackDataMixin":163,"d3":2,"react":148}],151:[function(require,module,exports){
 "use strict";
 
 var ArrayifyMixin = {
@@ -27911,7 +27931,7 @@ module.exports = ArrayifyMixin;
 
 
 
-},{}],151:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -27927,6 +27947,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		outerTickSize: React.PropTypes.number,
 		scale: React.PropTypes.func.isRequired,
 		className: React.PropTypes.string,
+		zero: React.PropTypes.number,
 		orientation: function (props, propName, componentName) {
 			if (["top", "bottom", "left", "right"].indexOf(props[propName]) == -1) {
 				return new Error("Not a valid orientation!");
@@ -27944,21 +27965,34 @@ var Axis = React.createClass({ displayName: "Axis",
 			innerTickSize: 6,
 			tickPadding: 3,
 			outerTickSize: 6,
-			className: "axis"
+			className: "axis",
+			zero: 0
 		};
 	},
 
 	_getTranslateString: function _getTranslateString() {
-		if (this.props.orientation === "bottom") {
-			return "translate(0, " + this.props.height + ")";
-		} else if (this.props.orientation === "right") {
-			return "translate(" + this.props.width + ", 0)";
+		var orientation = this.props.orientation;
+		var height = this.props.height;
+		var width = this.props.width;
+		var zero = this.props.zero;
+
+
+		if (orientation === "top") {
+			return "translate(0, " + zero + ")";
+		} else if (orientation === "bottom") {
+			return "translate(0, " + (zero == 0 ? height : zero) + ")";
+		} else if (orientation === "left") {
+			return "translate(" + zero + ", 0)";
+		} else if (orientation === "right") {
+			return "translate(" + (zero == 0 ? width : zero) + ", 0)";
 		} else {
 			return "";
 		}
 	},
 
 	render: function render() {
+		var height = this.props.height;
+		var width = this.props.width;
 		var tickArguments = this.props.tickArguments;
 		var tickValues = this.props.tickValues;
 		var tickFormat = this.props.tickFormat;
@@ -27968,12 +28002,27 @@ var Axis = React.createClass({ displayName: "Axis",
 		var scale = this.props.scale;
 		var orientation = this.props.orientation;
 		var className = this.props.className;
+		var zero = this.props.zero;
 
 
 		var ticks = tickValues == null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
 
 		if (scale.tickFormat) {
 			tickFormat = scale.tickFormat.apply(scale, tickArguments);
+		}
+
+		// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
+		if (zero != height && zero != width && zero != 0) {
+			(function () {
+				var originalTickFormat = tickFormat;
+				tickFormat = function (t) {
+					if (t == 0) {
+						return "";
+					} else {
+						return originalTickFormat(t);
+					}
+				};
+			})();
 		}
 
 		var tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
@@ -28022,7 +28071,7 @@ module.exports = Axis;
 
 
 
-},{"d3":2,"react":148}],152:[function(require,module,exports){
+},{"d3":2,"react":148}],153:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28063,7 +28112,7 @@ module.exports = Bar;
 
 
 
-},{"d3":2,"react":148}],153:[function(require,module,exports){
+},{"d3":2,"react":148}],154:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28076,6 +28125,9 @@ var Bar = require("./Bar");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
+var AccessorMixin = require("./AccessorMixin");
+var StackDataMixin = require("./StackDataMixin");
+var DefaultScalesMixin = require("./DefaultScalesMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28108,7 +28160,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var BarChart = React.createClass({ displayName: "BarChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, StackDataMixin, DefaultScalesMixin],
 
 	propTypes: {
 		barPadding: React.PropTypes.number,
@@ -28136,35 +28188,6 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var offset = this.props.offset;
 
 
-		var stack = d3.layout.stack().offset(offset).x(function (e) {
-			return e.x;
-		}).y(function (e) {
-			return e.y;
-		}).values(function (stack) {
-			return stack.values;
-		});
-
-		var stackedData = stack(data);
-
-		if (!xScale) {
-			xScale = d3.scale.ordinal().domain(stackedData[0].values.map(function (e) {
-				return e.x;
-			})).rangeRoundBands([0, innerWidth], barPadding);
-		}
-
-		if (!yScale) {
-			var yExtents = d3.extent(Array.prototype.concat.apply([], stackedData.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.y0 + e.y;
-				});
-			})));
-
-			// if we have no negative values set 0 as the minimum y-value to make the graph nicer
-			yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
-
-			yScale = d3.scale.linear().domain(yExtents).range([innerHeight, 0]);
-		}
-
 		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
@@ -28183,7 +28206,7 @@ module.exports = BarChart;
 
 
 
-},{"./ArrayifyMixin":150,"./Axis":151,"./Bar":152,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],154:[function(require,module,exports){
+},{"./AccessorMixin":149,"./ArrayifyMixin":151,"./Axis":152,"./Bar":153,"./Chart":155,"./DefaultPropsMixin":156,"./DefaultScalesMixin":157,"./HeightWidthMixin":158,"./StackDataMixin":163,"d3":2,"react":148}],155:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28209,7 +28232,7 @@ module.exports = Chart;
 
 
 
-},{"react":148}],155:[function(require,module,exports){
+},{"react":148}],156:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28245,7 +28268,139 @@ module.exports = DefaultPropsMixin;
 
 
 
-},{"d3":2,"react":148}],156:[function(require,module,exports){
+},{"d3":2,"react":148}],157:[function(require,module,exports){
+"use strict";
+
+var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } };
+
+var d3 = require("d3");
+
+var DefaultScalesMixin = {
+			componentWillMount: function componentWillMount() {
+						var xScale = this.props.xScale;
+						var yScale = this.props.yScale;
+						var x = this.props.x;
+						var y = this.props.y;
+						var values = this.props.values;
+
+
+						if (!this.props.xScale) {
+									var _ref = this._makeXScale();
+
+									var _ref2 = _slicedToArray(_ref, 2);
+
+									this.props.xScale = _ref2[0];
+									this.props.xIntercept = _ref2[1];
+						}
+
+						if (!this.props.yScale) {
+									var _ref3 = this._makeYScale();
+
+									var _ref32 = _slicedToArray(_ref3, 2);
+
+									this.props.yScale = _ref32[0];
+									this.props.yIntercept = _ref32[1];
+						}
+			},
+
+			componentWillReceiveProps: function componentWillReceiveProps(nextProps) {},
+
+			_makeXScale: function _makeXScale() {
+						var data = this.props.data;
+						var x = this.props.x;
+						var values = this.props.values;
+
+
+						if (Number.isFinite(x(values(data[0])[0]))) {
+									return this._makeLinearXScale();
+						} else {
+									return this._makeOrdinalXScale();
+						}
+			},
+
+			_makeLinearXScale: function _makeLinearXScale() {
+						var data = this.props.data;
+						var innerWidth = this.props.innerWidth;
+						var x = this.props.x;
+						var values = this.props.values;
+
+
+						var extents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
+									return values(stack).map(function (e) {
+												return x(e);
+									});
+						})));
+
+						var scale = d3.scale.linear().domain(extents).range([0, innerWidth]);
+
+						var zero = d3.max([0, scale.domain()[0]]);
+						var xIntercept = scale(zero);
+
+						return [scale, xIntercept];
+			},
+
+			_makeOrdinalXScale: function _makeOrdinalXScale() {
+						var data = this.props.data;
+						var innerWidth = this.props.innerWidth;
+						var x = this.props.x;
+						var values = this.props.values;
+						var barPadding = this.props.barPadding;
+
+
+						var scale = d3.scale.ordinal().domain(values(data[0]).map(function (e) {
+									return x(e);
+						})).rangeRoundBands([0, innerWidth], barPadding);
+
+						return [scale, 0];
+			},
+
+			_makeYScale: function _makeYScale() {
+						var data = this.props.data;
+						var y = this.props.y;
+						var values = this.props.values;
+
+
+						if (Number.isFinite(y(values(data[0])[0]))) {
+									return this._makeLinearYScale();
+						} else {
+									return this._makeOrdinalYScale();
+						}
+			},
+
+			_makeLinearYScale: function _makeLinearYScale() {
+						var data = this.props.data;
+						var innerHeight = this.props.innerHeight;
+						var y = this.props.y;
+						var y0 = this.props.y0;
+						var values = this.props.values;
+
+
+						var extents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
+									return values(stack).map(function (e) {
+												return y0(e) + y(e);
+									});
+						})));
+
+						extents = [d3.min([0, extents[0]]), extents[1]];
+
+						var scale = d3.scale.linear().domain(extents).range([innerHeight, 0]);
+
+						var zero = d3.max([0, scale.domain()[0]]);
+						var yIntercept = scale(zero);
+
+						return [scale, yIntercept];
+			},
+
+			_makeOrdinalYScale: function _makeOrdinalYScale() {
+						return [null, 0];
+			}
+};
+
+module.exports = DefaultScalesMixin;
+
+
+
+},{"d3":2}],158:[function(require,module,exports){
 "use strict";
 
 var HeightWidthMixin = {
@@ -28264,7 +28419,7 @@ module.exports = HeightWidthMixin;
 
 
 
-},{}],157:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28277,6 +28432,8 @@ var Path = require("./Path");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
+var AccessorMixin = require("./AccessorMixin");
+var DefaultScalesMixin = require("./DefaultScalesMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28302,7 +28459,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var LineChart = React.createClass({ displayName: "LineChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -28329,31 +28486,14 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var interpolate = this.props.interpolate;
 		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
+		var x = this.props.x;
+		var y = this.props.y;
 
-
-		if (!xScale) {
-			var xExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.x;
-				});
-			})));
-			xScale = d3.scale.linear().domain(xExtents).range([0, innerWidth]);
-		}
-
-		if (!yScale) {
-			var yExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.y;
-				});
-			})));
-
-			yScale = d3.scale.linear().domain(yExtents).range([innerHeight, 0]);
-		}
 
 		var line = d3.svg.line().x(function (e) {
-			return xScale(e.x);
+			return xScale(x(e));
 		}).y(function (e) {
-			return yScale(e.y);
+			return yScale(y(e));
 		}).interpolate(interpolate);
 
 		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, { data: data, line: line, strokeWidth: strokeWidth, colorScale: colorScale }), React.createElement(Axis, {
@@ -28370,7 +28510,7 @@ module.exports = LineChart;
 
 
 
-},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"./Path":158,"d3":2,"react":148}],158:[function(require,module,exports){
+},{"./AccessorMixin":149,"./ArrayifyMixin":151,"./Axis":152,"./Chart":155,"./DefaultPropsMixin":156,"./DefaultScalesMixin":157,"./HeightWidthMixin":158,"./Path":160,"d3":2,"react":148}],160:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28409,7 +28549,7 @@ module.exports = Path;
 
 
 
-},{"d3":2,"react":148}],159:[function(require,module,exports){
+},{"d3":2,"react":148}],161:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28417,6 +28557,7 @@ var d3 = require("d3");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
+var AccessorMixin = require("./AccessorMixin");
 
 var Chart = require("./Chart");
 
@@ -28445,7 +28586,8 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		strokeWidth: React.PropTypes.number.isRequired,
 		stroke: React.PropTypes.string.isRequired,
 		fill: React.PropTypes.string.isRequired,
-		opacity: React.PropTypes.number.isRequired
+		opacity: React.PropTypes.number.isRequired,
+		x: React.PropTypes.func.isRequired
 	},
 
 	render: function render() {
@@ -28458,6 +28600,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var stroke = this.props.stroke;
 		var fill = this.props.fill;
 		var opacity = this.props.opacity;
+		var x = this.props.x;
 
 
 		var wedges = pie.map(function (e) {
@@ -28475,7 +28618,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 			var linePos = outerArc.centroid(e);
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
-			return React.createElement("g", { className: "arc" }, React.createElement(Wedge, { fill: colorScale(e.data.x), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { dy: ".35em", x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, e.data.x));
+			return React.createElement("g", { className: "arc" }, React.createElement(Wedge, { fill: colorScale(x(e.data)), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { dy: ".35em", x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, x(e.data)));
 		});
 
 		return React.createElement("g", null, wedges);
@@ -28483,7 +28626,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var PieChart = React.createClass({ displayName: "PieChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin],
 
 	propTypes: {
 		innerRadius: React.PropTypes.number,
@@ -28522,10 +28665,12 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		var stroke = this.props.stroke;
 		var fill = this.props.fill;
 		var opacity = this.props.opacity;
+		var x = this.props.x;
+		var y = this.props.y;
 
 
 		var pie = d3.layout.pie().value(function (e) {
-			return e.y;
+			return y(e);
 		});
 
 		var radius = Math.min(innerWidth, innerHeight) / 2;
@@ -28548,7 +28693,7 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		var pieData = pie(data.values);
 
 		var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, strokeWidth: strokeWidth, stroke: stroke, fill: fill, opacity: opacity })));
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, strokeWidth: strokeWidth, stroke: stroke, fill: fill, opacity: opacity, x: x })));
 	}
 });
 
@@ -28556,7 +28701,7 @@ module.exports = PieChart;
 
 
 
-},{"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],160:[function(require,module,exports){
+},{"./AccessorMixin":149,"./Chart":155,"./DefaultPropsMixin":156,"./HeightWidthMixin":158,"d3":2,"react":148}],162:[function(require,module,exports){
 "use strict";
 
 var React = require("react");
@@ -28568,6 +28713,8 @@ var Axis = require("./Axis");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
+var AccessorMixin = require("./AccessorMixin");
+var DefaultScalesMixin = require("./DefaultScalesMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -28602,7 +28749,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
 
 	propTypes: {
 		rScale: React.PropTypes.func,
@@ -28628,27 +28775,9 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 		var colorScale = this.props.colorScale;
 		var rScale = this.props.rScale;
 		var shape = this.props.shape;
+		var xIntercept = this.props.xIntercept;
+		var yIntercept = this.props.yIntercept;
 
-
-		if (!xScale) {
-			var xExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.x;
-				});
-			})));
-
-			xScale = d3.scale.linear().domain(xExtents).range([0, innerWidth]);
-		}
-
-		if (!yScale) {
-			var yExtents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
-				return stack.values.map(function (e) {
-					return e.y;
-				});
-			})));
-
-			yScale = d3.scale.linear().domain(yExtents).range([innerHeight, 0]);
-		}
 
 		var symbol = d3.svg.symbol().type(shape);
 
@@ -28656,18 +28785,20 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			symbol = symbol.size(rScale);
 		}
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(Axis, {
+			orientation: "bottom",
+			scale: xScale,
+			height: innerHeight,
+			zero: yIntercept }), React.createElement(Axis, {
+			orientation: "left",
+			scale: yScale,
+			width: innerWidth,
+			zero: xIntercept }), React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
 			yScale: yScale,
 			colorScale: colorScale,
-			symbol: symbol }), React.createElement(Axis, {
-			orientation: "bottom",
-			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
-			orientation: "left",
-			scale: yScale,
-			width: innerWidth }));
+			symbol: symbol }));
 	}
 });
 
@@ -28675,7 +28806,31 @@ module.exports = ScatterPlot;
 
 
 
-},{"./ArrayifyMixin":150,"./Axis":151,"./Chart":154,"./DefaultPropsMixin":155,"./HeightWidthMixin":156,"d3":2,"react":148}],161:[function(require,module,exports){
+},{"./AccessorMixin":149,"./ArrayifyMixin":151,"./Axis":152,"./Chart":155,"./DefaultPropsMixin":156,"./DefaultScalesMixin":157,"./HeightWidthMixin":158,"d3":2,"react":148}],163:[function(require,module,exports){
+"use strict";
+
+var d3 = require("d3");
+
+var StackDataMixin = {
+	componentWillMount: function componentWillMount() {
+		var data = this.props.data;
+		var offset = this.props.offset;
+		var x = this.props.x;
+		var y = this.props.y;
+		var values = this.props.values;
+
+
+		var stack = d3.layout.stack().offset(offset).x(x).y(y).values(values);
+
+		this.props.data = stack(data);
+	}
+};
+
+module.exports = StackDataMixin;
+
+
+
+},{"d3":2}],164:[function(require,module,exports){
 "use strict";
 
 var BarChart = require("./BarChart");
@@ -28694,5 +28849,5 @@ module.exports = {
 
 
 
-},{"./AreaChart":149,"./BarChart":153,"./LineChart":157,"./PieChart":159,"./ScatterPlot":160}]},{},[161])(161)
+},{"./AreaChart":150,"./BarChart":154,"./LineChart":159,"./PieChart":161,"./ScatterPlot":162}]},{},[164])(164)
 });

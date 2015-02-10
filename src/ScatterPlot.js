@@ -7,6 +7,8 @@ let Axis = require('./Axis');
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
+let AccessorMixin = require('./AccessorMixin');
+let DefaultScalesMixin = require('./DefaultScalesMixin');
 
 let DataSet = React.createClass({
     propTypes: {
@@ -43,7 +45,7 @@ let DataSet = React.createClass({
 });
 
 let ScatterPlot = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
 
     propTypes: {
 	rScale: React.PropTypes.func,
@@ -68,33 +70,9 @@ let ScatterPlot = React.createClass({
 	     yScale,
 	     colorScale,
 	     rScale,
-	     shape} = this.props;
-
-	if (!xScale) {
-	    let xExtents = d3.extent(Array.prototype.concat.apply([],
-								  data.map(stack => {
-								      return stack.values.map(e => {
-									  return e.x;
-								      });
-								  })));
-	    
-	    xScale = d3.scale.linear()
-		.domain(xExtents)
-		.range([0, innerWidth]);
-	}   
-
-	if (!yScale) {
-	    let yExtents = d3.extent(Array.prototype.concat.apply([],
-								  data.map(stack => {
-								      return stack.values.map(e => {
-									  return e.y;
-								      });
-								  })));
-	    
-	    yScale = d3.scale.linear()
-		.domain(yExtents)
-		.range([innerHeight, 0]);
-	}
+	     shape,
+	     xIntercept,
+	     yIntercept} = this.props;
 
 	let symbol = d3.svg.symbol().type(shape);
 
@@ -104,24 +82,26 @@ let ScatterPlot = React.createClass({
 
 	return (
 		<Chart height={height} width={width} margin={margin}>
-		<DataSet
-	    data={data}
-	    xScale={xScale}
-	    yScale={yScale}
-	    colorScale={colorScale}
-	    symbol={symbol}
-		/>
-
 		<Axis
 	    orientation="bottom"
 	    scale={xScale}
 	    height={innerHeight}
+	    zero={yIntercept}
 		/>
 		
 		<Axis
 	    orientation="left"
 	    scale={yScale}
 	    width={innerWidth}
+	    zero={xIntercept}
+		/>
+
+		<DataSet
+	    data={data}
+	    xScale={xScale}
+	    yScale={yScale}
+	    colorScale={colorScale}
+	    symbol={symbol}
 		/>
 		</Chart>
 	);

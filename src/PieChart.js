@@ -3,6 +3,7 @@ let d3 = require('d3');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
+let AccessorMixin = require('./AccessorMixin');
 
 let Chart = require('./Chart');
 
@@ -31,11 +32,21 @@ let DataSet = React.createClass({
 	strokeWidth: React.PropTypes.number.isRequired,
 	stroke: React.PropTypes.string.isRequired,
 	fill: React.PropTypes.string.isRequired,
-	opacity: React.PropTypes.number.isRequired
+	opacity: React.PropTypes.number.isRequired,
+	x: React.PropTypes.func.isRequired
     },
     
     render() {
-	let {pie, arc, outerArc, colorScale, radius, strokeWidth, stroke, fill, opacity} = this.props;
+	let {pie,
+	     arc,
+	     outerArc,
+	     colorScale,
+	     radius,
+	     strokeWidth,
+	     stroke,
+	     fill,
+	     opacity,
+	     x} = this.props;
 	
 	let wedges = pie.map(e => {
 	    function midAngle(d){
@@ -54,9 +65,9 @@ let DataSet = React.createClass({
 	    
 	    return (
 		    <g className="arc">
-		    <Wedge fill={colorScale(e.data.x)} d={d}/>
+		    <Wedge fill={colorScale(x(e.data))} d={d}/>
 		    <polyline opacity={opacity} strokeWidth={strokeWidth} stroke={stroke} fill={fill} points={[arc.centroid(e), outerArc.centroid(e), linePos]}/>
-		    <text dy=".35em" x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{e.data.x}</text>	
+		    <text dy=".35em" x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{x(e.data)}</text>	
 		    </g>
 	    );
 	});
@@ -70,7 +81,7 @@ let DataSet = React.createClass({
 });
 
 let PieChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin],
 
     propTypes: {
 	innerRadius: React.PropTypes.number,
@@ -108,9 +119,11 @@ let PieChart = React.createClass({
 	     strokeWidth,
 	     stroke,
 	     fill,
-	     opacity} = this.props;
+	     opacity,
+	     x,
+	     y} = this.props;
 	
-	let pie = d3.layout.pie().value(e => { return e.y; });
+	let pie = d3.layout.pie().value(e => { return y(e); });
 
 	let radius = Math.min(innerWidth, innerHeight) / 2;
 	if (!innerRadius) {
@@ -139,7 +152,7 @@ let PieChart = React.createClass({
 	return (
 		<Chart height={height} width={width} margin={margin}>
 		<g transform={translation}>
-		<DataSet width={innerWidth} height={innerHeight} colorScale={colorScale} pie={pieData} arc={arc} outerArc={outerArc} radius={radius} strokeWidth={strokeWidth} stroke={stroke} fill={fill} opacity={opacity}/>
+		<DataSet width={innerWidth} height={innerHeight} colorScale={colorScale} pie={pieData} arc={arc} outerArc={outerArc} radius={radius} strokeWidth={strokeWidth} stroke={stroke} fill={fill} opacity={opacity} x={x}/>
 		</g>
 		</Chart>
 	);

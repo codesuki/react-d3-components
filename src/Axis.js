@@ -11,6 +11,7 @@ let Axis = React.createClass({
 	outerTickSize: React.PropTypes.number,
 	scale: React.PropTypes.func.isRequired,
 	className: React.PropTypes.string,
+	zero: React.PropTypes.number,
 	orientation: function(props, propName, componentName) {
 	    if (['top', 'bottom', 'left', 'right'].indexOf(props[propName]) == -1) {
 		return new Error('Not a valid orientation!');
@@ -26,22 +27,31 @@ let Axis = React.createClass({
 	    innerTickSize: 6,
 	    tickPadding: 3,
 	    outerTickSize: 6,
-	    className: "axis"
+	    className: "axis",
+	    zero: 0
 	};
     },
     
     _getTranslateString() {
-	if (this.props.orientation === "bottom") {
-	    return `translate(0, ${this.props.height})`;
-	} else if (this.props.orientation === "right") {
-	    return `translate(${this.props.width}, 0)`;
+	let {orientation, height, width, zero} = this.props;
+
+	if (orientation === "top") {
+	    return `translate(0, ${zero})`;
+	} else if (orientation === "bottom") {
+	    return `translate(0, ${zero == 0 ? height : zero})`;
+	} else if (orientation === "left") {
+	    return `translate(${zero}, 0)`;
+	} else if (orientation === "right") {
+	    return `translate(${zero == 0 ? width : zero}, 0)`;
 	} else {
 	    return "";
 	}
     },
 
     render() {
-	let {tickArguments,
+	let {height,
+	     width,
+	     tickArguments,
 	     tickValues,
 	     tickFormat,
 	     innerTickSize,
@@ -49,12 +59,19 @@ let Axis = React.createClass({
 	     outerTickSize,
 	     scale,
 	     orientation,
-	     className} = this.props;
+	     className,
+	     zero} = this.props;
 	
 	let ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
 
 	if (scale.tickFormat) {
 	    tickFormat = scale.tickFormat.apply(scale, tickArguments);
+	}
+
+	// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
+	if (zero != height && zero != width && zero != 0) {
+	    let originalTickFormat = tickFormat;
+	    tickFormat = t => { if (t == 0) { return ""; } else { return originalTickFormat(t); } };
 	}
 
 	let tickSpacing = Math.max(innerTickSize, 0) + tickPadding;

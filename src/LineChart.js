@@ -8,6 +8,8 @@ let Path = require('./Path');
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
+let AccessorMixin = require('./AccessorMixin');
+let DefaultScalesMixin = require('./DefaultScalesMixin');
 
 let DataSet = React.createClass({
     propTypes: {
@@ -35,7 +37,11 @@ let DataSet = React.createClass({
 });
 
 let LineChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+    mixins: [DefaultPropsMixin,
+	     HeightWidthMixin,
+	     ArrayifyMixin,
+	     AccessorMixin,
+	     DefaultScalesMixin],
 
     propTypes: {
 	interpolate: React.PropTypes.string,
@@ -61,36 +67,13 @@ let LineChart = React.createClass({
 	     colorScale,
 	     interpolate,
 	     strokeWidth,
-	     stroke} = this.props;
-
-	if (!xScale) {
-	    let xExtents = d3.extent(Array.prototype.concat.apply([],
-								  data.map(stack => {
-								      return stack.values.map(e => {
-									  return e.x;
-								      });
-								  })));
-	    xScale = d3.scale.linear()
-		.domain(xExtents)
-		.range([0, innerWidth]);
-	}
-
-	if (!yScale) {
-	    let yExtents = d3.extent(Array.prototype.concat.apply([],
-								  data.map(stack => {
-								      return stack.values.map(e => {
-									  return e.y;
-								      });
-								  })));
-	    
-	    yScale = d3.scale.linear()
-		.domain(yExtents)
-		.range([innerHeight, 0]);
-	}
+	     stroke,
+	     x,
+	     y} = this.props;
 
 	let line = d3.svg.line()
-		.x(function(e) { return xScale(e.x); })
-		.y(function(e) { return yScale(e.y); })
+		.x(function(e) { return xScale(x(e)); })
+		.y(function(e) { return yScale(y(e)); })
 		.interpolate(interpolate);
 	
 	return (

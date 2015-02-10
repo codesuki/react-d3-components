@@ -8,6 +8,9 @@ let Path = require('./Path');
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
+let AccessorMixin = require('./AccessorMixin');
+let StackDataMixin = require('./StackDataMixin');
+let DefaultScalesMixin = require('./DefaultScalesMixin');
 
 let DataSet = React.createClass({
     propTypes: {
@@ -43,7 +46,12 @@ let DataSet = React.createClass({
 });
 
 let AreaChart = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin],
+    mixins: [DefaultPropsMixin,
+	     HeightWidthMixin,
+	     ArrayifyMixin,
+	     AccessorMixin,
+	     StackDataMixin,
+	     DefaultScalesMixin],
 
     propTypes: {
 	interpolate: React.PropTypes.string,
@@ -75,71 +83,41 @@ let AreaChart = React.createClass({
 	     interpolate,
 	     strokeWidth,
 	     stroke,
-	     offset} = this.props;
-
-	let stack = d3.layout.stack()
-		.offset(offset)
-		.x(e => { return e.x; })
-		.y(e => { return e.y; })
-		.values(e => { return e.values; });
-
-	let stackedData = stack(data);
-
-	if (!xScale) {
-	    let xExtents = d3.extent(Array.prototype.concat.apply([],
-								  stackedData.map(stack => {
-								      return stack.values.map(e => {
-									  return e.x;
-								      });
-								  })));
-	    
-	    xScale = d3.scale.linear()
-		.domain(xExtents)
-		.range([0, innerWidth]);
-	}
-
-	if (!yScale) {
-	    let yExtents = d3.extent(Array.prototype.concat.apply([],
-								  stackedData.map(stack => {
-								      return stack.values.map(e => {
-									  return e.y0 + e.y;
-								      });
-								  })));
-	    
-	    // if we have no negative values set 0 as the minimum y-value to make the graph nicer
-	    yExtents = [d3.min([0, yExtents[0]]), yExtents[1]];
-	    
-	    yScale = d3.scale.linear()
-		.domain(yExtents)
-		.range([innerHeight, 0]);
-	}
+	     offset,
+	     xIntercept,
+	     yIntercept,
+	     x,
+	     y,
+	     y0} = this.props;
 
 	let line = d3.svg.line()
-		.x(function(e) { return xScale(e.x); })
-		.y(function(e) { return yScale(e.y0 + e.y); })
+		.x(function(e) { return xScale(x(e)); })
+		.y(function(e) { return yScale(y0(e) + y(e)); })
 		.interpolate(interpolate);
 
 	let area = d3.svg.area()
-		.x(function(e) { return xScale(e.x); })
-		.y0(function(e) { return yScale(yScale.domain()[0] + e.y0); })
-		.y1(function(e) { return yScale(e.y0 + e.y); })
+		.x(function(e) { return xScale(x(e)); })
+		.y0(function(e) { return yScale(yScale.domain()[0] + y0(e)); })
+		.y1(function(e) { return yScale(y0(e) + y(e)); })
 		.interpolate(interpolate);
 	
 	return (
 		<Chart height={height} width={width} margin={margin}>
 		
-		<DataSet data={stackedData} line={line} area={area} colorScale={colorScale} strokeWidth={strokeWidth} stroke={stroke}/>
+		<DataSet data={data} line={line} area={area} colorScale={colorScale} strokeWidth={strokeWidth} stroke={stroke}/>
 	    
 		<Axis
 	    orientation="bottom"
 	    scale={xScale}
 	    height={innerHeight}
+	    zero={yIntercept}
 		/>
 		
 		<Axis
 	    orientation="left"
 	    scale={yScale}
 	    width={innerWidth}
+	    zero={xIntercept}
 		/>
 		</Chart>
 	);
