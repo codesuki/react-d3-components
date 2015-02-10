@@ -20,5 +20,29 @@ div {
 }
 
 .axis line {
-  stroke: #ccc;
+    stroke: #ccc;
+}
+
+.axis path {
+    stroke: #ccc;
+}
+
+.bar:hover {
+    fill: #E55;
+}
+
+.dot:hover {
+    fill: #E55;
+}
+
+.area:hover {
+    fill: #E55;
+}
+
+.line:hover {
+    stroke: #E55;
+}
+
+.arc path:hover {
+    fill: #E55;
 }
