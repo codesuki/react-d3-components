@@ -20,11 +20,11 @@ let DataSet = React.createClass({
     },
     
     render() {
-	let {data, symbol, xScale, yScale, colorScale} = this.props;
+	let {data, symbol, xScale, yScale, colorScale, values, x, y} = this.props;
 
 	let circles = data.map(stack => {
-	    return stack.values.map(e => {
-		let translate = `translate(${xScale(e.x)}, ${yScale(e.y)})`;
+	    return values(stack).map(e => {
+		let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
 		return (
 			<path
 		    className="dot"
@@ -72,7 +72,10 @@ let ScatterPlot = React.createClass({
 	     rScale,
 	     shape,
 	     xIntercept,
-	     yIntercept} = this.props;
+	     yIntercept,
+	     values,
+	     x,
+	     y} = this.props;
 
 	let symbol = d3.svg.symbol().type(shape);
 
@@ -102,6 +105,9 @@ let ScatterPlot = React.createClass({
 	    yScale={yScale}
 	    colorScale={colorScale}
 	    symbol={symbol}
+	    values={values}
+	    x={x}
+	    y={y}
 		/>
 		</Chart>
 	);

@@ -13,6 +13,7 @@
   <div id="scatterplot"></div>
   <div id="scatterplot2"></div>
   <div id="scatterplot3"></div>
+  <div id="scatterplot4"></div>
   <div id="linechart"></div>
   <div id="areachart"></div>
   <div id="stackedareachart"></div>
@@ -107,6 +108,21 @@
 
     React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
     document.getElementById('scatterplot3')
+    );
+
+
+    data = [{
+    customLabel: 'somethingA',
+    customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
+    }];
+
+    var labelAccessor = function(stack) { return stack.customLabel; };
+    var valuesAccessor = function(stack) { return stack.customValues; };
+    var xAccessor = function(element) { return element[0]; };
+    var yAccessor = function(element) { return element[1]; };
+
+    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
+    document.getElementById('scatterplot4')
     );
   </script>
 </body>

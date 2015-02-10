@@ -15,10 +15,13 @@ Description
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
 I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked variant when given an array as input.
 
-If you like the project please consider a pull request. I am open for any additions.
+If you like the project please consider star'ing and a pull request. I am open for any additions.
 
 Features
 --------
+* Custom accessors to support any data format
+* Negative axes
+* CSS classes to allow styling
 * Bar Chart
 * Stacked Bar Chart
 * Scatter Plot
@@ -30,9 +33,6 @@ Features
 ToDo (in no particular order)
 -----------------------------
 * More Charts
-* Custom data accessors to support any data format
-* Negative Axes
-* CSS Classes for all elements
 * Animations
 * Tooltip
 * Legend
@@ -42,6 +42,23 @@ ToDo (in no particular order)
 Example
 =======
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
+
+Custom Accessors
+---------------
+```javascript
+data = [{
+    customLabel: 'somethingA',
+    customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
+}];
+
+var labelAccessor = function(stack) { return stack.customLabel; };
+var valuesAccessor = function(stack) { return stack.customValues; };
+var xAccessor = function(element) { return element[0]; };
+var yAccessor = function(element) { return element[1]; };
+
+React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
+    document.getElementById('location')
+```
 
 BarChart
 --------

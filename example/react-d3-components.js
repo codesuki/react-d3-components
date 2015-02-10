@@ -28731,11 +28731,14 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var xScale = this.props.xScale;
 		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
+		var values = this.props.values;
+		var x = this.props.x;
+		var y = this.props.y;
 
 
 		var circles = data.map(function (stack) {
-			return stack.values.map(function (e) {
-				var translate = "translate(" + xScale(e.x) + ", " + yScale(e.y) + ")";
+			return values(stack).map(function (e) {
+				var translate = "translate(" + xScale(x(e)) + ", " + yScale(y(e)) + ")";
 				return React.createElement("path", {
 					className: "dot",
 					d: symbol(),
@@ -28777,6 +28780,9 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 		var shape = this.props.shape;
 		var xIntercept = this.props.xIntercept;
 		var yIntercept = this.props.yIntercept;
+		var values = this.props.values;
+		var x = this.props.x;
+		var y = this.props.y;
 
 
 		var symbol = d3.svg.symbol().type(shape);
@@ -28798,7 +28804,10 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			xScale: xScale,
 			yScale: yScale,
 			colorScale: colorScale,
-			symbol: symbol }));
+			symbol: symbol,
+			values: values,
+			x: x,
+			y: y }));
 	}
 });
 
