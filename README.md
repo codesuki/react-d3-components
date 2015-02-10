@@ -27,8 +27,8 @@ Features
 * Stacked Area Chart
 * Pie Plot
 
-ToDo
-----
+ToDo (in no particular order)
+-----------------------------
 * More Charts
 * Custom data accessors to support any data format
 * Negative Axes
@@ -36,6 +36,8 @@ ToDo
 * Animations
 * Tooltip
 * Legend
+* Documentation
+* Tests
 
 Example
 =======
@@ -127,5 +129,27 @@ data = {
 React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
     document.getElementById('location')
 );
+```
+
+Overriding default parameters / Customization
+---------------------------------------------
+All Charts provide defaults for scales, colors, etc...
+If you want to use your own scale just pass it to the charts constructor.
+
+The scales are normal D3 objects, their documentation can be found [here](https://github.com/mbostock/d3/wiki/Ordinal-Scales) and [here](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
+
+There are more parameters like barPadding, strokeWidth, fill, opacity...
+They will be documented soon.
+
+```javascript
+var xScale = d3.scale.ordinal(); //... + set it up appropriately
+var yScale = d3.scale.linear();
+var colorScale = d3.scale.category20();
+
+<BarChart xScale={xScale}
+	  yScale={yScale}
+	  colorScale={colorScale}
+	  barPadding={0.3}
+          data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
    

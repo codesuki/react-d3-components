@@ -11,7 +11,8 @@
     "d3",
     "react",
     "graph",
-    "visualization"
+    "visualization",
+    "chart"
   ],
   "author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
   "license": "MIT",
