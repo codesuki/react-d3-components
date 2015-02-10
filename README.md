@@ -43,6 +43,22 @@ Example
 =======
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
 
+BarChart
+--------
+```javascript
+var BarChart = ReactD3.BarChart;
+
+var data = [{
+    label: 'somethingA',
+    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+}];
+
+React.render(
+    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('location')
+);
+```
+
 Custom Accessors
 ---------------
 ```javascript
@@ -60,20 +76,29 @@ React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10,
     document.getElementById('location')
 ```
 
-BarChart
---------
+Overriding default parameters / Customization
+---------------------------------------------
+All Charts provide defaults for scales, colors, etc...
+If you want to use your own scale just pass it to the charts constructor.
+
+The scales are normal D3 objects, their documentation can be found [here](https://github.com/mbostock/d3/wiki/Ordinal-Scales) and [here](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
+
+There are more parameters like barPadding, strokeWidth, fill, opacity...
+They will be documented soon.
+
 ```javascript
-var BarChart = ReactD3.BarChart;
+var xScale = d3.scale.ordinal(); //... + set it up appropriately
+var yScale = d3.scale.linear();
+var colorScale = d3.scale.category20();
 
-var data = [{
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-}];
-
-React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
-);
+<BarChart xScale={xScale}
+	  yScale={yScale}
+	  colorScale={colorScale}
+	  barPadding={0.3}
+	  data={data}
+	  width={400}
+	  height={400}
+	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
 
 StackedBarChart
@@ -148,28 +173,4 @@ React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bo
 );
 ```
 
-Overriding default parameters / Customization
----------------------------------------------
-All Charts provide defaults for scales, colors, etc...
-If you want to use your own scale just pass it to the charts constructor.
-
-The scales are normal D3 objects, their documentation can be found [here](https://github.com/mbostock/d3/wiki/Ordinal-Scales) and [here](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
-
-There are more parameters like barPadding, strokeWidth, fill, opacity...
-They will be documented soon.
-
-```javascript
-var xScale = d3.scale.ordinal(); //... + set it up appropriately
-var yScale = d3.scale.linear();
-var colorScale = d3.scale.category20();
-
-<BarChart xScale={xScale}
-	  yScale={yScale}
-	  colorScale={colorScale}
-	  barPadding={0.3}
-	  data={data}
-	  width={400}
-	  height={400}
-	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
-```
    
