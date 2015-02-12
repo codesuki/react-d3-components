@@ -8,7 +8,7 @@ Let React have complete control over the DOM even when using D3. This way we can
 * [Installation](#installation)
 * [Description](#description)
 * [Features](#features)
-* [ToDo](#todo)
+* [Todo](#todo)
 * [Examples](#examples)
   * [Bar Chart](#barchart)
   * [Custom accessors](#custom-accessors)
@@ -40,7 +40,7 @@ If you like the project please consider star'ing and a pull request. I am open f
 * Stacked Area Chart
 * Pie Plot
 
-## ToDo
+## Todo
 * More Charts
 * Animations
 * Tooltip
