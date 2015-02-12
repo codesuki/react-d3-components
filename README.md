@@ -4,8 +4,7 @@
 
 Let React have complete control over the DOM even when using D3. This way we can benefit from Reacts Virtual DOM.
 
-Table of Contents
-=================
+## Table of Contents
 * [Installation](#installation)
 * [Description](#description)
 * [Features](#features)
@@ -20,20 +19,18 @@ Table of Contents
 * [Screenshots](#screenshots)
 
 
-Installation {#installation}
-============
+## Installation
 ```
 npm install react-d3-components
 ```
 
-Description {#description}
-===========
+## Description
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
 I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked variant when given an array as input.
 
 If you like the project please consider star'ing and a pull request. I am open for any additions.
 
-Features  {#features}
+Features
 --------
 * Custom accessors to support any data format
 * Negative axes
@@ -46,7 +43,7 @@ Features  {#features}
 * Stacked Area Chart
 * Pie Plot
 
-ToDo (in no particular order)  {#todo}
+ToDo
 -----------------------------
 * More Charts
 * Animations
