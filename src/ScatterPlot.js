@@ -11,107 +11,107 @@ let AccessorMixin = require('./AccessorMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
 
 let DataSet = React.createClass({
-    propTypes: {
-	data: React.PropTypes.array.isRequired,
-	symbol: React.PropTypes.func.isRequired,
-	xScale: React.PropTypes.func.isRequired,
-	yScale: React.PropTypes.func.isRequired,
-	colorScale: React.PropTypes.func.isRequired
-    },
-    
-    render() {
-	let {data, symbol, xScale, yScale, colorScale, values, x, y} = this.props;
+	propTypes: {
+		data: React.PropTypes.array.isRequired,
+		symbol: React.PropTypes.func.isRequired,
+		xScale: React.PropTypes.func.isRequired,
+		yScale: React.PropTypes.func.isRequired,
+		colorScale: React.PropTypes.func.isRequired
+	},
 
-	let circles = data.map(stack => {
-	    return values(stack).map(e => {
-		let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
+	render() {
+		let {data, symbol, xScale, yScale, colorScale, values, x, y} = this.props;
+
+		let circles = data.map(stack => {
+			return values(stack).map(e => {
+				let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
+				return (
+						<path
+					className="dot"
+					d={symbol()}
+					transform={translate}
+					fill={colorScale(stack.label)}
+						/>
+				);
+			});
+		});
+
 		return (
-			<path
-		    className="dot"
-		    d={symbol()}
-		    transform={translate}
-		    fill={colorScale(stack.label)}
-			/>
+				<g>
+				{circles}
+			</g>
 		);
-	    });
-	});
-
-	return (
-		<g>
-		{circles}
-		</g>
-	);
-    }
+	}
 });
 
 let ScatterPlot = React.createClass({
-    mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
 
-    propTypes: {
-	rScale: React.PropTypes.func,
-	shape: React.PropTypes.string
-    },
+	propTypes: {
+		rScale: React.PropTypes.func,
+		shape: React.PropTypes.string
+	},
 
-    getDefaultProps() {
-	return {
-	    rScale: null,
-	    shape: 'circle'
-	};
-    },
-    
-    render() {
-	let {data,
-	     height,
-	     width,
-	     innerHeight,
-	     innerWidth,
-	     margin,
-	     xScale,
-	     yScale,
-	     colorScale,
-	     rScale,
-	     shape,
-	     xIntercept,
-	     yIntercept,
-	     values,
-	     x,
-	     y} = this.props;
+	getDefaultProps() {
+		return {
+			rScale: null,
+			shape: 'circle'
+		};
+	},
 
-	let symbol = d3.svg.symbol().type(shape);
+	render() {
+		let {data,
+			 height,
+			 width,
+			 innerHeight,
+			 innerWidth,
+			 margin,
+			 xScale,
+			 yScale,
+			 colorScale,
+			 rScale,
+			 shape,
+			 xIntercept,
+			 yIntercept,
+			 values,
+			 x,
+			 y} = this.props;
 
-	if (rScale) {
-	    symbol = symbol.size(rScale);
+		let symbol = d3.svg.symbol().type(shape);
+
+		if (rScale) {
+			symbol = symbol.size(rScale);
+		}
+
+		return (
+				<Chart height={height} width={width} margin={margin}>
+				<Axis
+			orientation="bottom"
+			scale={xScale}
+			height={innerHeight}
+			zero={yIntercept}
+				/>
+
+				<Axis
+			orientation="left"
+			scale={yScale}
+			width={innerWidth}
+			zero={xIntercept}
+				/>
+
+				<DataSet
+			data={data}
+			xScale={xScale}
+			yScale={yScale}
+			colorScale={colorScale}
+			symbol={symbol}
+			values={values}
+			x={x}
+			y={y}
+				/>
+				</Chart>
+		);
 	}
-
-	return (
-		<Chart height={height} width={width} margin={margin}>
-		<Axis
-	    orientation="bottom"
-	    scale={xScale}
-	    height={innerHeight}
-	    zero={yIntercept}
-		/>
-		
-		<Axis
-	    orientation="left"
-	    scale={yScale}
-	    width={innerWidth}
-	    zero={xIntercept}
-		/>
-
-		<DataSet
-	    data={data}
-	    xScale={xScale}
-	    yScale={yScale}
-	    colorScale={colorScale}
-	    symbol={symbol}
-	    values={values}
-	    x={x}
-	    y={y}
-		/>
-		</Chart>
-	);
-    }
 });
 
 module.exports = ScatterPlot;
