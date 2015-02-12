@@ -20,11 +20,11 @@ let DataSet = React.createClass({
     },
     
     render() {
-	let {data, line, strokeWidth, colorScale} = this.props;
+	let {data, line, strokeWidth, colorScale, values, label} = this.props;
 
 	let lines = data.map(stack => {
 	    return (
-		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={colorScale(stack.label)}/>
+		    <Path className="line" d={line(values(stack))} strokeWidth={strokeWidth} stroke={colorScale(label(stack))}/>
 	    );
 	});
 	    
@@ -68,6 +68,8 @@ let LineChart = React.createClass({
 	     interpolate,
 	     strokeWidth,
 	     stroke,
+	     values,
+	     label,
 	     x,
 	     y} = this.props;
 
@@ -79,7 +81,14 @@ let LineChart = React.createClass({
 	return (
 		<Chart height={height} width={width} margin={margin}>
 
-		<DataSet data={data} line={line} strokeWidth={strokeWidth} colorScale={colorScale}/>
+		<DataSet
+	    data={data}
+	    line={line}
+	    strokeWidth={strokeWidth}
+	    colorScale={colorScale}
+	    values={values}
+	    label={label}
+		/>
 
 		<Axis
 	    orientation="bottom"

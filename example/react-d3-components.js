@@ -27829,14 +27829,16 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var colorScale = this.props.colorScale;
 		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
+		var values = this.props.values;
+		var label = this.props.label;
 
 
 		var areas = data.map(function (stack) {
-			return React.createElement(Path, { className: "area", stroke: "none", fill: colorScale(stack.label), d: area(stack.values) });
+			return React.createElement(Path, { className: "area", stroke: "none", fill: colorScale(label(stack)), d: area(values(stack)) });
 		});
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(stack.values), strokeWidth: strokeWidth, stroke: stroke(stack.label) });
+			return React.createElement(Path, { className: "line", d: line(values(stack)), strokeWidth: strokeWidth, stroke: stroke(label(stack)) });
 		});
 
 		return React.createElement("g", null, areas, lines);
@@ -27879,6 +27881,8 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var offset = this.props.offset;
 		var xIntercept = this.props.xIntercept;
 		var yIntercept = this.props.yIntercept;
+		var values = this.props.values;
+		var label = this.props.label;
 		var x = this.props.x;
 		var y = this.props.y;
 		var y0 = this.props.y0;
@@ -27898,15 +27902,25 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			return yScale(y0(e) + y(e));
 		}).interpolate(interpolate);
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, { data: data, line: line, area: area, colorScale: colorScale, strokeWidth: strokeWidth, stroke: stroke }), React.createElement(Axis, {
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+			data: data,
+			line: line,
+			area: area,
+			colorScale: colorScale,
+			strokeWidth: strokeWidth,
+			stroke: stroke,
+			label: label,
+			values: values }), React.createElement(Axis, {
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept }), React.createElement(Axis, {
+			zero: yIntercept,
+			className: "x axis" }), React.createElement(Axis, {
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth,
-			zero: xIntercept }));
+			zero: xIntercept,
+			className: "y axis" }));
 	}
 });
 
@@ -28012,6 +28026,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		}
 
 		// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
+		// try ticks=ticks.filter(d!=0) instead of tickFormat
 		if (zero != height && zero != width && zero != 0) {
 			(function () {
 				var originalTickFormat = tickFormat;
@@ -28142,16 +28157,21 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var xScale = this.props.xScale;
 		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
+		var values = this.props.values;
+		var label = this.props.label;
+		var x = this.props.x;
+		var y = this.props.y;
+		var y0 = this.props.y0;
 
 
 		var bars = data.map(function (stack) {
-			return stack.values.map(function (e) {
+			return values(stack).map(function (e) {
 				return React.createElement(Bar, {
-					x: xScale(e.x),
+					x: xScale(x(e)),
 					width: xScale.rangeBand(),
-					y: yScale(e.y0 + e.y),
-					height: yScale(yScale.domain()[0]) - yScale(e.y),
-					fill: colorScale(stack.label) });
+					y: yScale(y0(e) + y(e)),
+					height: yScale(yScale.domain()[0]) - yScale(y(e)),
+					fill: colorScale(label(stack)) });
 			});
 		});
 
@@ -28186,13 +28206,23 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var colorScale = this.props.colorScale;
 		var barPadding = this.props.barPadding;
 		var offset = this.props.offset;
+		var values = this.props.values;
+		var label = this.props.label;
+		var y = this.props.y;
+		var y0 = this.props.y0;
+		var x = this.props.x;
 
 
 		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
 			yScale: yScale,
-			colorScale: colorScale }), React.createElement(Axis, {
+			colorScale: colorScale,
+			values: values,
+			label: label,
+			y: y,
+			y0: y0,
+			x: x }), React.createElement(Axis, {
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight }), React.createElement(Axis, {
@@ -28212,20 +28242,26 @@ module.exports = BarChart;
 var React = require("react");
 
 var Chart = React.createClass({ displayName: "Chart",
-	propTypes: {
-		height: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		margin: React.PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
-		}).isRequired
-	},
+			propTypes: {
+						height: React.PropTypes.number.isRequired,
+						width: React.PropTypes.number.isRequired,
+						margin: React.PropTypes.shape({
+									top: React.PropTypes.number,
+									bottom: React.PropTypes.number,
+									left: React.PropTypes.number,
+									right: React.PropTypes.number
+						}).isRequired
+			},
 
-	render: function render() {
-		return React.createElement("svg", { ref: "svg", width: this.props.width, height: this.props.height }, React.createElement("g", { transform: "translate(" + this.props.margin.left + ", " + this.props.margin.top + ")" }, this.props.children));
-	}
+			render: function render() {
+						var width = this.props.width;
+						var height = this.props.height;
+						var margin = this.props.margin;
+						var children = this.props.children;
+
+
+						return React.createElement("svg", { ref: "svg", width: width, height: height }, React.createElement("g", { transform: "translate(" + margin.left + ", " + margin.top + ")" }, children));
+			}
 });
 
 module.exports = Chart;
@@ -28448,10 +28484,12 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var line = this.props.line;
 		var strokeWidth = this.props.strokeWidth;
 		var colorScale = this.props.colorScale;
+		var values = this.props.values;
+		var label = this.props.label;
 
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(stack.values), strokeWidth: strokeWidth, stroke: colorScale(stack.label) });
+			return React.createElement(Path, { className: "line", d: line(values(stack)), strokeWidth: strokeWidth, stroke: colorScale(label(stack)) });
 		});
 
 		return React.createElement("g", null, lines);
@@ -28486,6 +28524,8 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var interpolate = this.props.interpolate;
 		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
+		var values = this.props.values;
+		var label = this.props.label;
 		var x = this.props.x;
 		var y = this.props.y;
 
@@ -28496,7 +28536,13 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			return yScale(y(e));
 		}).interpolate(interpolate);
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, { data: data, line: line, strokeWidth: strokeWidth, colorScale: colorScale }), React.createElement(Axis, {
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+			data: data,
+			line: line,
+			strokeWidth: strokeWidth,
+			colorScale: colorScale,
+			values: values,
+			label: label }), React.createElement(Axis, {
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight }), React.createElement(Axis, {

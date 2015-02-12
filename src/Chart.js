@@ -13,11 +13,11 @@ let Chart = React.createClass({
     },
 
     render() {
+	let {width, height, margin, children} = this.props;
+	
 	return (
-		<svg ref="svg" width={this.props.width} height={this.props.height}>
-		<g transform={`translate(${this.props.margin.left}, ${this.props.margin.top})`}>
-		{this.props.children}
-	        </g>
+		<svg ref="svg" width={width} height={height}>
+		<g transform={`translate(${margin.left}, ${margin.top})`}>{children}</g>
 		</svg>
 	);
     }

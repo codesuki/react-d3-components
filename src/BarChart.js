@@ -21,17 +21,17 @@ let DataSet = React.createClass({
     },
     
     render() {
-	let {data, xScale, yScale, colorScale} = this.props;
+	let {data, xScale, yScale, colorScale, values, label, x, y, y0} = this.props;
 
 	let bars = data.map(stack => {
-	    return stack.values.map(e => {
+	    return values(stack).map(e => {
 		return (
 			<Bar
-		    x={xScale(e.x)}
+		    x={xScale(x(e))}
 		    width={xScale.rangeBand()}
-		    y={yScale(e.y0 + e.y)}
-		    height={yScale(yScale.domain()[0]) - yScale(e.y)}
-		    fill={colorScale(stack.label)}
+		    y={yScale(y0(e) + y(e))}
+		    height={yScale(yScale.domain()[0]) - yScale(y(e))}
+		    fill={colorScale(label(stack))}
 			/>
 		);
 	    });
@@ -76,7 +76,12 @@ let BarChart = React.createClass({
 	     yScale,
 	     colorScale,
 	     barPadding,
-	     offset} = this.props;
+	     offset,
+	     values,
+	     label,
+	     y,
+	     y0,
+	     x} = this.props;
 
 	return (
 		<Chart height={height} width={width} margin={margin}>
@@ -85,6 +90,11 @@ let BarChart = React.createClass({
 	    xScale={xScale}
 	    yScale={yScale}
 	    colorScale={colorScale}
+	    values={values}
+	    label={label}
+	    y={y}
+	    y0={y0}
+	    x={x}
 		/>
 
 		<Axis

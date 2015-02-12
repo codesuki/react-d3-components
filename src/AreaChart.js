@@ -23,17 +23,17 @@ let DataSet = React.createClass({
     },
     
     render() {
-	let {data, area, line, colorScale, strokeWidth, stroke} = this.props;
+	let {data, area, line, colorScale, strokeWidth, stroke, values, label} = this.props;
 	
 	let areas = data.map(stack => {
 	    return (
-		    <Path className="area" stroke="none" fill={colorScale(stack.label)} d={area(stack.values)}/>
+		    <Path className="area" stroke="none" fill={colorScale(label(stack))} d={area(values(stack))}/>
 	    );
 	});
 
 	let lines = data.map(stack => {
 	    return (
-		    <Path className="line" d={line(stack.values)} strokeWidth={strokeWidth} stroke={stroke(stack.label)}/>
+		    <Path className="line" d={line(values(stack))} strokeWidth={strokeWidth} stroke={stroke(label(stack))}/>
 	    );
 	});
 	
@@ -86,6 +86,8 @@ let AreaChart = React.createClass({
 	     offset,
 	     xIntercept,
 	     yIntercept,
+	     values,
+	     label,
 	     x,
 	     y,
 	     y0} = this.props;
@@ -104,13 +106,23 @@ let AreaChart = React.createClass({
 	return (
 		<Chart height={height} width={width} margin={margin}>
 		
-		<DataSet data={data} line={line} area={area} colorScale={colorScale} strokeWidth={strokeWidth} stroke={stroke}/>
+		<DataSet
+	    data={data}
+	    line={line}
+	    area={area}
+	    colorScale={colorScale}
+	    strokeWidth={strokeWidth}
+	    stroke={stroke}
+	    label={label}
+	    values={values}
+		/>
 	    
 		<Axis
 	    orientation="bottom"
 	    scale={xScale}
 	    height={innerHeight}
 	    zero={yIntercept}
+	    className={"x axis"}
 		/>
 		
 		<Axis
@@ -118,6 +130,7 @@ let AreaChart = React.createClass({
 	    scale={yScale}
 	    width={innerWidth}
 	    zero={xIntercept}
+	    className={"y axis"}
 		/>
 		</Chart>
 	);
