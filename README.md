@@ -14,7 +14,7 @@ Let React have complete control over the DOM even when using D3. This way we can
   * [Custom accessors](#custom-accessors)
   * [Customization](#overriding-default-parameters)
   * [Stacked Bar Chart](#stackedbarchart)
-  * [Scatter, Line and Area Charts](#scatterplot-&amp;-LineChart-&amp;-AreaChart)
+  * [Scatter, Line and Area Charts](#other-charts)
   * [Pie Chart](#piechart)
 
 ## Installation
@@ -137,7 +137,7 @@ React.render(
 ![stackedbarchart][stackedbarchart]
 [stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
 
-### Scatterplot & LineChart & AreaChart
+### Other Charts
 ```javascript
 var ScatterPlot = ReactD3.ScatterPlot;
 var LineChart = ReactD3.LineChart;
