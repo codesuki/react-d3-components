@@ -39,9 +39,27 @@ ToDo (in no particular order)
 * Documentation
 * Tests
 
-Example
-=======
+Examples
+========
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
+
+![barchart][barchart]
+[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
+
+![stackedbarchart][stackedbarchart]
+[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
+
+![scatterplot][scatterplot]
+[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
+
+![linechart][linechart]
+[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
+
+![areachart][areachart]
+[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
+
+![piechart][piechart]
+[piechart]: http://codesuki.github.io/react-d3-components/piechart.png
 
 BarChart
 --------
@@ -49,13 +67,13 @@ BarChart
 var BarChart = ReactD3.BarChart;
 
 var data = [{
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 }];
 
 React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
+	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('location')
 );
 ```
 
@@ -63,8 +81,8 @@ Custom Accessors
 ---------------
 ```javascript
 data = [{
-    customLabel: 'somethingA',
-    customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
+	customLabel: 'somethingA',
+	customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
 }];
 
 var labelAccessor = function(stack) { return stack.customLabel; };
@@ -73,7 +91,7 @@ var xAccessor = function(element) { return element[0]; };
 var yAccessor = function(element) { return element[1]; };
 
 React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
-    document.getElementById('location')
+	document.getElementById('location')
 ```
 
 Overriding default parameters / Customization
@@ -107,23 +125,23 @@ StackedBarChart
 var BarChart = ReactD3.BarChart;
 
 data = [
-    {
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-    },
-    {
-    label: 'somethingB',
-    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-    },
-    {
-    label: 'somethingC',
-    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-    }
+	{
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	},
+	{
+	label: 'somethingB',
+	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+	},
+	{
+	label: 'somethingC',
+	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+	}
 ];
 
 React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
+	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('location')
 );
 ```
 
@@ -135,26 +153,26 @@ var LineChart = ReactD3.LineChart;
 var AreaChart = ReactD3.AreaChart;
 
 data = [
-    {
-    label: 'somethingA',
-    values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
-    },
-    {
-    label: 'somethingB',
-    values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
-    }
+	{
+	label: 'somethingA',
+	values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
+	},
+	{
+	label: 'somethingB',
+	values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
+	}
 ];
-   
+
 React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
+	document.getElementById('location')
 );
 
 React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
+	document.getElementById('location')
 );
 
 React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('location')
+	document.getElementById('location')
 );
 ```
 
@@ -164,13 +182,11 @@ PieChart
 var PieChart = ReactD3.PieChart;
 
 data = {
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 };
-    
+
 React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
-    document.getElementById('location')
+	document.getElementById('location')
 );
 ```
-
-   
