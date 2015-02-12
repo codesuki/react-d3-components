@@ -14,10 +14,8 @@ Let React have complete control over the DOM even when using D3. This way we can
   * [Custom accessors](#custom-accessors)
   * [Customization](#overriding-default-parameters)
   * [Stacked Bar Chart](#stackedbarchart)
-  * [Scatter, Line and Area Charts](#scatterplot-&-LineChart-&-AreaChart)
+  * [Scatter, Line and Area Charts](#scatterplot-&amp;-LineChart-&amp;-AreaChart)
   * [Pie Chart](#piechart)
-* [Screenshots](#screenshots)
-
 
 ## Installation
 ```
@@ -67,6 +65,9 @@ React.render(
 	document.getElementById('location')
 );
 ```
+
+![barchart][barchart]
+[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
 
 ### Custom Accessors
 ```javascript
@@ -133,6 +134,9 @@ React.render(
 );
 ```
 
+![stackedbarchart][stackedbarchart]
+[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
+
 ### Scatterplot & LineChart & AreaChart
 ```javascript
 var ScatterPlot = ReactD3.ScatterPlot;
@@ -163,6 +167,15 @@ React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, b
 );
 ```
 
+![scatterplot][scatterplot]
+[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
+
+![linechart][linechart]
+[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
+
+![areachart][areachart]
+[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
+
 ### PieChart
 ```javascript
 var PieChart = ReactD3.PieChart;
@@ -176,23 +189,6 @@ React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bo
 	document.getElementById('location')
 );
 ```
-
-Screenshots  {#screenshots}
-===========
-![barchart][barchart]
-[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
-
-![stackedbarchart][stackedbarchart]
-[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
-
-![scatterplot][scatterplot]
-[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
-
-![linechart][linechart]
-[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
-
-![areachart][areachart]
-[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
 
 ![piechart][piechart]
 [piechart]: http://codesuki.github.io/react-d3-components/piechart.png
