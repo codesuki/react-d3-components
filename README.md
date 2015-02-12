@@ -4,20 +4,36 @@
 
 Let React have complete control over the DOM even when using D3. This way we can benefit from Reacts Virtual DOM.
 
-Installation
+Table of Contents
+=================
+* [Installation](#installation)
+* [Description](#description)
+* [Features](#features)
+* [ToDo](#todo)
+* [Examples](#examples)
+  * [Bar Chart](#barchart)
+  * [Custom accessors](#accessors)
+  * [Customization](#customization)
+  * [Stacked Bar Chart](#stackedbarchart)
+  * [More charts](#othercharts)
+  * [Pie chart](#piechart)
+* [Screenshots](#screenshots)
+
+
+Installation {#installation}
 ============
 ```
 npm install react-d3-components
 ```
 
-Description
+Description {#description}
 ===========
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
 I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked variant when given an array as input.
 
 If you like the project please consider star'ing and a pull request. I am open for any additions.
 
-Features
+Features  {#features}
 --------
 * Custom accessors to support any data format
 * Negative axes
@@ -30,7 +46,7 @@ Features
 * Stacked Area Chart
 * Pie Plot
 
-ToDo (in no particular order)
+ToDo (in no particular order)  {#todo}
 -----------------------------
 * More Charts
 * Animations
@@ -39,29 +55,11 @@ ToDo (in no particular order)
 * Documentation
 * Tests
 
-Examples
+Examples  {#examples}
 ========
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
 
-![barchart][barchart]
-[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
-
-![stackedbarchart][stackedbarchart]
-[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
-
-![scatterplot][scatterplot]
-[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
-
-![linechart][linechart]
-[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
-
-![areachart][areachart]
-[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
-
-![piechart][piechart]
-[piechart]: http://codesuki.github.io/react-d3-components/piechart.png
-
-BarChart
+BarChart  {#barchart}
 --------
 ```javascript
 var BarChart = ReactD3.BarChart;
@@ -77,7 +75,7 @@ React.render(
 );
 ```
 
-Custom Accessors
+Custom Accessors  {#accessors}
 ---------------
 ```javascript
 data = [{
@@ -94,7 +92,7 @@ React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10,
 	document.getElementById('location')
 ```
 
-Overriding default parameters / Customization
+Overriding default parameters / Customization  {#customization}
 ---------------------------------------------
 All Charts provide defaults for scales, colors, etc...
 If you want to use your own scale just pass it to the charts constructor.
@@ -119,7 +117,7 @@ var colorScale = d3.scale.category20();
 	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
 
-StackedBarChart
+StackedBarChart  {#stackedbarchart}
 --------
 ```javascript
 var BarChart = ReactD3.BarChart;
@@ -145,7 +143,7 @@ React.render(
 );
 ```
 
-ScatterPlot & LineChart & AreaChart
+ScatterPlot & LineChart & AreaChart  {#othercharts}
 -----------------------------------
 ```javascript
 var ScatterPlot = ReactD3.ScatterPlot;
@@ -176,7 +174,7 @@ React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, b
 );
 ```
 
-PieChart
+PieChart  {#piechart}
 --------
 ```javascript
 var PieChart = ReactD3.PieChart;
@@ -190,3 +188,23 @@ React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bo
 	document.getElementById('location')
 );
 ```
+
+Screenshots  {#screenshots}
+===========
+![barchart][barchart]
+[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
+
+![stackedbarchart][stackedbarchart]
+[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
+
+![scatterplot][scatterplot]
+[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
+
+![linechart][linechart]
+[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
+
+![areachart][areachart]
+[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
+
+![piechart][piechart]
+[piechart]: http://codesuki.github.io/react-d3-components/piechart.png
