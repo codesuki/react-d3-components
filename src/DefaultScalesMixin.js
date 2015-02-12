@@ -1,4 +1,4 @@
-let d3 = require('d3');
+let d3 = require('./D3Provider');
 
 let DefaultScalesMixin = {
 	componentWillMount() {

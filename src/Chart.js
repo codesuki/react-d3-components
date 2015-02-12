@@ -1,4 +1,4 @@
-let React = require('react');
+let React = require('./ReactProvider');
 
 let Chart = React.createClass({
 	propTypes: {

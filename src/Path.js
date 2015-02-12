@@ -1,5 +1,5 @@
-let React = require('react');
-let d3 = require('d3');
+let React = require('./ReactProvider');
+let d3 = require('./D3Provider');
 
 let Path = React.createClass({
 	propTypes: {

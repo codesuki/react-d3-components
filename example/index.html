@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
   <script src="react-d3-components.js"></script>
 </head>
 <body>
@@ -23,134 +24,134 @@
   <div id="piechart"></div>
 
   <script type="text/jsx;harmony=true">
-    var BarChart = ReactD3.BarChart;
-    var PieChart = ReactD3.PieChart;
-    var AreaChart = ReactD3.AreaChart;
-    var LineChart = ReactD3.LineChart;
-    var ScatterPlot = ReactD3.ScatterPlot;
+	var BarChart = ReactD3.BarChart;
+	var PieChart = ReactD3.PieChart;
+	var AreaChart = ReactD3.AreaChart;
+	var LineChart = ReactD3.LineChart;
+	var ScatterPlot = ReactD3.ScatterPlot;
 
-    var data = [{
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-    }];
-     
-    React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('barchart')
-    );
+	var data = [{
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	}];
 
-    data = [{
-    customLabel: 'somethingA',
-    customValues: [['SomethingA', 10], ['SomethingB', 4], ['SomethingC', 3]]
-    }];
-    var labelAccessor = function(stack) { return stack.customLabel; };
-    var valuesAccessor = function(stack) { return stack.customValues; };
-    var xAccessor = function(element) { return element[0]; };
-    var yAccessor = function(element) { return element[1]; };
+	React.render(
+	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('barchart')
+	);
 
-    React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}
-	      label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}
-	      />,
-    document.getElementById('barchart2')
-    );
-    
-    data = [
-    {
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-    },
-    {
-    label: 'somethingB',
-    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-    },
-    {
-    label: 'somethingC',
-    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-    }
-    ];
-     
-    React.render(
-    <BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('stackedbarchart')
-    );
-   
+	data = [{
+	customLabel: 'somethingA',
+	customValues: [['SomethingA', 10], ['SomethingB', 4], ['SomethingC', 3]]
+	}];
+	var labelAccessor = function(stack) { return stack.customLabel; };
+	var valuesAccessor = function(stack) { return stack.customValues; };
+	var xAccessor = function(element) { return element[0]; };
+	var yAccessor = function(element) { return element[1]; };
 
-    data = {
-    label: 'somethingA',
-    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-    };
-    
-    React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
-    document.getElementById('piechart')
-    );
+	React.render(
+	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}
+		  label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}
+		  />,
+	document.getElementById('barchart2')
+	);
 
-    data = [{
-    label: 'somethingA',
-    values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
-    },
-    {
-    label: 'somethingB',
-    values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
-    }];
-   
-    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('scatterplot2')
-    );
+	data = [
+	{
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	},
+	{
+	label: 'somethingB',
+	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+	},
+	{
+	label: 'somethingC',
+	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+	}
+	];
 
-    React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('stackedareachart')
-    );
-    
-    React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('linechart')
-    );
-
-    data = [{
-    label: 'somethingA',
-    values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
-    }];
-
-    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('scatterplot')
-    );
-
-    React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('areachart')
-    );
+	React.render(
+	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('stackedbarchart')
+	);
 
 
-    data = [{
-    label: 'somethingA',
-    values: [{x: 0, y: 3}, {x: 1.3, y: -4}, {x: 3, y: 7}, {x: -3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: -7.8}, {x: 5.5, y: 9}, {x: -3.2, y: 5.6}]
-    }];
+	data = {
+	label: 'somethingA',
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	};
 
-    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-    document.getElementById('scatterplot3')
-    );
+	React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
+	document.getElementById('piechart')
+	);
+
+	data = [{
+	label: 'somethingA',
+	values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
+	},
+	{
+	label: 'somethingB',
+	values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
+	}];
+
+	React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('scatterplot2')
+	);
+
+	React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('stackedareachart')
+	);
+
+	React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('linechart')
+	);
+
+	data = [{
+	label: 'somethingA',
+	values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
+	}];
+
+	React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('scatterplot')
+	);
+
+	React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('areachart')
+	);
 
 
-    data = [{
-    customLabel: 'somethingA',
-    customValues: [[0, 3], [1.3, 4], [3, 7], [3.5, 8], [4, 7], [4.5, 7],  [5, 7.8]]
-    }];
+	data = [{
+	label: 'somethingA',
+	values: [{x: 0, y: 3}, {x: 1.3, y: -4}, {x: 3, y: 7}, {x: -3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: -7.8}, {x: 5.5, y: 9}, {x: -3.2, y: 5.6}]
+	}];
 
-    var labelAccessor = function(stack) { return stack.customLabel; };
-    var valuesAccessor = function(stack) { return stack.customValues; };
-    var xAccessor = function(element) { return element[0]; };
-    var yAccessor = function(element) { return element[1]; };
+	React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	document.getElementById('scatterplot3')
+	);
 
-    React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
-    document.getElementById('scatterplot4')
-    );
 
-    React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
-    document.getElementById('areachart2')
-    );
+	data = [{
+	customLabel: 'somethingA',
+	customValues: [[0, 3], [1.3, 4], [3, 7], [3.5, 8], [4, 7], [4.5, 7],  [5, 7.8]]
+	}];
 
-    React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
-    document.getElementById('linechart2')
-    );
+	var labelAccessor = function(stack) { return stack.customLabel; };
+	var valuesAccessor = function(stack) { return stack.customValues; };
+	var xAccessor = function(element) { return element[0]; };
+	var yAccessor = function(element) { return element[1]; };
+
+	React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
+	document.getElementById('scatterplot4')
+	);
+
+	React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
+	document.getElementById('areachart2')
+	);
+
+	React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
+	document.getElementById('linechart2')
+	);
   </script>
 </body>
 </html>
