@@ -11,11 +11,11 @@ Let React have complete control over the DOM even when using D3. This way we can
 * [ToDo](#todo)
 * [Examples](#examples)
   * [Bar Chart](#barchart)
-  * [Custom accessors](#accessors)
-  * [Customization](#customization)
+  * [Custom accessors](#custom-accessors)
+  * [Customization](#overriding-default-parameters)
   * [Stacked Bar Chart](#stackedbarchart)
-  * [More charts](#othercharts)
-  * [Pie chart](#piechart)
+  * [Scatter, Line and Area Charts](#scatterplot-&-LineChart-&-AreaChart)
+  * [Pie Chart](#piechart)
 * [Screenshots](#screenshots)
 
 
@@ -30,8 +30,7 @@ I try to provide sensible defaults, but since for most use-cases we need to cust
 
 If you like the project please consider star'ing and a pull request. I am open for any additions.
 
-Features
---------
+## Features
 * Custom accessors to support any data format
 * Negative axes
 * CSS classes to allow styling
@@ -43,8 +42,7 @@ Features
 * Stacked Area Chart
 * Pie Plot
 
-ToDo
------------------------------
+## ToDo
 * More Charts
 * Animations
 * Tooltip
@@ -52,12 +50,10 @@ ToDo
 * Documentation
 * Tests
 
-Examples  {#examples}
-========
+## Examples
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
 
-BarChart  {#barchart}
---------
+### BarChart
 ```javascript
 var BarChart = ReactD3.BarChart;
 
@@ -72,8 +68,7 @@ React.render(
 );
 ```
 
-Custom Accessors  {#accessors}
----------------
+### Custom Accessors
 ```javascript
 data = [{
 	customLabel: 'somethingA',
@@ -89,8 +84,7 @@ React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10,
 	document.getElementById('location')
 ```
 
-Overriding default parameters / Customization  {#customization}
----------------------------------------------
+### Overriding default parameters
 All Charts provide defaults for scales, colors, etc...
 If you want to use your own scale just pass it to the charts constructor.
 
@@ -114,8 +108,7 @@ var colorScale = d3.scale.category20();
 	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
 
-StackedBarChart  {#stackedbarchart}
---------
+### StackedBarChart
 ```javascript
 var BarChart = ReactD3.BarChart;
 
@@ -140,8 +133,7 @@ React.render(
 );
 ```
 
-ScatterPlot & LineChart & AreaChart  {#othercharts}
------------------------------------
+### Scatterplot & LineChart & AreaChart
 ```javascript
 var ScatterPlot = ReactD3.ScatterPlot;
 var LineChart = ReactD3.LineChart;
@@ -171,8 +163,7 @@ React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, b
 );
 ```
 
-PieChart  {#piechart}
---------
+### PieChart
 ```javascript
 var PieChart = ReactD3.PieChart;
 
