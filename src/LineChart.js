@@ -4,12 +4,14 @@ let d3 = require('./D3Provider');
 let Chart = require('./Chart');
 let Axis = require('./Axis');
 let Path = require('./Path');
+let Tooltip = require('./Tooltip');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
 let AccessorMixin = require('./AccessorMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
+let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
 	propTypes: {
@@ -19,11 +21,25 @@ let DataSet = React.createClass({
 	},
 
 	render() {
-		let {data, line, strokeWidth, colorScale, values, label} = this.props;
+		let {data,
+			 line,
+			 strokeWidth,
+			 colorScale,
+			 values,
+			 label,
+			 onMouseEnter,
+			 onMouseLeave} = this.props;
 
 		let lines = data.map(stack => {
 			return (
-					<Path className="line" d={line(values(stack))}  stroke={colorScale(label(stack))}/>
+					<Path
+				className="line"
+				d={line(values(stack))}
+				stroke={colorScale(label(stack))}
+				data={data}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+					/>
 			);
 		});
 
@@ -40,7 +56,8 @@ let LineChart = React.createClass({
 			 HeightWidthMixin,
 			 ArrayifyMixin,
 			 AccessorMixin,
-			 DefaultScalesMixin],
+			 DefaultScalesMixin,
+			 TooltipMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string
@@ -48,7 +65,10 @@ let LineChart = React.createClass({
 
 	getDefaultProps() {
 		return {
-			interpolate: 'linear'
+			interpolate: 'linear',
+			tooltipHtml: (d, position, xScale, yScale) => {
+				return d3.round(yScale.invert(position[1]), 2);
+			}
 		};
 	},
 
@@ -76,6 +96,7 @@ let LineChart = React.createClass({
 				.interpolate(interpolate);
 
 		return (
+				<div>
 				<Chart height={height} width={width} margin={margin}>
 
 				<DataSet
@@ -85,6 +106,8 @@ let LineChart = React.createClass({
 			colorScale={colorScale}
 			values={values}
 			label={label}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
 				/>
 
 				<Axis
@@ -101,6 +124,13 @@ let LineChart = React.createClass({
 			width={innerWidth}
 				/>
 				</Chart>
+
+				<Tooltip
+			hidden={this.state.tooltip.hidden}
+			top={this.state.tooltip.top}
+			left={this.state.tooltip.left}
+			html={this.state.tooltip.html}/>
+				</div>
 		);
 	}
 });

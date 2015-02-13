@@ -4,6 +4,7 @@ let d3 = require('./D3Provider');
 let Chart = require('./Chart');
 let Axis = require('./Axis');
 let Path = require('./Path');
+let Tooltip = require('./Tooltip');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
@@ -11,6 +12,7 @@ let ArrayifyMixin = require('./ArrayifyMixin');
 let StackAccessorMixin = require('./StackAccessorMixin');
 let StackDataMixin = require('./StackDataMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
+let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
 	propTypes: {
@@ -22,17 +24,36 @@ let DataSet = React.createClass({
 	},
 
 	render() {
-		let {data, area, line, colorScale, stroke, values, label} = this.props;
+		let {data,
+			 area,
+			 line,
+			 colorScale,
+			 stroke,
+			 values,
+			 label,
+			 onMouseEnter,
+			 onMouseLeave} = this.props;
 
 		let areas = data.map(stack => {
 			return (
-					<Path className="area" stroke="none" fill={colorScale(label(stack))} d={area(values(stack))}/>
+					<Path
+				className="area"
+				stroke="none"
+				fill={colorScale(label(stack))}
+				d={area(values(stack))}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+					/>
 			);
 		});
 
 		let lines = data.map(stack => {
 			return (
-					<Path className="line" d={line(values(stack))} stroke={stroke(label(stack))}/>
+					<Path
+				className="line"
+				d={line(values(stack))}
+				stroke={stroke(label(stack))}
+					/>
 			);
 		});
 
@@ -50,7 +71,8 @@ let AreaChart = React.createClass({
 			 ArrayifyMixin,
 			 StackAccessorMixin,
 			 StackDataMixin,
-			 DefaultScalesMixin],
+			 DefaultScalesMixin,
+			 TooltipMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -60,7 +82,10 @@ let AreaChart = React.createClass({
 	getDefaultProps() {
 		return {
 			interpolate: 'linear',
-			stroke: d3.scale.category20()
+			stroke: d3.scale.category20(),
+			tooltipHtml: (d, position, xScale, yScale) => {
+				return d3.round(yScale.invert(position[1]), 2);
+			}
 		};
 	},
 
@@ -97,6 +122,7 @@ let AreaChart = React.createClass({
 				.interpolate(interpolate);
 
 		return (
+			<div>
 				<Chart height={height} width={width} margin={margin}>
 
 				<DataSet
@@ -107,6 +133,8 @@ let AreaChart = React.createClass({
 			stroke={stroke}
 			label={label}
 			values={values}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
 				/>
 
 				<Axis
@@ -125,6 +153,13 @@ let AreaChart = React.createClass({
 			zero={xIntercept}
 				/>
 				</Chart>
+
+				<Tooltip
+			hidden={this.state.tooltip.hidden}
+			top={this.state.tooltip.top}
+			left={this.state.tooltip.left}
+			html={this.state.tooltip.html}/>
+				</div>
 		);
 	}
 });

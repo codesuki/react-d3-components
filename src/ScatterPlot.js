@@ -3,12 +3,14 @@ let d3 = require('./D3Provider');
 
 let Chart = require('./Chart');
 let Axis = require('./Axis');
+let Tooltip = require('./Tooltip');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
 let AccessorMixin = require('./AccessorMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
+let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
 	propTypes: {
@@ -16,11 +18,22 @@ let DataSet = React.createClass({
 		symbol: React.PropTypes.func.isRequired,
 		xScale: React.PropTypes.func.isRequired,
 		yScale: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired
+		colorScale: React.PropTypes.func.isRequired,
+		onMouseEnter: React.PropTypes.func,
+		onMouseLeave: React.PropTypes.func
 	},
 
 	render() {
-		let {data, symbol, xScale, yScale, colorScale, values, x, y} = this.props;
+		let {data,
+			 symbol,
+			 xScale,
+			 yScale,
+			 colorScale,
+			 values,
+			 x,
+			 y,
+			 onMouseEnter,
+			 onMouseLeave} = this.props;
 
 		let circles = data.map(stack => {
 			return values(stack).map(e => {
@@ -31,6 +44,8 @@ let DataSet = React.createClass({
 					d={symbol()}
 					transform={translate}
 					fill={colorScale(stack.label)}
+					onMouseOver={ evt => { onMouseEnter(evt, e); } }
+					onMouseLeave={  evt => { onMouseLeave(evt); } }
 						/>
 				);
 			});
@@ -45,7 +60,12 @@ let DataSet = React.createClass({
 });
 
 let ScatterPlot = React.createClass({
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin,
+			 HeightWidthMixin,
+			 ArrayifyMixin,
+			 AccessorMixin,
+			 DefaultScalesMixin,
+			 TooltipMixin],
 
 	propTypes: {
 		rScale: React.PropTypes.func,
@@ -55,7 +75,10 @@ let ScatterPlot = React.createClass({
 	getDefaultProps() {
 		return {
 			rScale: null,
-			shape: 'circle'
+			shape: 'circle',
+			tooltipHtml: (d, position, xScale, yScale) => {
+				return d.y.toString();
+			}
 		};
 	},
 
@@ -84,6 +107,7 @@ let ScatterPlot = React.createClass({
 		}
 
 		return (
+			<div>
 				<Chart height={height} width={width} margin={margin}>
 				<Axis
 			orientation="bottom"
@@ -108,8 +132,17 @@ let ScatterPlot = React.createClass({
 			values={values}
 			x={x}
 			y={y}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
 				/>
 				</Chart>
+
+				<Tooltip
+			hidden={this.state.tooltip.hidden}
+			top={this.state.tooltip.top}
+			left={this.state.tooltip.left}
+			html={this.state.tooltip.html}/>
+				</div>
 		);
 	}
 });

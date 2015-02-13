@@ -4,6 +4,7 @@ let d3 = require('./D3Provider');
 let Chart = require('./Chart');
 let Axis = require('./Axis');
 let Bar = require('./Bar');
+let Tooltip = require('./Tooltip');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
@@ -11,6 +12,7 @@ let ArrayifyMixin = require('./ArrayifyMixin');
 let StackAccessorMixin = require('./StackAccessorMixin');
 let StackDataMixin = require('./StackDataMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
+let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
 	propTypes: {
@@ -26,7 +28,17 @@ let DataSet = React.createClass({
 	},
 
 	render() {
-		let {data, xScale, yScale, colorScale, values, label, x, y, y0} = this.props;
+		let {data,
+			 xScale,
+			 yScale,
+			 colorScale,
+			 values,
+			 label,
+			 x,
+			 y,
+			 y0,
+			 onMouseEnter,
+			 onMouseLeave} = this.props;
 
 		let bars = data.map(stack => {
 			return values(stack).map(e => {
@@ -37,6 +49,9 @@ let DataSet = React.createClass({
 					x={xScale(x(e))}
 					y={yScale(y0(e) + y(e))}
 					fill={colorScale(label(stack))}
+					data={e}
+					onMouseEnter={onMouseEnter}
+					onMouseLeave={onMouseLeave}
 						/>
 				);
 			});
@@ -54,7 +69,16 @@ let BarChart = React.createClass({
 			 ArrayifyMixin,
 			 StackAccessorMixin,
 			 StackDataMixin,
-			 DefaultScalesMixin],
+			 DefaultScalesMixin,
+			 TooltipMixin],
+
+	getDefaultProps() {
+		return {
+			tooltipHtml: (d, position, xScale, yScale) => {
+				return d.y.toString();
+			}
+		};
+	},
 
 	render() {
 		let {data,
@@ -73,6 +97,7 @@ let BarChart = React.createClass({
 			 x} = this.props;
 
 		return (
+				<div>
 				<Chart height={height} width={width} margin={margin}>
 				<DataSet
 			data={data}
@@ -84,6 +109,8 @@ let BarChart = React.createClass({
 			y={y}
 			y0={y0}
 			x={x}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
 				/>
 
 				<Axis
@@ -100,6 +127,13 @@ let BarChart = React.createClass({
 			width={innerWidth}
 				/>
 				</Chart>
+
+				<Tooltip
+			hidden={this.state.tooltip.hidden}
+			top={this.state.tooltip.top}
+			left={this.state.tooltip.left}
+			html={this.state.tooltip.html}/>
+				</div>
 		);
 	}
 });

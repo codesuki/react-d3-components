@@ -53,3 +53,14 @@ div {
 	stroke: none;
 	font-weight: bold;
 }
+
+.tooltip {
+	width: 50px;
+	height: 25px;
+	border: 2px solid;
+	border-radius: 4px;
+	background-color: #eee;
+	opacity: 0.6;
+	justify-content: center;
+	align-items: center;
+}

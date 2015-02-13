@@ -7,14 +7,26 @@ let Bar = React.createClass({
 		height: React.PropTypes.number.isRequired,
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		fill: React.PropTypes.string.isRequired
+		fill: React.PropTypes.string.isRequired,
+		data: React.PropTypes.object.isRequired,
+		onMouseEnter: React.PropTypes.func,
+		onMouseLeave: React.PropTypes.func
 	},
 
 	render() {
-		let {x, y, width, height, fill} = this.props;
+		let {x, y, width, height, fill, data, onMouseEnter, onMouseLeave} = this.props;
 
 		return (
-				<rect className="bar" x={x} y={y} width={width} height={height} fill={fill}/>
+				<rect
+			className="bar"
+			x={x}
+			y={y}
+			width={width}
+			height={height}
+			fill={fill}
+			onMouseMove={ e => { onMouseEnter(e, data); } }
+			onMouseLeave={ e => { onMouseLeave(e); } }
+				/>
 		);
 	}
 });
