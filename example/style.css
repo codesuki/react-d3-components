@@ -1,0 +1,55 @@
+body {
+	text-align: center;
+}
+
+div {
+	float: left;
+}
+
+.axis {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+	font: 11px sans-serif;
+	fill: #000;
+	stroke: none;
+	font-weight: bold;
+}
+
+.axis line {
+	stroke: #ccc;
+}
+
+.axis path {
+	stroke: #ccc;
+}
+
+.bar:hover {
+	fill: #E55;
+}
+
+.dot:hover {
+	fill: #E55;
+}
+
+.area:hover {
+	fill: #E55;
+}
+
+.line:hover {
+	stroke: #E55;
+}
+
+.arc path:hover {
+	fill: #E55;
+}
+
+.arc text {
+	font: 11px sans-serif;
+	fill: #000;
+	stroke: none;
+	font-weight: bold;
+}
