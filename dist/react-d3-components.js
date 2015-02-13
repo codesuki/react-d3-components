@@ -27,11 +27,7 @@ var AccessorMixin = {
 				return e.y;
 			},
 			y0: function (e) {
-				if (e.hasOwnProperty("y0")) {
-					return e.y0;
-				} else {
-					return 0;
-				}
+				return 0;
 			}
 		};
 	}
@@ -54,7 +50,7 @@ var Path = require("./Path");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
-var AccessorMixin = require("./AccessorMixin");
+var StackAccessorMixin = require("./StackAccessorMixin");
 var StackDataMixin = require("./StackDataMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
 
@@ -92,7 +88,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var AreaChart = React.createClass({ displayName: "AreaChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, StackDataMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -174,7 +170,7 @@ module.exports = AreaChart;
 
 
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15,"./StackDataMixin":17}],3:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18}],3:[function(require,module,exports){
 "use strict";
 
 var ArrayifyMixin = {
@@ -272,18 +268,10 @@ var Axis = React.createClass({ displayName: "Axis",
 		}
 
 		// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
-		// try ticks=ticks.filter(d!=0) instead of tickFormat
 		if (zero != height && zero != width && zero != 0) {
-			(function () {
-				var originalTickFormat = tickFormat;
-				tickFormat = function (t) {
-					if (t == 0) {
-						return "";
-					} else {
-						return originalTickFormat(t);
-					}
-				};
-			})();
+			ticks = ticks.filter(function (element, index, array) {
+				return element == 0 ? false : true;
+			});
 		}
 
 		var tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
@@ -386,7 +374,7 @@ var Bar = require("./Bar");
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
-var AccessorMixin = require("./AccessorMixin");
+var StackAccessorMixin = require("./StackAccessorMixin");
 var StackDataMixin = require("./StackDataMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
 
@@ -426,7 +414,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var BarChart = React.createClass({ displayName: "BarChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, StackDataMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin],
 
 	propTypes: {
 		barPadding: React.PropTypes.number,
@@ -482,7 +470,7 @@ module.exports = BarChart;
 
 
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15,"./StackDataMixin":17}],7:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18}],7:[function(require,module,exports){
 "use strict";
 
 var React = require("./ReactProvider");
@@ -1128,6 +1116,45 @@ module.exports = ScatterPlot;
 },{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15}],17:[function(require,module,exports){
 "use strict";
 
+var React = require("./ReactProvider");
+
+var StackAccessorMixin = {
+	propTypes: {
+		label: React.PropTypes.func,
+		values: React.PropTypes.func,
+		x: React.PropTypes.func,
+		y: React.PropTypes.func,
+		y0: React.PropTypes.func
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			label: function (stack) {
+				return stack.label;
+			},
+			values: function (stack) {
+				return stack.values;
+			},
+			x: function (e) {
+				return e.x;
+			},
+			y: function (e) {
+				return e.y;
+			},
+			y0: function (e) {
+				return e.y0;
+			}
+		};
+	}
+};
+
+module.exports = StackAccessorMixin;
+
+
+
+},{"./ReactProvider":15}],18:[function(require,module,exports){
+"use strict";
+
 var d3 = require("./D3Provider");
 
 var StackDataMixin = {
@@ -1149,7 +1176,7 @@ module.exports = StackDataMixin;
 
 
 
-},{"./D3Provider":8}],18:[function(require,module,exports){
+},{"./D3Provider":8}],19:[function(require,module,exports){
 "use strict";
 
 var BarChart = require("./BarChart");
@@ -1168,5 +1195,5 @@ module.exports = {
 
 
 
-},{"./AreaChart":2,"./BarChart":6,"./LineChart":12,"./PieChart":14,"./ScatterPlot":16}]},{},[18])(18)
+},{"./AreaChart":2,"./BarChart":6,"./LineChart":12,"./PieChart":14,"./ScatterPlot":16}]},{},[19])(19)
 });

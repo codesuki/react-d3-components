@@ -1,6 +1,6 @@
 let React = require('./ReactProvider');
 
-let AccessorMixin = {
+let StackAccessorMixin = {
 	propTypes: {
 		label: React.PropTypes.func,
 		values: React.PropTypes.func,
@@ -15,9 +15,9 @@ let AccessorMixin = {
 			values: stack => { return stack.values; },
 			x: e => { return e.x; },
 			y: e => { return e.y; },
-			y0: e => { return 0; }
+			y0: e => { return e.y0; }
 		};
 	}
 };
 
-module.exports = AccessorMixin;
+module.exports = StackAccessorMixin;

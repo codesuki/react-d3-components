@@ -8,7 +8,7 @@ let Bar = require('./Bar');
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
-let AccessorMixin = require('./AccessorMixin');
+let StackAccessorMixin = require('./StackAccessorMixin');
 let StackDataMixin = require('./StackDataMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
 
@@ -49,7 +49,7 @@ let BarChart = React.createClass({
 	mixins: [DefaultPropsMixin,
 			 HeightWidthMixin,
 			 ArrayifyMixin,
-			 AccessorMixin,
+			 StackAccessorMixin,
 			 StackDataMixin,
 			 DefaultScalesMixin],
 

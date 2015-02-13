@@ -69,10 +69,8 @@ let Axis = React.createClass({
 		}
 
 		// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
-		// try ticks=ticks.filter(d!=0) instead of tickFormat
 		if (zero != height && zero != width && zero != 0) {
-			let originalTickFormat = tickFormat;
-			tickFormat = t => { if (t == 0) { return ""; } else { return originalTickFormat(t); } };
+			ticks = ticks.filter((element, index, array) => { return element == 0 ? false : true;});
 		}
 
 		let tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
