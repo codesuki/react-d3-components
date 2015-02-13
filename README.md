@@ -66,8 +66,7 @@ React.render(
 );
 ```
 
-![barchart][barchart]
-[barchart]: http://codesuki.github.io/react-d3-components/barchart.png
+![barchart](http://codesuki.github.io/react-d3-components/barchart.png)
 
 ### Custom Accessors
 ```javascript
@@ -134,8 +133,7 @@ React.render(
 );
 ```
 
-![stackedbarchart][stackedbarchart]
-[stackedbarchart]: http://codesuki.github.io/react-d3-components/stackedbarchart.png
+![stackedbarchart](http://codesuki.github.io/react-d3-components/stackedbarchart.png)
 
 ### Other Charts
 ```javascript
@@ -167,14 +165,11 @@ React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, b
 );
 ```
 
-![scatterplot][scatterplot]
-[scatterplot]: http://codesuki.github.io/react-d3-components/scatterplot.png
+![scatterplot](http://codesuki.github.io/react-d3-components/scatterplot.png)
 
-![linechart][linechart]
-[linechart]: http://codesuki.github.io/react-d3-components/linechart.png
+![linechart](http://codesuki.github.io/react-d3-components/linechart.png)
 
-![areachart][areachart]
-[areachart]: http://codesuki.github.io/react-d3-components/areachart.png
+![areachart](http://codesuki.github.io/react-d3-components/areachart.png)
 
 ### PieChart
 ```javascript
@@ -190,5 +185,4 @@ React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bo
 );
 ```
 
-![piechart][piechart]
-[piechart]: http://codesuki.github.io/react-d3-components/piechart.png
+![piechart](http://codesuki.github.io/react-d3-components/piechart.png)
