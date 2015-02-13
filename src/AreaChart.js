@@ -18,12 +18,11 @@ let DataSet = React.createClass({
 		area: React.PropTypes.func.isRequired,
 		line: React.PropTypes.func.isRequired,
 		colorScale: React.PropTypes.func.isRequired,
-		strokeWidth: React.PropTypes.string.isRequired,
 		stroke: React.PropTypes.func.isRequired
 	},
 
 	render() {
-		let {data, area, line, colorScale, strokeWidth, stroke, values, label} = this.props;
+		let {data, area, line, colorScale, stroke, values, label} = this.props;
 
 		let areas = data.map(stack => {
 			return (
@@ -33,7 +32,7 @@ let DataSet = React.createClass({
 
 		let lines = data.map(stack => {
 			return (
-					<Path className="line" d={line(values(stack))} strokeWidth={strokeWidth} stroke={stroke(label(stack))}/>
+					<Path className="line" d={line(values(stack))} stroke={stroke(label(stack))}/>
 			);
 		});
 
@@ -55,18 +54,13 @@ let AreaChart = React.createClass({
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
-		strokeWidth: React.PropTypes.string,
-		stroke: React.PropTypes.func,
-		offset: React.PropTypes.string
-
+		stroke: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {
 			interpolate: 'linear',
-			strokeWidth: '2',
-			stroke: d3.scale.category20b(),
-			offset: 'zero'
+			stroke: d3.scale.category20()
 		};
 	},
 
@@ -81,7 +75,6 @@ let AreaChart = React.createClass({
 			 yScale,
 			 colorScale,
 			 interpolate,
-			 strokeWidth,
 			 stroke,
 			 offset,
 			 xIntercept,
@@ -111,26 +104,25 @@ let AreaChart = React.createClass({
 			line={line}
 			area={area}
 			colorScale={colorScale}
-			strokeWidth={strokeWidth}
 			stroke={stroke}
 			label={label}
 			values={values}
 				/>
 
 				<Axis
-			orientation="bottom"
+			className={"x axis"}
+			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
 			zero={yIntercept}
-			className={"x axis"}
 				/>
 
 				<Axis
-			orientation="left"
+			className={"y axis"}
+			orientation={"left"}
 			scale={yScale}
 			width={innerWidth}
 			zero={xIntercept}
-			className={"y axis"}
 				/>
 				</Chart>
 		);

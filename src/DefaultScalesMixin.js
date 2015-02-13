@@ -1,6 +1,17 @@
+let React = require('./ReactProvider');
 let d3 = require('./D3Provider');
 
 let DefaultScalesMixin = {
+	propTypes: {
+		barPadding: React.PropTypes.number
+	},
+
+	getDefaultProps() {
+		return {
+			barPadding: 0.5
+		};
+	},
+
 	componentWillMount() {
 		let {xScale, yScale, x, y, values} = this.props;
 

@@ -60,7 +60,6 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		area: React.PropTypes.func.isRequired,
 		line: React.PropTypes.func.isRequired,
 		colorScale: React.PropTypes.func.isRequired,
-		strokeWidth: React.PropTypes.string.isRequired,
 		stroke: React.PropTypes.func.isRequired
 	},
 
@@ -69,7 +68,6 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var area = this.props.area;
 		var line = this.props.line;
 		var colorScale = this.props.colorScale;
-		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
 		var values = this.props.values;
 		var label = this.props.label;
@@ -80,7 +78,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		});
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(values(stack)), strokeWidth: strokeWidth, stroke: stroke(label(stack)) });
+			return React.createElement(Path, { className: "line", d: line(values(stack)), stroke: stroke(label(stack)) });
 		});
 
 		return React.createElement("g", null, areas, lines);
@@ -92,18 +90,13 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
-		strokeWidth: React.PropTypes.string,
-		stroke: React.PropTypes.func,
-		offset: React.PropTypes.string
-
+		stroke: React.PropTypes.func
 	},
 
 	getDefaultProps: function getDefaultProps() {
 		return {
 			interpolate: "linear",
-			strokeWidth: "2",
-			stroke: d3.scale.category20b(),
-			offset: "zero"
+			stroke: d3.scale.category20()
 		};
 	},
 
@@ -118,7 +111,6 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
 		var interpolate = this.props.interpolate;
-		var strokeWidth = this.props.strokeWidth;
 		var stroke = this.props.stroke;
 		var offset = this.props.offset;
 		var xIntercept = this.props.xIntercept;
@@ -149,20 +141,19 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			line: line,
 			area: area,
 			colorScale: colorScale,
-			strokeWidth: strokeWidth,
 			stroke: stroke,
 			label: label,
 			values: values }), React.createElement(Axis, {
+			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept,
-			className: "x axis" }), React.createElement(Axis, {
+			zero: yIntercept }), React.createElement(Axis, {
+			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth,
-			zero: xIntercept,
-			className: "y axis" }));
+			zero: xIntercept }));
 	}
 });
 
@@ -284,25 +275,43 @@ var Axis = React.createClass({ displayName: "Axis",
 			return scale(e) + scale.rangeBand() / 2;
 		} : scale;
 
-		var tickElements = undefined;
-		var pathElement = undefined;
+		var transform = undefined,
+		    x = undefined,
+		    y = undefined,
+		    x2 = undefined,
+		    y2 = undefined,
+		    dy = undefined,
+		    textAnchor = undefined,
+		    d = undefined;
 		if (orientation === "bottom" || orientation === "top") {
-			tickElements = ticks.map(function (tick) {
-				return React.createElement("g", { className: "tick", transform: "translate(" + activeScale(tick) + ", 0)" }, React.createElement("line", { x2: 0, y2: sign * innerTickSize }), React.createElement("text", { x: 0, y: sign * tickSpacing, dy: sign < 0 ? "0em" : ".71em", textAnchor: "middle" }, tickFormat(tick)));
-			});
-
-			var d = "M" + range[0] + ", " + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
-			pathElement = React.createElement("path", { className: "domain", d: d });
+			transform = "translate({val}, 0)";
+			x = 0;
+			y = sign * tickSpacing;
+			x2 = 0;
+			y2 = sign * innerTickSize;
+			dy = sign < 0 ? "0em" : ".71em";
+			textAnchor = "middle";
+			d = "M" + range[0] + ", " + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
 		} else {
-			tickElements = ticks.map(function (tick) {
-				return React.createElement("g", { className: "tick", transform: "translate(0, " + activeScale(tick) + ")" }, React.createElement("line", { y2: 0, x2: sign * innerTickSize }), React.createElement("text", { y: 0, x: sign * tickSpacing, dy: ".32em", textAnchor: sign < 0 ? "end" : "start" }, tickFormat(tick)));
-			});
-
-			var d = "M" + sign * outerTickSize + ", " + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
-			pathElement = React.createElement("path", { className: "domain", d: d });
+			transform = "translate(0, {val})";
+			x = sign * tickSpacing;
+			y = 0;
+			x2 = sign * innerTickSize;
+			y2 = 0;
+			dy = ".32em";
+			textAnchor = sign < 0 ? "end" : "start";
+			d = "M" + sign * outerTickSize + ", " + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
 		}
 
-		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString() }, tickElements, pathElement);
+		var tickElements = ticks.map(function (tick) {
+			var position = activeScale(tick);
+			var translate = transform.replace("{val}", position);
+			return React.createElement("g", { className: "tick", transform: translate }, React.createElement("line", { x2: x2, y2: y2, stroke: "#aaa" }), React.createElement("text", { x: x, y: y, dy: dy, textAnchor: textAnchor }, tickFormat(tick)));
+		});
+
+		var pathElement = React.createElement("path", { className: "domain", d: d, fill: "none", stroke: "#aaa" });
+
+		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString(), style: { shapeRendering: "crispEdges" } }, tickElements, pathElement);
 	},
 
 	_d3_scaleExtent: function _d3_scaleExtent(domain) {
@@ -328,21 +337,11 @@ var d3 = require("./D3Provider");
 
 var Bar = React.createClass({ displayName: "Bar",
 	propTypes: {
+		width: React.PropTypes.number.isRequired,
+		height: React.PropTypes.number.isRequired,
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		fill: React.PropTypes.string
-	},
-
-	getDefaultProps: function getDefaultProps() {
-		return {
-			x: 0,
-			y: 0,
-			height: 0,
-			width: 0,
-			fill: "#000"
-		};
+		fill: React.PropTypes.string.isRequired
 	},
 
 	render: function render() {
@@ -383,7 +382,12 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		data: React.PropTypes.array.isRequired,
 		xScale: React.PropTypes.func.isRequired,
 		yScale: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired
+		colorScale: React.PropTypes.func.isRequired,
+		values: React.PropTypes.func.isRequired,
+		label: React.PropTypes.func.isRequired,
+		x: React.PropTypes.func.isRequired,
+		y: React.PropTypes.func.isRequired,
+		y0: React.PropTypes.func.isRequired
 	},
 
 	render: function render() {
@@ -401,10 +405,10 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var bars = data.map(function (stack) {
 			return values(stack).map(function (e) {
 				return React.createElement(Bar, {
-					x: xScale(x(e)),
 					width: xScale.rangeBand(),
-					y: yScale(y0(e) + y(e)),
 					height: yScale(yScale.domain()[0]) - yScale(y(e)),
+					x: xScale(x(e)),
+					y: yScale(y0(e) + y(e)),
 					fill: colorScale(label(stack)) });
 			});
 		});
@@ -416,18 +420,6 @@ var DataSet = React.createClass({ displayName: "DataSet",
 var BarChart = React.createClass({ displayName: "BarChart",
 	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin],
 
-	propTypes: {
-		barPadding: React.PropTypes.number,
-		offset: React.PropTypes.string
-	},
-
-	getDefaultProps: function getDefaultProps() {
-		return {
-			barPadding: 0.5,
-			offset: "zero"
-		};
-	},
-
 	render: function render() {
 		var data = this.props.data;
 		var height = this.props.height;
@@ -438,8 +430,6 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var xScale = this.props.xScale;
 		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
-		var barPadding = this.props.barPadding;
-		var offset = this.props.offset;
 		var values = this.props.values;
 		var label = this.props.label;
 		var y = this.props.y;
@@ -457,9 +447,11 @@ var BarChart = React.createClass({ displayName: "BarChart",
 			y: y,
 			y0: y0,
 			x: x }), React.createElement(Axis, {
+			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight }), React.createElement(Axis, {
+			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth }));
@@ -552,9 +544,20 @@ module.exports = DefaultPropsMixin;
 
 var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } };
 
+var React = require("./ReactProvider");
 var d3 = require("./D3Provider");
 
 var DefaultScalesMixin = {
+	propTypes: {
+		barPadding: React.PropTypes.number
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			barPadding: 0.5
+		};
+	},
+
 	componentWillMount: function componentWillMount() {
 		var xScale = this.props.xScale;
 		var yScale = this.props.yScale;
@@ -679,7 +682,7 @@ module.exports = DefaultScalesMixin;
 
 
 
-},{"./D3Provider":8}],11:[function(require,module,exports){
+},{"./D3Provider":8,"./ReactProvider":15}],11:[function(require,module,exports){
 "use strict";
 
 var HeightWidthMixin = {
@@ -718,7 +721,6 @@ var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
 		data: React.PropTypes.array.isRequired,
 		line: React.PropTypes.func.isRequired,
-		strokeWidth: React.PropTypes.string.isRequired,
 		colorScale: React.PropTypes.func.isRequired
 	},
 
@@ -732,7 +734,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(values(stack)), strokeWidth: strokeWidth, stroke: colorScale(label(stack)) });
+			return React.createElement(Path, { className: "line", d: line(values(stack)), stroke: colorScale(label(stack)) });
 		});
 
 		return React.createElement("g", null, lines);
@@ -743,14 +745,12 @@ var LineChart = React.createClass({ displayName: "LineChart",
 	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
 
 	propTypes: {
-		interpolate: React.PropTypes.string,
-		strokeWidth: React.PropTypes.string
+		interpolate: React.PropTypes.string
 	},
 
 	getDefaultProps: function getDefaultProps() {
 		return {
-			interpolate: "linear",
-			strokeWidth: "2"
+			interpolate: "linear"
 		};
 	},
 
@@ -786,9 +786,11 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			colorScale: colorScale,
 			values: values,
 			label: label }), React.createElement(Axis, {
+			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight }), React.createElement(Axis, {
+			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth }));
@@ -807,30 +809,27 @@ var d3 = require("./D3Provider");
 
 var Path = React.createClass({ displayName: "Path",
 	propTypes: {
-		strokeWidth: React.PropTypes.string,
-		stroke: React.PropTypes.string,
-		d: React.PropTypes.string.isRequired,
+		className: React.PropTypes.string,
+		stroke: React.PropTypes.string.isRequired,
 		fill: React.PropTypes.string,
-		className: React.PropTypes.string
+		d: React.PropTypes.string.isRequired
 	},
 
 	getDefaultProps: function getDefaultProps() {
 		return {
-			strokeWidth: "2",
-			stroke: d3.scale.category20()(),
+			className: "path",
 			fill: "none"
 		};
 	},
 
 	render: function render() {
-		var strokeWidth = this.props.strokeWidth;
-		var stroke = this.props.stroke;
-		var d = this.props.d;
-		var fill = this.props.fill;
 		var className = this.props.className;
+		var stroke = this.props.stroke;
+		var fill = this.props.fill;
+		var d = this.props.d;
 
 
-		return React.createElement("g", null, React.createElement("path", { className: className, strokeWidth: strokeWidth, stroke: stroke, fill: fill, d: d }));
+		return React.createElement("path", { className: className, strokeWidth: "2", stroke: stroke, fill: fill, d: d });
 	}
 });
 
@@ -872,11 +871,20 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		outerArc: React.PropTypes.func.isRequired,
 		colorScale: React.PropTypes.func.isRequired,
 		radius: React.PropTypes.number.isRequired,
-		strokeWidth: React.PropTypes.number.isRequired,
-		stroke: React.PropTypes.string.isRequired,
-		fill: React.PropTypes.string.isRequired,
-		opacity: React.PropTypes.number.isRequired,
+		strokeWidth: React.PropTypes.number,
+		stroke: React.PropTypes.string,
+		fill: React.PropTypes.string,
+		opacity: React.PropTypes.number,
 		x: React.PropTypes.func.isRequired
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			strokeWidth: 2,
+			stroke: "#000",
+			fill: "none",
+			opacity: 0.3
+		};
 	},
 
 	render: function render() {
@@ -921,10 +929,8 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		innerRadius: React.PropTypes.number,
 		outerRadius: React.PropTypes.number,
 		labelRadius: React.PropTypes.number,
-		strokeWidth: React.PropTypes.number,
-		stroke: React.PropTypes.string,
-		fill: React.PropTypes.string,
-		opacity: React.PropTypes.number
+		padRadius: React.PropTypes.number,
+		cornerRadius: React.PropTypes.number
 	},
 
 	getDefaultProps: function getDefaultProps() {
@@ -932,10 +938,8 @@ var PieChart = React.createClass({ displayName: "PieChart",
 			innerRadius: null,
 			outerRadius: null,
 			labelRadius: null,
-			strokeWidth: 2,
-			stroke: "#000",
-			fill: "none",
-			opacity: 0.3
+			padRadius: "auto",
+			cornerRadius: 0
 		};
 	},
 
@@ -950,10 +954,8 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		var innerRadius = this.props.innerRadius;
 		var outerRadius = this.props.outerRadius;
 		var labelRadius = this.props.labelRadius;
-		var strokeWidth = this.props.strokeWidth;
-		var stroke = this.props.stroke;
-		var fill = this.props.fill;
-		var opacity = this.props.opacity;
+		var padRadius = this.props.padRadius;
+		var cornerRadius = this.props.cornerRadius;
 		var x = this.props.x;
 		var y = this.props.y;
 
@@ -975,14 +977,14 @@ var PieChart = React.createClass({ displayName: "PieChart",
 			labelRadius = radius * 0.9;
 		}
 
-		var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+		var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius).padRadius(padRadius).cornerRadius(cornerRadius);
 
 		var outerArc = d3.svg.arc().innerRadius(labelRadius).outerRadius(labelRadius);
 
 		var pieData = pie(data.values);
 
 		var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, strokeWidth: strokeWidth, stroke: stroke, fill: fill, opacity: opacity, x: x })));
+		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, x: x })));
 	}
 });
 
@@ -1155,9 +1157,20 @@ module.exports = StackAccessorMixin;
 },{"./ReactProvider":15}],18:[function(require,module,exports){
 "use strict";
 
+var React = require("./ReactProvider");
 var d3 = require("./D3Provider");
 
 var StackDataMixin = {
+	propTypes: {
+		offset: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			offset: "zero"
+		};
+	},
+
 	componentWillMount: function componentWillMount() {
 		var data = this.props.data;
 		var offset = this.props.offset;
@@ -1176,7 +1189,7 @@ module.exports = StackDataMixin;
 
 
 
-},{"./D3Provider":8}],19:[function(require,module,exports){
+},{"./D3Provider":8,"./ReactProvider":15}],19:[function(require,module,exports){
 "use strict";
 
 var BarChart = require("./BarChart");

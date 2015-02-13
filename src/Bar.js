@@ -3,21 +3,11 @@ let d3 = require('./D3Provider');
 
 let Bar = React.createClass({
 	propTypes: {
+		width: React.PropTypes.number.isRequired,
+		height: React.PropTypes.number.isRequired,
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		fill: React.PropTypes.string
-	},
-
-	getDefaultProps() {
-		return {
-			x: 0,
-			y: 0,
-			height: 0,
-			width: 0,
-			fill: '#000'
-		};
+		fill: React.PropTypes.string.isRequired
 	},
 
 	render() {

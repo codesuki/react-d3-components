@@ -29,11 +29,20 @@ let DataSet = React.createClass({
 		outerArc: React.PropTypes.func.isRequired,
 		colorScale: React.PropTypes.func.isRequired,
 		radius: React.PropTypes.number.isRequired,
-		strokeWidth: React.PropTypes.number.isRequired,
-		stroke: React.PropTypes.string.isRequired,
-		fill: React.PropTypes.string.isRequired,
-		opacity: React.PropTypes.number.isRequired,
+		strokeWidth: React.PropTypes.number,
+		stroke: React.PropTypes.string,
+		fill: React.PropTypes.string,
+		opacity: React.PropTypes.number,
 		x: React.PropTypes.func.isRequired
+	},
+
+	getDefaultProps() {
+		return {
+			strokeWidth: 2,
+			stroke: '#000',
+			fill: 'none',
+			opacity: 0.3
+		};
 	},
 
 	render() {
@@ -87,10 +96,8 @@ let PieChart = React.createClass({
 		innerRadius: React.PropTypes.number,
 		outerRadius: React.PropTypes.number,
 		labelRadius: React.PropTypes.number,
-		strokeWidth: React.PropTypes.number,
-		stroke: React.PropTypes.string,
-		fill: React.PropTypes.string,
-		opacity: React.PropTypes.number
+		padRadius: React.PropTypes.number,
+		cornerRadius: React.PropTypes.number
 	},
 
 	getDefaultProps() {
@@ -98,10 +105,8 @@ let PieChart = React.createClass({
 			innerRadius: null,
 			outerRadius: null,
 			labelRadius: null,
-			strokeWidth: 2,
-			stroke: '#000',
-			fill: 'none',
-			opacity: 0.3
+			padRadius: "auto",
+			cornerRadius: 0
 		};
 	},
 
@@ -116,10 +121,8 @@ let PieChart = React.createClass({
 			 innerRadius,
 			 outerRadius,
 			 labelRadius,
-			 strokeWidth,
-			 stroke,
-			 fill,
-			 opacity,
+			 padRadius,
+			 cornerRadius,
 			 x,
 			 y} = this.props;
 
@@ -140,7 +143,9 @@ let PieChart = React.createClass({
 
 		let arc = d3.svg.arc()
 				.innerRadius(innerRadius)
-				.outerRadius(outerRadius);
+				.outerRadius(outerRadius)
+				.padRadius(padRadius)
+				.cornerRadius(cornerRadius);
 
 		let outerArc = d3.svg.arc()
 				.innerRadius(labelRadius)
@@ -152,7 +157,7 @@ let PieChart = React.createClass({
 		return (
 				<Chart height={height} width={width} margin={margin}>
 				<g transform={translation}>
-				<DataSet width={innerWidth} height={innerHeight} colorScale={colorScale} pie={pieData} arc={arc} outerArc={outerArc} radius={radius} strokeWidth={strokeWidth} stroke={stroke} fill={fill} opacity={opacity} x={x}/>
+				<DataSet width={innerWidth} height={innerHeight} colorScale={colorScale} pie={pieData} arc={arc} outerArc={outerArc} radius={radius} x={x}/>
 				</g>
 				</Chart>
 		);

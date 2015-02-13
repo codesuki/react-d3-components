@@ -81,38 +81,43 @@ let Axis = React.createClass({
 
 		let activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
 
-		let tickElements;
-		let pathElement;
+		let transform, x, y, x2, y2, dy, textAnchor, d;
 		if (orientation === "bottom" || orientation === "top") {
-			tickElements = ticks.map(tick => {
-				return (
-						<g className="tick" transform={`translate(${activeScale(tick)}, 0)`}>
-						<line x2={0} y2={sign * innerTickSize}/>
-						<text x={0} y={sign * tickSpacing} dy={sign < 0 ? "0em" : ".71em"} textAnchor="middle">
-						{tickFormat(tick)}</text>
-						</g>
-				);
-			});
-
-			let d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
-			pathElement = <path className="domain" d={d}/>;
+			transform = `translate({val}, 0)`;
+			x = 0;
+			y = sign * tickSpacing;
+			x2 = 0;
+			y2 = sign * innerTickSize;
+			dy = sign < 0 ? "0em" : ".71em";
+			textAnchor = "middle";
+			d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
 		} else {
-			tickElements = ticks.map(tick => {
-				return (
-						<g className="tick" transform={`translate(0, ${activeScale(tick)})`}>
-						<line y2={0} x2={sign * innerTickSize}/>
-						<text y={0} x={sign * tickSpacing} dy=".32em" textAnchor={sign < 0 ? "end" : "start"}>
-						{tickFormat(tick)}</text>
-						</g>
-				);
-			});
-
-			let d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
-			pathElement = <path className="domain" d={d}/>;
+			transform = `translate(0, {val})`;
+			x = sign * tickSpacing;
+			y = 0;
+			x2 = sign * innerTickSize;
+			y2 = 0;
+			dy = ".32em";
+			textAnchor = sign < 0 ? "end" : "start";
+			d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
 		}
 
+		let tickElements = ticks.map(tick => {
+			let position = activeScale(tick);
+			let translate = transform.replace("{val}", position);
+			return (
+					<g className="tick" transform={translate}>
+					<line x2={x2} y2={y2} stroke="#aaa"/>
+					<text x={x} y={y} dy={dy} textAnchor={textAnchor}>
+					{tickFormat(tick)}</text>
+					</g>
+			);
+		});
+
+		let pathElement = <path className="domain" d={d} fill="none" stroke="#aaa"/>;
+
 		return (
-				<g ref="axis" className={className} transform={this._getTranslateString()}>
+				<g ref="axis" className={className} transform={this._getTranslateString()} style={{shapeRendering: 'crispEdges'}}>
 				{tickElements}
 			{pathElement}
 			</g>

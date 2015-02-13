@@ -15,7 +15,6 @@ let DataSet = React.createClass({
 	propTypes: {
 		data: React.PropTypes.array.isRequired,
 		line: React.PropTypes.func.isRequired,
-		strokeWidth: React.PropTypes.string.isRequired,
 		colorScale: React.PropTypes.func.isRequired
 	},
 
@@ -24,7 +23,7 @@ let DataSet = React.createClass({
 
 		let lines = data.map(stack => {
 			return (
-					<Path className="line" d={line(values(stack))} strokeWidth={strokeWidth} stroke={colorScale(label(stack))}/>
+					<Path className="line" d={line(values(stack))}  stroke={colorScale(label(stack))}/>
 			);
 		});
 
@@ -44,14 +43,12 @@ let LineChart = React.createClass({
 			 DefaultScalesMixin],
 
 	propTypes: {
-		interpolate: React.PropTypes.string,
-		strokeWidth: React.PropTypes.string
+		interpolate: React.PropTypes.string
 	},
 
 	getDefaultProps() {
 		return {
-			interpolate: 'linear',
-			strokeWidth: '2'
+			interpolate: 'linear'
 		};
 	},
 
@@ -91,13 +88,15 @@ let LineChart = React.createClass({
 				/>
 
 				<Axis
-			orientation="bottom"
+			className={"x axis"}
+			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
 				/>
 
 				<Axis
-			orientation="left"
+			className={"y axis"}
+			orientation={"left"}
 			scale={yScale}
 			width={innerWidth}
 				/>

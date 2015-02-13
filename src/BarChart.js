@@ -17,7 +17,12 @@ let DataSet = React.createClass({
 		data: React.PropTypes.array.isRequired,
 		xScale: React.PropTypes.func.isRequired,
 		yScale: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired
+		colorScale: React.PropTypes.func.isRequired,
+		values: React.PropTypes.func.isRequired,
+		label: React.PropTypes.func.isRequired,
+		x: React.PropTypes.func.isRequired,
+		y: React.PropTypes.func.isRequired,
+		y0: React.PropTypes.func.isRequired
 	},
 
 	render() {
@@ -27,10 +32,10 @@ let DataSet = React.createClass({
 			return values(stack).map(e => {
 				return (
 						<Bar
-					x={xScale(x(e))}
 					width={xScale.rangeBand()}
-					y={yScale(y0(e) + y(e))}
 					height={yScale(yScale.domain()[0]) - yScale(y(e))}
+					x={xScale(x(e))}
+					y={yScale(y0(e) + y(e))}
 					fill={colorScale(label(stack))}
 						/>
 				);
@@ -38,9 +43,7 @@ let DataSet = React.createClass({
 		});
 
 		return (
-				<g>
-				{bars}
-			</g>
+				<g>{bars}</g>
 		);
 	}
 });
@@ -53,18 +56,6 @@ let BarChart = React.createClass({
 			 StackDataMixin,
 			 DefaultScalesMixin],
 
-	propTypes: {
-		barPadding: React.PropTypes.number,
-		offset: React.PropTypes.string
-	},
-
-	getDefaultProps() {
-		return {
-			barPadding: 0.5,
-			offset: 'zero'
-		};
-	},
-
 	render() {
 		let {data,
 			 height,
@@ -75,8 +66,6 @@ let BarChart = React.createClass({
 			 xScale,
 			 yScale,
 			 colorScale,
-			 barPadding,
-			 offset,
 			 values,
 			 label,
 			 y,
@@ -98,13 +87,15 @@ let BarChart = React.createClass({
 				/>
 
 				<Axis
-			orientation="bottom"
+			className={"x axis"}
+			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
 				/>
 
 				<Axis
-			orientation="left"
+			className={"y axis"}
+			orientation={"left"}
 			scale={yScale}
 			width={innerWidth}
 				/>
