@@ -99,7 +99,9 @@ let ScatterPlot = React.createClass({
 			 yIntercept,
 			 values,
 			 x,
-			 y} = this.props;
+			 y,
+			 xAxis,
+			 yAxis} = this.props;
 
 		let symbol = d3.svg.symbol().type(shape);
 
@@ -111,17 +113,21 @@ let ScatterPlot = React.createClass({
 			<div>
 				<Chart height={height} width={width} margin={margin}>
 				<Axis
+			className={"x axis"}
 			orientation="bottom"
 			scale={xScale}
 			height={innerHeight}
 			zero={yIntercept}
+			{...xAxis}
 				/>
 
 				<Axis
+			className={"y axis"}
 			orientation="left"
 			scale={yScale}
 			width={innerWidth}
 			zero={xIntercept}
+			{...yAxis}
 				/>
 
 				<DataSet

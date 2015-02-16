@@ -164,6 +164,8 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var x = this.props.x;
 		var y = this.props.y;
 		var y0 = this.props.y0;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -189,17 +191,17 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			label: label,
 			values: values,
 			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, {
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept }), React.createElement(Axis, {
+			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth,
-			zero: xIntercept })), React.createElement(Tooltip, {
+			zero: xIntercept }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
 			left: this.state.tooltip.left,
@@ -514,6 +516,8 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var y = this.props.y;
 		var y0 = this.props.y0;
 		var x = this.props.x;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
@@ -527,15 +531,15 @@ var BarChart = React.createClass({ displayName: "BarChart",
 			y0: y0,
 			x: x,
 			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, {
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
+			height: innerHeight }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
-			width: innerWidth })), React.createElement(Tooltip, {
+			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
 			left: this.state.tooltip.left,
@@ -923,6 +927,8 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var label = this.props.label;
 		var x = this.props.x;
 		var y = this.props.y;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -941,15 +947,15 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			values: values,
 			label: label,
 			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, {
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
+			height: innerHeight }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
-			width: innerWidth })), React.createElement(Tooltip, {
+			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
 			left: this.state.tooltip.left,
@@ -1321,6 +1327,8 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 		var values = this.props.values;
 		var x = this.props.x;
 		var y = this.props.y;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var symbol = d3.svg.symbol().type(shape);
@@ -1329,15 +1337,17 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			symbol = symbol.size(rScale);
 		}
 
-		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(Axis, {
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(Axis, React.__spread({
+			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept }), React.createElement(Axis, {
+			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
+			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			width: innerWidth,
-			zero: xIntercept }), React.createElement(DataSet, {
+			zero: xIntercept }, yAxis)), React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
 			yScale: yScale,

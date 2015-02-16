@@ -94,7 +94,9 @@ let BarChart = React.createClass({
 			 label,
 			 y,
 			 y0,
-			 x} = this.props;
+			 x,
+			 xAxis,
+			 yAxis} = this.props;
 
 		return (
 				<div>
@@ -118,6 +120,7 @@ let BarChart = React.createClass({
 			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
+			{...xAxis}
 				/>
 
 				<Axis
@@ -125,6 +128,7 @@ let BarChart = React.createClass({
 			orientation={"left"}
 			scale={yScale}
 			width={innerWidth}
+			{...yAxis}
 				/>
 				</Chart>
 

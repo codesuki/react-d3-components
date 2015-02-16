@@ -125,7 +125,9 @@ let AreaChart = React.createClass({
 			 label,
 			 x,
 			 y,
-			 y0} = this.props;
+			 y0,
+			 xAxis,
+			 yAxis} = this.props;
 
 		let line = d3.svg.line()
 				.x(function(e) { return xScale(x(e)); })
@@ -160,6 +162,7 @@ let AreaChart = React.createClass({
 			scale={xScale}
 			height={innerHeight}
 			zero={yIntercept}
+			{...xAxis}
 				/>
 
 				<Axis
@@ -168,6 +171,7 @@ let AreaChart = React.createClass({
 			scale={yScale}
 			width={innerWidth}
 			zero={xIntercept}
+			{...yAxis}
 				/>
 				</Chart>
 

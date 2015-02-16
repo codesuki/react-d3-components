@@ -138,7 +138,9 @@ let LineChart = React.createClass({
 			 values,
 			 label,
 			 x,
-			 y} = this.props;
+			 y,
+			 xAxis,
+			 yAxis} = this.props;
 
 		let line = d3.svg.line()
 				.x(function(e) { return xScale(x(e)); })
@@ -167,6 +169,7 @@ let LineChart = React.createClass({
 			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
+			{...xAxis}
 				/>
 
 				<Axis
@@ -174,6 +177,7 @@ let LineChart = React.createClass({
 			orientation={"left"}
 			scale={yScale}
 			width={innerWidth}
+			{...yAxis}
 				/>
 				</Chart>
 
