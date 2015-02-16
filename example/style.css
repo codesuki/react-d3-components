@@ -39,6 +39,11 @@ div {
 	fill: #E55;
 }
 
+.line {
+	stroke-width: 3px;
+	padding: 10px;
+}
+
 .line:hover {
 	stroke: #E55;
 }
@@ -55,8 +60,7 @@ div {
 }
 
 .tooltip {
-	width: 50px;
-	height: 25px;
+	padding: 3px;
 	border: 2px solid;
 	border-radius: 4px;
 	background-color: #eee;

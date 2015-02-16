@@ -14,11 +14,22 @@ let TooltipMixin = {
 		};
 	},
 
+	getDefaultProps() {
+		return {
+			tooltipOffset: {top: -20, left: 15},
+			tooltipHtml: null
+		};
+	},
+
 	componentDidMount() {
 		this._svg_node = this.getDOMNode().getElementsByTagName("svg")[0];
 	},
 
-	onMouseEnter(e, d) {
+	onMouseEnter(e, data) {
+		if (!this.props.tooltipHtml) {
+			return;
+		}
+
 		let {margin, xScale, yScale, tooltipHtml} = this.props;
 
 		let svg = this._svg_node;
@@ -36,15 +47,19 @@ let TooltipMixin = {
 
 		this.setState({
 			tooltip: {
-				top: e.pageY - 20,
-				left: e.pageX + 15,
+				top: e.pageY + this.props.tooltipOffset.top,
+				left: e.pageX + this.props.tooltipOffset.left,
 				hidden: false,
-				html: tooltipHtml(d, position, xScale, yScale)
+				html: this._tooltipHtml(data, position)
 			}
 		});
 	},
 
 	onMouseLeave(e) {
+		if (!this.props.tooltipHtml) {
+			return;
+		}
+
 		this.setState({
 			tooltip: {
 				hidden: true

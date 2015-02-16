@@ -43,6 +43,7 @@ let DataSet = React.createClass({
 				d={area(values(stack))}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
+				data={data}
 					/>
 			);
 		});
@@ -59,7 +60,7 @@ let DataSet = React.createClass({
 
 		return (
 				<g>
-				{areas}{lines}
+				{areas}
 			</g>
 		);
 	}
@@ -82,11 +83,27 @@ let AreaChart = React.createClass({
 	getDefaultProps() {
 		return {
 			interpolate: 'linear',
-			stroke: d3.scale.category20(),
-			tooltipHtml: (d, position, xScale, yScale) => {
-				return d3.round(yScale.invert(position[1]), 2);
-			}
+			stroke: d3.scale.category20()
 		};
+	},
+
+	_tooltipHtml(d, position) {
+		let {x, y0, y, values, label, xScale, yScale} = this.props;
+
+		let xBisector = d3.bisector(e => { return x(e); }).right;
+		let xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
+		xIndex = (xIndex == values(d[0]).length) ? xIndex - 1: xIndex;
+
+		let yValueCursor = yScale.invert(position[1]);
+
+		let yBisector = d3.bisector(e => { return y0(values(e)[xIndex]) + y(values(e)[xIndex]); }).left;
+		let yIndex = yBisector(d, yValueCursor);
+		yIndex = (yIndex == d.length) ? yIndex - 1: yIndex;
+
+		let yValue = y(values(d[yIndex])[xIndex]);
+		let yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
+
+		return this.props.tooltipHtml(yValue, yValueCumulative);
 	},
 
 	render() {

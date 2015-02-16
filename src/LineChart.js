@@ -21,7 +21,9 @@ let DataSet = React.createClass({
 	},
 
 	render() {
-		let {data,
+		let {width,
+			 height,
+			 data,
 			 line,
 			 strokeWidth,
 			 colorScale,
@@ -36,13 +38,23 @@ let DataSet = React.createClass({
 				className="line"
 				d={line(values(stack))}
 				stroke={colorScale(label(stack))}
-				data={data}
+				data={values(stack)}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
 					/>
 			);
 		});
 
+		/*
+		 The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
+		 Not sure if this should be used.
+		 */
+		/*
+		<rect width={width} height={height} fill={"none"} stroke={"none"} style={{pointerEvents: "all"}}
+			onMouseMove={ evt => { onMouseEnter(evt, data); } }
+			onMouseLeave={  evt => { onMouseLeave(evt); } }
+				/>
+		 */
 		return (
 				<g>
 				{lines}
@@ -65,11 +77,49 @@ let LineChart = React.createClass({
 
 	getDefaultProps() {
 		return {
-			interpolate: 'linear',
-			tooltipHtml: (d, position, xScale, yScale) => {
-				return d3.round(yScale.invert(position[1]), 2);
-			}
+			interpolate: 'linear'
 		};
+	},
+
+	/*
+	 The code below supports finding the data values for the line closest to the mouse cursor.
+	 Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
+	 For now I don't want to use this method.
+	 */
+	/*
+	 tooltipHtml: (d, position, xScale, yScale) => {
+	 let xValueCursor = xScale.invert(position[0]);
+	 let yValueCursor = yScale.invert(position[1]);
+
+	 let xBisector = d3.bisector(e => { return e.x; }).left;
+	 let valuesAtX = d.map(stack => {
+	 let idx = xBisector(stack.values, xValueCursor);
+	 return stack.values[idx];
+	 });
+
+	 valuesAtX.sort((a, b) => { return a.y - b.y; });
+
+	 let yBisector = d3.bisector(e => { return e.y; }).left;
+	 let yIndex = yBisector(valuesAtX, yValueCursor);
+
+	 let yValue = valuesAtX[yIndex == valuesAtX.length ? yIndex - 1 : yIndex].y;
+
+	 return `Value: ${yValue}`;
+	 }
+	 */
+	_tooltipHtml(data, position) {
+		let {x, y0, y, values, label, xScale, yScale} = this.props;
+
+		let xValueCursor = xScale.invert(position[0]);
+		let yValueCursor = yScale.invert(position[1]);
+
+		let xBisector = d3.bisector(e => { return x(e); }).left;
+		let xIndex = xBisector(data, xScale.invert(position[0]));
+
+		let yValue = y(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		let cursorValue = d3.round(yScale.invert(position[1]), 2);
+
+		return this.props.tooltipHtml(yValue, cursorValue);
 	},
 
 	render() {
@@ -100,6 +150,8 @@ let LineChart = React.createClass({
 				<Chart height={height} width={width} margin={margin}>
 
 				<DataSet
+			height={innerHeight}
+			width={innerWidth}
 			data={data}
 			line={line}
 			strokeWidth={strokeWidth}

@@ -73,11 +73,11 @@ let BarChart = React.createClass({
 			 TooltipMixin],
 
 	getDefaultProps() {
-		return {
-			tooltipHtml: (d, position, xScale, yScale) => {
-				return d.y.toString();
-			}
-		};
+		return {};
+	},
+
+	_tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d));
 	},
 
 	render() {

@@ -3,7 +3,10 @@ let d3 = require('./D3Provider');
 
 let DefaultPropsMixin = {
 	propTypes: {
-		data: React.PropTypes.array.isRequired,
+		data: React.PropTypes.oneOfType([
+			React.PropTypes.object,
+			React.PropTypes.array
+		]).isRequired,
 		height: React.PropTypes.number.isRequired,
 		width: React.PropTypes.number.isRequired,
 		margin: React.PropTypes.shape({

@@ -1,11 +1,13 @@
 let React = require('./ReactProvider');
 let d3 = require('./D3Provider');
 
+let Chart = require('./Chart');
+let Tooltip = require('./Tooltip');
+
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let AccessorMixin = require('./AccessorMixin');
-
-let Chart = require('./Chart');
+let TooltipMixin = require('./TooltipMixin');
 
 let Wedge = React.createClass({
 	propTypes: {
@@ -14,10 +16,15 @@ let Wedge = React.createClass({
 	},
 
 	render() {
-		let {fill, d} = this.props;
+		let {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
 
 		return (
-				<path fill={fill} d={d}/>
+				<path
+			fill={fill}
+			d={d}
+			onMouseMove={ evt => { onMouseEnter(evt, data); } }
+			onMouseLeave={  evt => { onMouseLeave(evt); } }
+				/>
 		);
 	}
 });
@@ -55,7 +62,9 @@ let DataSet = React.createClass({
 			 stroke,
 			 fill,
 			 opacity,
-			 x} = this.props;
+			 x,
+			 onMouseEnter,
+			 onMouseLeave} = this.props;
 
 		let wedges = pie.map(e => {
 			function midAngle(d){
@@ -74,9 +83,27 @@ let DataSet = React.createClass({
 
 			return (
 					<g className="arc">
-					<Wedge fill={colorScale(x(e.data))} d={d}/>
-					<polyline opacity={opacity} strokeWidth={strokeWidth} stroke={stroke} fill={fill} points={[arc.centroid(e), outerArc.centroid(e), linePos]}/>
-					<text dy=".35em" x={labelPos[0]} y={labelPos[1]} textAnchor={textAnchor}>{x(e.data)}</text>
+					<Wedge
+				data={e.data}
+				fill={colorScale(x(e.data))}
+				d={d}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+					/>
+
+					<polyline
+				opacity={opacity}
+				strokeWidth={strokeWidth}
+				stroke={stroke}
+				fill={fill}
+				points={[arc.centroid(e), outerArc.centroid(e), linePos]}
+					/>
+
+					<text
+				dy=".35em"
+				x={labelPos[0]}
+				y={labelPos[1]}
+				textAnchor={textAnchor}>{x(e.data)}</text>
 					</g>
 			);
 		});
@@ -90,13 +117,16 @@ let DataSet = React.createClass({
 });
 
 let PieChart = React.createClass({
-	mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin],
+	mixins: [DefaultPropsMixin,
+			 HeightWidthMixin,
+			 AccessorMixin,
+			 TooltipMixin],
 
 	propTypes: {
 		innerRadius: React.PropTypes.number,
 		outerRadius: React.PropTypes.number,
 		labelRadius: React.PropTypes.number,
-		padRadius: React.PropTypes.number,
+		padRadius: React.PropTypes.string,
 		cornerRadius: React.PropTypes.number
 	},
 
@@ -108,6 +138,10 @@ let PieChart = React.createClass({
 			padRadius: "auto",
 			cornerRadius: 0
 		};
+	},
+
+	_tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 	},
 
 	render() {
@@ -155,11 +189,30 @@ let PieChart = React.createClass({
 
 		let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
 		return (
+			<div>
 				<Chart height={height} width={width} margin={margin}>
 				<g transform={translation}>
-				<DataSet width={innerWidth} height={innerHeight} colorScale={colorScale} pie={pieData} arc={arc} outerArc={outerArc} radius={radius} x={x}/>
+				<DataSet
+			width={innerWidth}
+			height={innerHeight}
+			colorScale={colorScale}
+			pie={pieData}
+			arc={arc}
+			outerArc={outerArc}
+			radius={radius}
+			x={x}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
+				/>
 				</g>
 				</Chart>
+
+				<Tooltip
+			hidden={this.state.tooltip.hidden}
+			top={this.state.tooltip.top}
+			left={this.state.tooltip.left}
+			html={this.state.tooltip.html}/>
+				</div>
 		);
 	}
 });

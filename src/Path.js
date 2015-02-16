@@ -7,7 +7,7 @@ let Path = React.createClass({
 		stroke: React.PropTypes.string.isRequired,
 		fill: React.PropTypes.string,
 		d: React.PropTypes.string.isRequired,
-		data: React.PropTypes.object.isRequired
+		data: React.PropTypes.array.isRequired
 	},
 
 	getDefaultProps() {

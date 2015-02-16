@@ -8,7 +8,10 @@ let Bar = React.createClass({
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
 		fill: React.PropTypes.string.isRequired,
-		data: React.PropTypes.object.isRequired,
+		data: React.PropTypes.oneOfType([
+			React.PropTypes.array,
+			React.PropTypes.object
+		]).isRequired,
 		onMouseEnter: React.PropTypes.func,
 		onMouseLeave: React.PropTypes.func
 	},

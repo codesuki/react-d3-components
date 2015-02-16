@@ -75,11 +75,12 @@ let ScatterPlot = React.createClass({
 	getDefaultProps() {
 		return {
 			rScale: null,
-			shape: 'circle',
-			tooltipHtml: (d, position, xScale, yScale) => {
-				return d.y.toString();
-			}
+			shape: 'circle'
 		};
+	},
+
+	_tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 	},
 
 	render() {

@@ -12,11 +12,7 @@ let Axis = React.createClass({
 		scale: React.PropTypes.func.isRequired,
 		className: React.PropTypes.string,
 		zero: React.PropTypes.number,
-		orientation: function(props, propName, componentName) {
-			if (['top', 'bottom', 'left', 'right'].indexOf(props[propName]) == -1) {
-				return new Error('Not a valid orientation!');
-			}
-		}
+		orientation: React.PropTypes.oneOf(['top', 'bottom', 'left', 'right'])
 	},
 
 	getDefaultProps() {
