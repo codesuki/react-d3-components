@@ -12,6 +12,7 @@ Let React have complete control over the DOM even when using D3. This way we can
 * [Documentation](#documentation)
 * [Features](#features)
 * [Todo](#todo)
+* [Changelog](#changelog)
 * [Examples](#examples)
   * [Bar Chart](#barchart)
   * [Tooltips](#tooltips)
@@ -56,6 +57,13 @@ For quick testing the [examples](#examples) might be enough.
 * Legend
 * Documentation
 * Tests
+
+## Changelog
+
+* 0.3.0: Added tooltips and made axis properties accessible.
+* 0.2.2: Fixed accessors not being used everywhere
+* 0.2.1: Excluded external libraries from build and make it usable as a browser include
+* 0.2.0: Custom accessors, stacked charts, default scales
 
 ## Examples
 Check out example/index.html found [here](http://codesuki.github.io/react-d3-components/example.html).
