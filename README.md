@@ -129,7 +129,7 @@ React.render(<LineChart
 					xAxis={{innerTickSize: 10, label: "x-label"}}
 					yAxis={{label: "y-label"}}
 					/>,
-	document.getElementById('linechart'));
+					document.getElementById('linechart'));
 ```
 
 The following are the default values.
@@ -170,7 +170,7 @@ React.render(<ScatterPlot
 				y={yAccessor}
 				values={valuesAccessor}
 				/>,
-	document.getElementById('location'));
+				document.getElementById('location'));
 ```
 
 ### Overriding default parameters
@@ -215,10 +215,13 @@ data = [
 	}
 ];
 
-React.render(
-	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-	document.getElementById('location')
-);
+React.render(<BarChart
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+			/>,
+			document.getElementById('location'));
 ```
 
 ![stackedbarchart](http://codesuki.github.io/react-d3-components/stackedbarchart.png)
@@ -240,16 +243,29 @@ data = [
 	}
 ];
 
-React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-	document.getElementById('location')
+React.render(<ScatterPlot
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+			document.getElementById('location'));
+
+React.render(<LineChart
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+				/>,
+			document.getElementById('location')
 );
 
-React.render(<LineChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-	document.getElementById('location')
-);
-
-React.render(<AreaChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-	document.getElementById('location')
+React.render(<AreaChart
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+				/>,
+			document.getElementById('location')
 );
 ```
 
@@ -268,8 +284,13 @@ data = {
 	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 };
 
-React.render(<PieChart data={data} width={600} height={400} margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
-	document.getElementById('location')
+React.render(<PieChart
+				data={data}
+				width={600}
+				height={400}
+				margin={{top: 10, bottom: 10, left: 100, right: 100}}
+				/>,
+			document.getElementById('location')
 );
 ```
 
