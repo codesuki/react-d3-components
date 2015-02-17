@@ -161,6 +161,7 @@ let AreaChart = React.createClass({
 			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
+			width={innerWidth}
 			zero={yIntercept}
 			{...xAxis}
 				/>
@@ -169,6 +170,7 @@ let AreaChart = React.createClass({
 			className={"y axis"}
 			orientation={"left"}
 			scale={yScale}
+			height={innerHeight}
 			width={innerWidth}
 			zero={xIntercept}
 			{...yAxis}

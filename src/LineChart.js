@@ -116,7 +116,17 @@ let LineChart = React.createClass({
 		let xBisector = d3.bisector(e => { return x(e); }).left;
 		let xIndex = xBisector(data, xScale.invert(position[0]));
 
-		let yValue = y(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		let valueLeft = x(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		let valueRight = x(data[xIndex == data.length ? xIndex - 1 : xIndex - 1]);
+
+		let index;
+		if (Math.abs(xValueCursor - valueLeft) < Math.abs(xValueCursor - valueRight)) {
+			index = xIndex;
+		} else {
+			index = xIndex - 1;
+		}
+
+		let yValue = y(data[index == data.length ? index - 1 : index]);
 		let cursorValue = d3.round(yScale.invert(position[1]), 2);
 
 		return this.props.tooltipHtml(yValue, cursorValue);
@@ -169,6 +179,7 @@ let LineChart = React.createClass({
 			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
+			width={innerWidth}
 			{...xAxis}
 				/>
 
@@ -176,6 +187,7 @@ let LineChart = React.createClass({
 			className={"y axis"}
 			orientation={"left"}
 			scale={yScale}
+			height={innerHeight}
 			width={innerWidth}
 			{...yAxis}
 				/>

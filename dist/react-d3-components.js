@@ -196,10 +196,12 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
+			width: innerWidth,
 			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth,
 			zero: xIntercept }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
@@ -247,7 +249,8 @@ var Axis = React.createClass({ displayName: "Axis",
 		scale: React.PropTypes.func.isRequired,
 		className: React.PropTypes.string,
 		zero: React.PropTypes.number,
-		orientation: React.PropTypes.oneOf(["top", "bottom", "left", "right"])
+		orientation: React.PropTypes.oneOf(["top", "bottom", "left", "right"]).isRequired,
+		label: React.PropTypes.string
 	},
 
 	getDefaultProps: function getDefaultProps() {
@@ -261,7 +264,8 @@ var Axis = React.createClass({ displayName: "Axis",
 			tickPadding: 3,
 			outerTickSize: 6,
 			className: "axis",
-			zero: 0
+			zero: 0,
+			label: ""
 		};
 	},
 
@@ -298,6 +302,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		var orientation = this.props.orientation;
 		var className = this.props.className;
 		var zero = this.props.zero;
+		var label = this.props.label;
 
 
 		var ticks = tickValues == null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
@@ -330,9 +335,10 @@ var Axis = React.createClass({ displayName: "Axis",
 		    y2 = undefined,
 		    dy = undefined,
 		    textAnchor = undefined,
-		    d = undefined;
+		    d = undefined,
+		    labelElement = undefined;
 		if (orientation === "bottom" || orientation === "top") {
-			transform = "translate({val}, 0)";
+			transform = "translate({}, 0)";
 			x = 0;
 			y = sign * tickSpacing;
 			x2 = 0;
@@ -340,8 +346,10 @@ var Axis = React.createClass({ displayName: "Axis",
 			dy = sign < 0 ? "0em" : ".71em";
 			textAnchor = "middle";
 			d = "M" + range[0] + ", " + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+
+			labelElement = React.createElement("text", { className: "" + className + " label", textAnchor: "end", x: width, y: -6 }, label);
 		} else {
-			transform = "translate(0, {val})";
+			transform = "translate(0, {})";
 			x = sign * tickSpacing;
 			y = 0;
 			x2 = sign * innerTickSize;
@@ -349,17 +357,19 @@ var Axis = React.createClass({ displayName: "Axis",
 			dy = ".32em";
 			textAnchor = sign < 0 ? "end" : "start";
 			d = "M" + sign * outerTickSize + ", " + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+
+			labelElement = React.createElement("text", { className: "" + className + " label", textAnchor: "end", y: 6, dy: ".75em", transform: "rotate(-90)" }, label);
 		}
 
 		var tickElements = ticks.map(function (tick) {
 			var position = activeScale(tick);
-			var translate = transform.replace("{val}", position);
+			var translate = transform.replace("{}", position);
 			return React.createElement("g", { className: "tick", transform: translate }, React.createElement("line", { x2: x2, y2: y2, stroke: "#aaa" }), React.createElement("text", { x: x, y: y, dy: dy, textAnchor: textAnchor }, tickFormat(tick)));
 		});
 
 		var pathElement = React.createElement("path", { className: "domain", d: d, fill: "none", stroke: "#aaa" });
 
-		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString(), style: { shapeRendering: "crispEdges" } }, tickElements, pathElement);
+		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString(), style: { shapeRendering: "crispEdges" } }, tickElements, pathElement, labelElement);
 	},
 
 	_d3_scaleExtent: function _d3_scaleExtent(domain) {
@@ -535,10 +545,12 @@ var BarChart = React.createClass({ displayName: "BarChart",
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }, xAxis)), React.createElement(Axis, React.__spread({
+			height: innerHeight,
+			width: innerWidth }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
@@ -904,7 +916,17 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		}).left;
 		var xIndex = xBisector(data, xScale.invert(position[0]));
 
-		var yValue = y(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		var valueLeft = x(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		var valueRight = x(data[xIndex == data.length ? xIndex - 1 : xIndex - 1]);
+
+		var index = undefined;
+		if (Math.abs(xValueCursor - valueLeft) < Math.abs(xValueCursor - valueRight)) {
+			index = xIndex;
+		} else {
+			index = xIndex - 1;
+		}
+
+		var yValue = y(data[index == data.length ? index - 1 : index]);
 		var cursorValue = d3.round(yScale.invert(position[1]), 2);
 
 		return this.props.tooltipHtml(yValue, cursorValue);
@@ -951,10 +973,12 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }, xAxis)), React.createElement(Axis, React.__spread({
+			height: innerHeight,
+			width: innerWidth }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
@@ -1342,10 +1366,12 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
+			width: innerWidth,
 			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth,
 			zero: xIntercept }, yAxis)), React.createElement(DataSet, {
 			data: data,

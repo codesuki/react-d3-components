@@ -12,7 +12,8 @@ let Axis = React.createClass({
 		scale: React.PropTypes.func.isRequired,
 		className: React.PropTypes.string,
 		zero: React.PropTypes.number,
-		orientation: React.PropTypes.oneOf(['top', 'bottom', 'left', 'right'])
+		orientation: React.PropTypes.oneOf(['top', 'bottom', 'left', 'right']).isRequired,
+		label: React.PropTypes.string
 	},
 
 	getDefaultProps() {
@@ -24,7 +25,8 @@ let Axis = React.createClass({
 			tickPadding: 3,
 			outerTickSize: 6,
 			className: "axis",
-			zero: 0
+			zero: 0,
+			label: ""
 		};
 	},
 
@@ -56,7 +58,8 @@ let Axis = React.createClass({
 			 scale,
 			 orientation,
 			 className,
-			 zero} = this.props;
+			 zero,
+			 label} = this.props;
 
 		let ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
 
@@ -77,9 +80,9 @@ let Axis = React.createClass({
 
 		let activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
 
-		let transform, x, y, x2, y2, dy, textAnchor, d;
+		let transform, x, y, x2, y2, dy, textAnchor, d, labelElement;
 		if (orientation === "bottom" || orientation === "top") {
-			transform = `translate({val}, 0)`;
+			transform = `translate({}, 0)`;
 			x = 0;
 			y = sign * tickSpacing;
 			x2 = 0;
@@ -87,8 +90,10 @@ let Axis = React.createClass({
 			dy = sign < 0 ? "0em" : ".71em";
 			textAnchor = "middle";
 			d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
+
+			labelElement = <text className={`${className} label`} textAnchor={"end"} x={width} y={-6}>{label}</text>;
 		} else {
-			transform = `translate(0, {val})`;
+			transform = `translate(0, {})`;
 			x = sign * tickSpacing;
 			y = 0;
 			x2 = sign * innerTickSize;
@@ -96,11 +101,13 @@ let Axis = React.createClass({
 			dy = ".32em";
 			textAnchor = sign < 0 ? "end" : "start";
 			d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
+
+			labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={".75em"} transform={"rotate(-90)"}>{label}</text>;
 		}
 
 		let tickElements = ticks.map(tick => {
 			let position = activeScale(tick);
-			let translate = transform.replace("{val}", position);
+			let translate = transform.replace("{}", position);
 			return (
 					<g className="tick" transform={translate}>
 					<line x2={x2} y2={y2} stroke="#aaa"/>
@@ -116,6 +123,7 @@ let Axis = React.createClass({
 				<g ref="axis" className={className} transform={this._getTranslateString()} style={{shapeRendering: 'crispEdges'}}>
 				{tickElements}
 			{pathElement}
+			{labelElement}
 			</g>
 		);
 	},

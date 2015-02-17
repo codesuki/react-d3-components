@@ -117,6 +117,7 @@ let ScatterPlot = React.createClass({
 			orientation="bottom"
 			scale={xScale}
 			height={innerHeight}
+			width={innerWidth}
 			zero={yIntercept}
 			{...xAxis}
 				/>
@@ -125,6 +126,7 @@ let ScatterPlot = React.createClass({
 			className={"y axis"}
 			orientation="left"
 			scale={yScale}
+			height={innerHeight}
 			width={innerWidth}
 			zero={xIntercept}
 			{...yAxis}

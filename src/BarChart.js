@@ -120,6 +120,7 @@ let BarChart = React.createClass({
 			orientation={"bottom"}
 			scale={xScale}
 			height={innerHeight}
+			width={innerWidth}
 			{...xAxis}
 				/>
 
@@ -127,6 +128,7 @@ let BarChart = React.createClass({
 			className={"y axis"}
 			orientation={"left"}
 			scale={yScale}
+			height={innerHeight}
 			width={innerWidth}
 			{...yAxis}
 				/>
