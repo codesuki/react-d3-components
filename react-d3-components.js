@@ -46,6 +46,7 @@ var d3 = require("./D3Provider");
 var Chart = require("./Chart");
 var Axis = require("./Axis");
 var Path = require("./Path");
+var Tooltip = require("./Tooltip");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
@@ -53,6 +54,7 @@ var ArrayifyMixin = require("./ArrayifyMixin");
 var StackAccessorMixin = require("./StackAccessorMixin");
 var StackDataMixin = require("./StackDataMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
+var TooltipMixin = require("./TooltipMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -71,22 +73,34 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var stroke = this.props.stroke;
 		var values = this.props.values;
 		var label = this.props.label;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
 		var areas = data.map(function (stack) {
-			return React.createElement(Path, { className: "area", stroke: "none", fill: colorScale(label(stack)), d: area(values(stack)) });
+			return React.createElement(Path, {
+				className: "area",
+				stroke: "none",
+				fill: colorScale(label(stack)),
+				d: area(values(stack)),
+				onMouseEnter: onMouseEnter,
+				onMouseLeave: onMouseLeave,
+				data: data });
 		});
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(values(stack)), stroke: stroke(label(stack)) });
+			return React.createElement(Path, {
+				className: "line",
+				d: line(values(stack)),
+				stroke: stroke(label(stack)) });
 		});
 
-		return React.createElement("g", null, areas, lines);
+		return React.createElement("g", null, areas);
 	}
 });
 
 var AreaChart = React.createClass({ displayName: "AreaChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin, TooltipMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string,
@@ -98,6 +112,36 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			interpolate: "linear",
 			stroke: d3.scale.category20()
 		};
+	},
+
+	_tooltipHtml: function _tooltipHtml(d, position) {
+		var x = this.props.x;
+		var y0 = this.props.y0;
+		var y = this.props.y;
+		var values = this.props.values;
+		var label = this.props.label;
+		var xScale = this.props.xScale;
+		var yScale = this.props.yScale;
+
+
+		var xBisector = d3.bisector(function (e) {
+			return x(e);
+		}).right;
+		var xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
+		xIndex = xIndex == values(d[0]).length ? xIndex - 1 : xIndex;
+
+		var yValueCursor = yScale.invert(position[1]);
+
+		var yBisector = d3.bisector(function (e) {
+			return y0(values(e)[xIndex]) + y(values(e)[xIndex]);
+		}).left;
+		var yIndex = yBisector(d, yValueCursor);
+		yIndex = yIndex == d.length ? yIndex - 1 : yIndex;
+
+		var yValue = y(values(d[yIndex])[xIndex]);
+		var yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
+
+		return this.props.tooltipHtml(yValue, yValueCumulative);
 	},
 
 	render: function render() {
@@ -120,6 +164,8 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var x = this.props.x;
 		var y = this.props.y;
 		var y0 = this.props.y0;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -136,24 +182,32 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 			return yScale(y0(e) + y(e));
 		}).interpolate(interpolate);
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
 			data: data,
 			line: line,
 			area: area,
 			colorScale: colorScale,
 			stroke: stroke,
 			label: label,
-			values: values }), React.createElement(Axis, {
+			values: values,
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept }), React.createElement(Axis, {
+			width: innerWidth,
+			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth,
-			zero: xIntercept }));
+			zero: xIntercept }, yAxis))), React.createElement(Tooltip, {
+			hidden: this.state.tooltip.hidden,
+			top: this.state.tooltip.top,
+			left: this.state.tooltip.left,
+			html: this.state.tooltip.html }));
 	}
 });
 
@@ -161,7 +215,7 @@ module.exports = AreaChart;
 
 
 
-},{"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18}],3:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18,"./Tooltip":19,"./TooltipMixin":20}],3:[function(require,module,exports){
 "use strict";
 
 var ArrayifyMixin = {
@@ -195,11 +249,8 @@ var Axis = React.createClass({ displayName: "Axis",
 		scale: React.PropTypes.func.isRequired,
 		className: React.PropTypes.string,
 		zero: React.PropTypes.number,
-		orientation: function (props, propName, componentName) {
-			if (["top", "bottom", "left", "right"].indexOf(props[propName]) == -1) {
-				return new Error("Not a valid orientation!");
-			}
-		}
+		orientation: React.PropTypes.oneOf(["top", "bottom", "left", "right"]).isRequired,
+		label: React.PropTypes.string
 	},
 
 	getDefaultProps: function getDefaultProps() {
@@ -213,7 +264,8 @@ var Axis = React.createClass({ displayName: "Axis",
 			tickPadding: 3,
 			outerTickSize: 6,
 			className: "axis",
-			zero: 0
+			zero: 0,
+			label: ""
 		};
 	},
 
@@ -250,6 +302,7 @@ var Axis = React.createClass({ displayName: "Axis",
 		var orientation = this.props.orientation;
 		var className = this.props.className;
 		var zero = this.props.zero;
+		var label = this.props.label;
 
 
 		var ticks = tickValues == null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
@@ -282,9 +335,10 @@ var Axis = React.createClass({ displayName: "Axis",
 		    y2 = undefined,
 		    dy = undefined,
 		    textAnchor = undefined,
-		    d = undefined;
+		    d = undefined,
+		    labelElement = undefined;
 		if (orientation === "bottom" || orientation === "top") {
-			transform = "translate({val}, 0)";
+			transform = "translate({}, 0)";
 			x = 0;
 			y = sign * tickSpacing;
 			x2 = 0;
@@ -292,8 +346,10 @@ var Axis = React.createClass({ displayName: "Axis",
 			dy = sign < 0 ? "0em" : ".71em";
 			textAnchor = "middle";
 			d = "M" + range[0] + ", " + sign * outerTickSize + "V0H" + range[1] + "V" + sign * outerTickSize;
+
+			labelElement = React.createElement("text", { className: "" + className + " label", textAnchor: "end", x: width, y: -6 }, label);
 		} else {
-			transform = "translate(0, {val})";
+			transform = "translate(0, {})";
 			x = sign * tickSpacing;
 			y = 0;
 			x2 = sign * innerTickSize;
@@ -301,17 +357,19 @@ var Axis = React.createClass({ displayName: "Axis",
 			dy = ".32em";
 			textAnchor = sign < 0 ? "end" : "start";
 			d = "M" + sign * outerTickSize + ", " + range[0] + "H0V" + range[1] + "H" + sign * outerTickSize;
+
+			labelElement = React.createElement("text", { className: "" + className + " label", textAnchor: "end", y: 6, dy: ".75em", transform: "rotate(-90)" }, label);
 		}
 
 		var tickElements = ticks.map(function (tick) {
 			var position = activeScale(tick);
-			var translate = transform.replace("{val}", position);
+			var translate = transform.replace("{}", position);
 			return React.createElement("g", { className: "tick", transform: translate }, React.createElement("line", { x2: x2, y2: y2, stroke: "#aaa" }), React.createElement("text", { x: x, y: y, dy: dy, textAnchor: textAnchor }, tickFormat(tick)));
 		});
 
 		var pathElement = React.createElement("path", { className: "domain", d: d, fill: "none", stroke: "#aaa" });
 
-		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString(), style: { shapeRendering: "crispEdges" } }, tickElements, pathElement);
+		return React.createElement("g", { ref: "axis", className: className, transform: this._getTranslateString(), style: { shapeRendering: "crispEdges" } }, tickElements, pathElement, labelElement);
 	},
 
 	_d3_scaleExtent: function _d3_scaleExtent(domain) {
@@ -341,7 +399,10 @@ var Bar = React.createClass({ displayName: "Bar",
 		height: React.PropTypes.number.isRequired,
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		fill: React.PropTypes.string.isRequired
+		fill: React.PropTypes.string.isRequired,
+		data: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object]).isRequired,
+		onMouseEnter: React.PropTypes.func,
+		onMouseLeave: React.PropTypes.func
 	},
 
 	render: function render() {
@@ -350,9 +411,24 @@ var Bar = React.createClass({ displayName: "Bar",
 		var width = this.props.width;
 		var height = this.props.height;
 		var fill = this.props.fill;
+		var data = this.props.data;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
-		return React.createElement("rect", { className: "bar", x: x, y: y, width: width, height: height, fill: fill });
+		return React.createElement("rect", {
+			className: "bar",
+			x: x,
+			y: y,
+			width: width,
+			height: height,
+			fill: fill,
+			onMouseMove: function (e) {
+				onMouseEnter(e, data);
+			},
+			onMouseLeave: function (e) {
+				onMouseLeave(e);
+			} });
 	}
 });
 
@@ -369,6 +445,7 @@ var d3 = require("./D3Provider");
 var Chart = require("./Chart");
 var Axis = require("./Axis");
 var Bar = require("./Bar");
+var Tooltip = require("./Tooltip");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
@@ -376,6 +453,7 @@ var ArrayifyMixin = require("./ArrayifyMixin");
 var StackAccessorMixin = require("./StackAccessorMixin");
 var StackDataMixin = require("./StackDataMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
+var TooltipMixin = require("./TooltipMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -400,6 +478,8 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var x = this.props.x;
 		var y = this.props.y;
 		var y0 = this.props.y0;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
 		var bars = data.map(function (stack) {
@@ -409,7 +489,10 @@ var DataSet = React.createClass({ displayName: "DataSet",
 					height: yScale(yScale.domain()[0]) - yScale(y(e)),
 					x: xScale(x(e)),
 					y: yScale(y0(e) + y(e)),
-					fill: colorScale(label(stack)) });
+					fill: colorScale(label(stack)),
+					data: e,
+					onMouseEnter: onMouseEnter,
+					onMouseLeave: onMouseLeave });
 			});
 		});
 
@@ -418,7 +501,15 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var BarChart = React.createClass({ displayName: "BarChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, StackAccessorMixin, StackDataMixin, DefaultScalesMixin, TooltipMixin],
+
+	getDefaultProps: function getDefaultProps() {
+		return {};
+	},
+
+	_tooltipHtml: function _tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d));
+	},
 
 	render: function render() {
 		var data = this.props.data;
@@ -435,9 +526,11 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var y = this.props.y;
 		var y0 = this.props.y0;
 		var x = this.props.x;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
 			yScale: yScale,
@@ -446,15 +539,23 @@ var BarChart = React.createClass({ displayName: "BarChart",
 			label: label,
 			y: y,
 			y0: y0,
-			x: x }), React.createElement(Axis, {
+			x: x,
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
+			height: innerHeight,
+			width: innerWidth }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
-			width: innerWidth }));
+			height: innerHeight,
+			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
+			hidden: this.state.tooltip.hidden,
+			top: this.state.tooltip.top,
+			left: this.state.tooltip.left,
+			html: this.state.tooltip.html }));
 	}
 });
 
@@ -462,7 +563,7 @@ module.exports = BarChart;
 
 
 
-},{"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18}],7:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15,"./StackAccessorMixin":17,"./StackDataMixin":18,"./Tooltip":19,"./TooltipMixin":20}],7:[function(require,module,exports){
 "use strict";
 
 var React = require("./ReactProvider");
@@ -511,7 +612,7 @@ var d3 = require("./D3Provider");
 
 var DefaultPropsMixin = {
 	propTypes: {
-		data: React.PropTypes.array.isRequired,
+		data: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.array]).isRequired,
 		height: React.PropTypes.number.isRequired,
 		width: React.PropTypes.number.isRequired,
 		margin: React.PropTypes.shape({
@@ -710,12 +811,14 @@ var d3 = require("./D3Provider");
 var Chart = require("./Chart");
 var Axis = require("./Axis");
 var Path = require("./Path");
+var Tooltip = require("./Tooltip");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
 var AccessorMixin = require("./AccessorMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
+var TooltipMixin = require("./TooltipMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -725,24 +828,44 @@ var DataSet = React.createClass({ displayName: "DataSet",
 	},
 
 	render: function render() {
+		var width = this.props.width;
+		var height = this.props.height;
 		var data = this.props.data;
 		var line = this.props.line;
 		var strokeWidth = this.props.strokeWidth;
 		var colorScale = this.props.colorScale;
 		var values = this.props.values;
 		var label = this.props.label;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
 		var lines = data.map(function (stack) {
-			return React.createElement(Path, { className: "line", d: line(values(stack)), stroke: colorScale(label(stack)) });
+			return React.createElement(Path, {
+				className: "line",
+				d: line(values(stack)),
+				stroke: colorScale(label(stack)),
+				data: values(stack),
+				onMouseEnter: onMouseEnter,
+				onMouseLeave: onMouseLeave });
 		});
 
+		/*
+   The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
+   Not sure if this should be used.
+   */
+		/*
+  <rect width={width} height={height} fill={"none"} stroke={"none"} style={{pointerEvents: "all"}}
+  	onMouseMove={ evt => { onMouseEnter(evt, data); } }
+  	onMouseLeave={  evt => { onMouseLeave(evt); } }
+  		/>
+   */
 		return React.createElement("g", null, lines);
 	}
 });
 
 var LineChart = React.createClass({ displayName: "LineChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin, TooltipMixin],
 
 	propTypes: {
 		interpolate: React.PropTypes.string
@@ -752,6 +875,61 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		return {
 			interpolate: "linear"
 		};
+	},
+
+	/*
+  The code below supports finding the data values for the line closest to the mouse cursor.
+  Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
+  For now I don't want to use this method.
+  */
+	/*
+  tooltipHtml: (d, position, xScale, yScale) => {
+  let xValueCursor = xScale.invert(position[0]);
+  let yValueCursor = yScale.invert(position[1]);
+ 	 let xBisector = d3.bisector(e => { return e.x; }).left;
+  let valuesAtX = d.map(stack => {
+  let idx = xBisector(stack.values, xValueCursor);
+  return stack.values[idx];
+  });
+ 	 valuesAtX.sort((a, b) => { return a.y - b.y; });
+ 	 let yBisector = d3.bisector(e => { return e.y; }).left;
+  let yIndex = yBisector(valuesAtX, yValueCursor);
+ 	 let yValue = valuesAtX[yIndex == valuesAtX.length ? yIndex - 1 : yIndex].y;
+ 	 return `Value: ${yValue}`;
+  }
+  */
+	_tooltipHtml: function _tooltipHtml(data, position) {
+		var x = this.props.x;
+		var y0 = this.props.y0;
+		var y = this.props.y;
+		var values = this.props.values;
+		var label = this.props.label;
+		var xScale = this.props.xScale;
+		var yScale = this.props.yScale;
+
+
+		var xValueCursor = xScale.invert(position[0]);
+		var yValueCursor = yScale.invert(position[1]);
+
+		var xBisector = d3.bisector(function (e) {
+			return x(e);
+		}).left;
+		var xIndex = xBisector(data, xScale.invert(position[0]));
+
+		var valueLeft = x(data[xIndex == data.length ? xIndex - 1 : xIndex]);
+		var valueRight = x(data[xIndex == data.length ? xIndex - 1 : xIndex - 1]);
+
+		var index = undefined;
+		if (Math.abs(xValueCursor - valueLeft) < Math.abs(xValueCursor - valueRight)) {
+			index = xIndex;
+		} else {
+			index = xIndex - 1;
+		}
+
+		var yValue = y(data[index == data.length ? index - 1 : index]);
+		var cursorValue = d3.round(yScale.invert(position[1]), 2);
+
+		return this.props.tooltipHtml(yValue, cursorValue);
 	},
 
 	render: function render() {
@@ -771,6 +949,8 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var label = this.props.label;
 		var x = this.props.x;
 		var y = this.props.y;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -779,21 +959,31 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			return yScale(y(e));
 		}).interpolate(interpolate);
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
+			height: innerHeight,
+			width: innerWidth,
 			data: data,
 			line: line,
 			strokeWidth: strokeWidth,
 			colorScale: colorScale,
 			values: values,
-			label: label }), React.createElement(Axis, {
+			label: label,
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseLeave }), React.createElement(Axis, React.__spread({
 			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
-			height: innerHeight }), React.createElement(Axis, {
+			height: innerHeight,
+			width: innerWidth }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
-			width: innerWidth }));
+			height: innerHeight,
+			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
+			hidden: this.state.tooltip.hidden,
+			top: this.state.tooltip.top,
+			left: this.state.tooltip.left,
+			html: this.state.tooltip.html }));
 	}
 });
 
@@ -801,7 +991,7 @@ module.exports = LineChart;
 
 
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15}],13:[function(require,module,exports){
+},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./ReactProvider":15,"./Tooltip":19,"./TooltipMixin":20}],13:[function(require,module,exports){
 "use strict";
 
 var React = require("./ReactProvider");
@@ -812,7 +1002,8 @@ var Path = React.createClass({ displayName: "Path",
 		className: React.PropTypes.string,
 		stroke: React.PropTypes.string.isRequired,
 		fill: React.PropTypes.string,
-		d: React.PropTypes.string.isRequired
+		d: React.PropTypes.string.isRequired,
+		data: React.PropTypes.array.isRequired
 	},
 
 	getDefaultProps: function getDefaultProps() {
@@ -827,9 +1018,23 @@ var Path = React.createClass({ displayName: "Path",
 		var stroke = this.props.stroke;
 		var fill = this.props.fill;
 		var d = this.props.d;
+		var data = this.props.data;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
-		return React.createElement("path", { className: className, strokeWidth: "2", stroke: stroke, fill: fill, d: d });
+		return React.createElement("path", {
+			className: className,
+			strokeWidth: "2",
+			stroke: stroke,
+			fill: fill,
+			d: d,
+			onMouseMove: function (evt) {
+				onMouseEnter(evt, data);
+			},
+			onMouseLeave: function (evt) {
+				onMouseLeave(evt);
+			} });
 	}
 });
 
@@ -843,11 +1048,13 @@ module.exports = Path;
 var React = require("./ReactProvider");
 var d3 = require("./D3Provider");
 
+var Chart = require("./Chart");
+var Tooltip = require("./Tooltip");
+
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var AccessorMixin = require("./AccessorMixin");
-
-var Chart = require("./Chart");
+var TooltipMixin = require("./TooltipMixin");
 
 var Wedge = React.createClass({ displayName: "Wedge",
 	propTypes: {
@@ -858,9 +1065,20 @@ var Wedge = React.createClass({ displayName: "Wedge",
 	render: function render() {
 		var fill = this.props.fill;
 		var d = this.props.d;
+		var data = this.props.data;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
-		return React.createElement("path", { fill: fill, d: d });
+		return React.createElement("path", {
+			fill: fill,
+			d: d,
+			onMouseMove: function (evt) {
+				onMouseEnter(evt, data);
+			},
+			onMouseLeave: function (evt) {
+				onMouseLeave(evt);
+			} });
 	}
 });
 
@@ -898,6 +1116,8 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var fill = this.props.fill;
 		var opacity = this.props.opacity;
 		var x = this.props.x;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
 		var wedges = pie.map(function (e) {
@@ -915,7 +1135,21 @@ var DataSet = React.createClass({ displayName: "DataSet",
 			var linePos = outerArc.centroid(e);
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
-			return React.createElement("g", { className: "arc" }, React.createElement(Wedge, { fill: colorScale(x(e.data)), d: d }), React.createElement("polyline", { opacity: opacity, strokeWidth: strokeWidth, stroke: stroke, fill: fill, points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", { dy: ".35em", x: labelPos[0], y: labelPos[1], textAnchor: textAnchor }, x(e.data)));
+			return React.createElement("g", { className: "arc" }, React.createElement(Wedge, {
+				data: e.data,
+				fill: colorScale(x(e.data)),
+				d: d,
+				onMouseEnter: onMouseEnter,
+				onMouseLeave: onMouseLeave }), React.createElement("polyline", {
+				opacity: opacity,
+				strokeWidth: strokeWidth,
+				stroke: stroke,
+				fill: fill,
+				points: [arc.centroid(e), outerArc.centroid(e), linePos] }), React.createElement("text", {
+				dy: ".35em",
+				x: labelPos[0],
+				y: labelPos[1],
+				textAnchor: textAnchor }, x(e.data)));
 		});
 
 		return React.createElement("g", null, wedges);
@@ -923,13 +1157,13 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var PieChart = React.createClass({ displayName: "PieChart",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin, TooltipMixin],
 
 	propTypes: {
 		innerRadius: React.PropTypes.number,
 		outerRadius: React.PropTypes.number,
 		labelRadius: React.PropTypes.number,
-		padRadius: React.PropTypes.number,
+		padRadius: React.PropTypes.string,
 		cornerRadius: React.PropTypes.number
 	},
 
@@ -941,6 +1175,10 @@ var PieChart = React.createClass({ displayName: "PieChart",
 			padRadius: "auto",
 			cornerRadius: 0
 		};
+	},
+
+	_tooltipHtml: function _tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 	},
 
 	render: function render() {
@@ -984,7 +1222,21 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		var pieData = pie(data.values);
 
 		var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, { width: innerWidth, height: innerHeight, colorScale: colorScale, pie: pieData, arc: arc, outerArc: outerArc, radius: radius, x: x })));
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, {
+			width: innerWidth,
+			height: innerHeight,
+			colorScale: colorScale,
+			pie: pieData,
+			arc: arc,
+			outerArc: outerArc,
+			radius: radius,
+			x: x,
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseLeave }))), React.createElement(Tooltip, {
+			hidden: this.state.tooltip.hidden,
+			top: this.state.tooltip.top,
+			left: this.state.tooltip.left,
+			html: this.state.tooltip.html }));
 	}
 });
 
@@ -992,7 +1244,7 @@ module.exports = PieChart;
 
 
 
-},{"./AccessorMixin":1,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./HeightWidthMixin":11,"./ReactProvider":15}],15:[function(require,module,exports){
+},{"./AccessorMixin":1,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./HeightWidthMixin":11,"./ReactProvider":15,"./Tooltip":19,"./TooltipMixin":20}],15:[function(require,module,exports){
 "use strict";
 
 var React = window.React || require("react");
@@ -1009,12 +1261,14 @@ var d3 = require("./D3Provider");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
+var Tooltip = require("./Tooltip");
 
 var DefaultPropsMixin = require("./DefaultPropsMixin");
 var HeightWidthMixin = require("./HeightWidthMixin");
 var ArrayifyMixin = require("./ArrayifyMixin");
 var AccessorMixin = require("./AccessorMixin");
 var DefaultScalesMixin = require("./DefaultScalesMixin");
+var TooltipMixin = require("./TooltipMixin");
 
 var DataSet = React.createClass({ displayName: "DataSet",
 	propTypes: {
@@ -1022,7 +1276,9 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		symbol: React.PropTypes.func.isRequired,
 		xScale: React.PropTypes.func.isRequired,
 		yScale: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired
+		colorScale: React.PropTypes.func.isRequired,
+		onMouseEnter: React.PropTypes.func,
+		onMouseLeave: React.PropTypes.func
 	},
 
 	render: function render() {
@@ -1034,6 +1290,8 @@ var DataSet = React.createClass({ displayName: "DataSet",
 		var values = this.props.values;
 		var x = this.props.x;
 		var y = this.props.y;
+		var onMouseEnter = this.props.onMouseEnter;
+		var onMouseLeave = this.props.onMouseLeave;
 
 
 		var circles = data.map(function (stack) {
@@ -1043,7 +1301,13 @@ var DataSet = React.createClass({ displayName: "DataSet",
 					className: "dot",
 					d: symbol(),
 					transform: translate,
-					fill: colorScale(stack.label) });
+					fill: colorScale(stack.label),
+					onMouseOver: function (evt) {
+						onMouseEnter(evt, e);
+					},
+					onMouseLeave: function (evt) {
+						onMouseLeave(evt);
+					} });
 			});
 		});
 
@@ -1052,7 +1316,7 @@ var DataSet = React.createClass({ displayName: "DataSet",
 });
 
 var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
-	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin],
+	mixins: [DefaultPropsMixin, HeightWidthMixin, ArrayifyMixin, AccessorMixin, DefaultScalesMixin, TooltipMixin],
 
 	propTypes: {
 		rScale: React.PropTypes.func,
@@ -1064,6 +1328,10 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			rScale: null,
 			shape: "circle"
 		};
+	},
+
+	_tooltipHtml: function _tooltipHtml(d, position) {
+		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 	},
 
 	render: function render() {
@@ -1083,6 +1351,8 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 		var values = this.props.values;
 		var x = this.props.x;
 		var y = this.props.y;
+		var xAxis = this.props.xAxis;
+		var yAxis = this.props.yAxis;
 
 
 		var symbol = d3.svg.symbol().type(shape);
@@ -1091,15 +1361,19 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			symbol = symbol.size(rScale);
 		}
 
-		return React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(Axis, {
+		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(Axis, React.__spread({
+			className: "x axis",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			zero: yIntercept }), React.createElement(Axis, {
+			width: innerWidth,
+			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
+			className: "y axis",
 			orientation: "left",
 			scale: yScale,
+			height: innerHeight,
 			width: innerWidth,
-			zero: xIntercept }), React.createElement(DataSet, {
+			zero: xIntercept }, yAxis)), React.createElement(DataSet, {
 			data: data,
 			xScale: xScale,
 			yScale: yScale,
@@ -1107,7 +1381,13 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 			symbol: symbol,
 			values: values,
 			x: x,
-			y: y }));
+			y: y,
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseLeave })), React.createElement(Tooltip, {
+			hidden: this.state.tooltip.hidden,
+			top: this.state.tooltip.top,
+			left: this.state.tooltip.left,
+			html: this.state.tooltip.html }));
 	}
 });
 
@@ -1115,7 +1395,7 @@ module.exports = ScatterPlot;
 
 
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15}],17:[function(require,module,exports){
+},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":7,"./D3Provider":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./ReactProvider":15,"./Tooltip":19,"./TooltipMixin":20}],17:[function(require,module,exports){
 "use strict";
 
 var React = require("./ReactProvider");
@@ -1192,6 +1472,129 @@ module.exports = StackDataMixin;
 },{"./D3Provider":8,"./ReactProvider":15}],19:[function(require,module,exports){
 "use strict";
 
+var React = require("./ReactProvider");
+var d3 = require("./D3Provider");
+
+var Tooltip = React.createClass({ displayName: "Tooltip",
+	propTypes: {
+		top: React.PropTypes.number.isRequired,
+		left: React.PropTypes.number.isRequired,
+		html: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			top: 150,
+			left: 100,
+			html: ""
+		};
+	},
+
+	render: function render() {
+		var top = this.props.top;
+		var left = this.props.left;
+		var hidden = this.props.hidden;
+		var html = this.props.html;
+
+
+		var style = {
+			display: hidden ? "none" : "flex",
+			position: "absolute",
+			top: top,
+			left: left
+		};
+
+		return React.createElement("div", { className: "tooltip", style: style }, html);
+	}
+});
+
+module.exports = Tooltip;
+
+
+
+},{"./D3Provider":8,"./ReactProvider":15}],20:[function(require,module,exports){
+"use strict";
+
+var React = require("./ReactProvider");
+var d3 = require("./D3Provider");
+
+var TooltipMixin = {
+	propTypes: {
+		tooltipHtml: React.PropTypes.func
+	},
+
+	getInitialState: function getInitialState() {
+		return {
+			tooltip: {
+				hidden: true
+			}
+		};
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			tooltipOffset: { top: -20, left: 15 },
+			tooltipHtml: null
+		};
+	},
+
+	componentDidMount: function componentDidMount() {
+		this._svg_node = this.getDOMNode().getElementsByTagName("svg")[0];
+	},
+
+	onMouseEnter: function onMouseEnter(e, data) {
+		if (!this.props.tooltipHtml) {
+			return;
+		}
+
+		var margin = this.props.margin;
+		var xScale = this.props.xScale;
+		var yScale = this.props.yScale;
+		var tooltipHtml = this.props.tooltipHtml;
+
+
+		var svg = this._svg_node;
+		var position = undefined;
+		if (svg.createSVGPoint) {
+			var point = svg.createSVGPoint();
+			point.x = e.clientX, point.y = e.clientY;
+			point = point.matrixTransform(svg.getScreenCTM().inverse());
+			position = [point.x - margin.left, point.y - margin.top];
+		} else {
+			var rect = svg.getBoundingClientRect();
+			position = [e.clientX - rect.left - svg.clientLeft - margin.left, e.clientY - rect.top - svg.clientTop - margin.top];
+		}
+
+		this.setState({
+			tooltip: {
+				top: e.pageY + this.props.tooltipOffset.top,
+				left: e.pageX + this.props.tooltipOffset.left,
+				hidden: false,
+				html: this._tooltipHtml(data, position)
+			}
+		});
+	},
+
+	onMouseLeave: function onMouseLeave(e) {
+		if (!this.props.tooltipHtml) {
+			return;
+		}
+
+		this.setState({
+			tooltip: {
+				hidden: true
+			}
+		});
+	}
+};
+
+module.exports = TooltipMixin;
+
+
+
+},{"./D3Provider":8,"./ReactProvider":15}],21:[function(require,module,exports){
+"use strict";
+
 var BarChart = require("./BarChart");
 var PieChart = require("./PieChart");
 var ScatterPlot = require("./ScatterPlot");
@@ -1208,5 +1611,5 @@ module.exports = {
 
 
 
-},{"./AreaChart":2,"./BarChart":6,"./LineChart":12,"./PieChart":14,"./ScatterPlot":16}]},{},[19])(19)
+},{"./AreaChart":2,"./BarChart":6,"./LineChart":12,"./PieChart":14,"./ScatterPlot":16}]},{},[21])(21)
 });
