@@ -4,13 +4,18 @@
 
 Let React have complete control over the DOM even when using D3. This way we can benefit from Reacts Virtual DOM.
 
+![charts](http://codesuki.github.io/react-d3-components/charts.png)
+
 ## Table of Contents
 * [Installation](#installation)
 * [Description](#description)
+* [Documentation](#documentation)
 * [Features](#features)
 * [Todo](#todo)
 * [Examples](#examples)
   * [Bar Chart](#barchart)
+  * [Tooltips](#tooltips)
+  * [Axis parameters](#axis-parameters)
   * [Custom accessors](#custom-accessors)
   * [Customization](#overriding-default-parameters)
   * [Stacked Bar Chart](#stackedbarchart)
@@ -28,7 +33,12 @@ I try to provide sensible defaults, but since for most use-cases we need to cust
 
 If you like the project please consider star'ing and a pull request. I am open for any additions.
 
+## Documentation
+Documentation is in the [Wiki](https://github.com/codesuki/react-d3-components/wiki).
+For quick testing the [examples](#examples) might be enough.
+
 ## Features
+* Tooltips
 * Custom accessors to support any data format
 * Negative axes
 * CSS classes to allow styling
@@ -43,7 +53,6 @@ If you like the project please consider star'ing and a pull request. I am open f
 ## Todo
 * More Charts
 * Animations
-* Tooltip
 * Legend
 * Documentation
 * Tests
@@ -68,6 +77,68 @@ React.render(
 
 ![barchart](http://codesuki.github.io/react-d3-components/barchart.png)
 
+### Tooltips
+You can provide a callback to every chart that will return html for the tooltip.
+Depending on the type of chart the callback will receive different parameters that are useful.
+
+* Bar Chart: x, y0, y of the hovered bar and the total bar height in case of a stacked bar chart.
+* Scatter Plot: x, y of the hovered point.
+* Pie Chart: x, y, of the hovered wedge.
+* Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart.
+
+Example Scatter Plot:
+```javascript
+var tooltipScatter = function(x, y) {
+	return "x: " + x + " y: " + y;
+};
+
+React.render(<ScatterPlot
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+				tooltipHtml={tooltipScatter}
+				xAxis={{label: "x-label"}}
+				yAxis={{label: "y-label"}}
+				/>,
+			document.getElementById('scatterplot')
+);
+```
+
+![tooltip](http://codesuki.github.io/react-d3-components/tooltip.png)
+
+### Axis parameters
+All D3 axis parameters can optionally be provided to the chart. For detailed explanation please check the documentation.
+```javascript
+
+React.render(<LineChart
+					data={data}
+					width={400}
+					height={400}
+					margin={{top: 10, bottom: 50, left: 50, right: 10}}
+					tooltipHtml={tooltipLine}
+
+					xAxis={{innerTickSize: 10, label: "x-label"}}
+					yAxis={{label: "y-label"}}
+					/>,
+	document.getElementById('linechart'));
+```
+
+The following are the default values.
+```javascript
+{
+tickArguments: [10],
+tickValues: null,
+tickFormat: x => { return x; },
+innerTickSize: 6,
+tickPadding: 3,
+outerTickSize: 6,
+className: "axis",
+zero: 0,
+label: ""
+}
+```
+
 ### Custom Accessors
 ```javascript
 data = [{
@@ -80,8 +151,18 @@ var valuesAccessor = function(stack) { return stack.customValues; };
 var xAccessor = function(element) { return element[0]; };
 var yAccessor = function(element) { return element[1]; };
 
-React.render(<ScatterPlot data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}} label={labelAccessor} x={xAccessor} y={yAccessor} values={valuesAccessor}/>,
-	document.getElementById('location')
+React.render(<ScatterPlot
+				data={data}
+				width={400}
+				height={400}
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+
+				label={labelAccessor}
+				x={xAccessor}
+				y={yAccessor}
+				values={valuesAccessor}
+				/>,
+	document.getElementById('location'));
 ```
 
 ### Overriding default parameters
@@ -90,8 +171,7 @@ If you want to use your own scale just pass it to the charts constructor.
 
 The scales are normal D3 objects, their documentation can be found [here](https://github.com/mbostock/d3/wiki/Ordinal-Scales) and [here](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
 
-There are more parameters like barPadding, strokeWidth, fill, opacity...
-They will be documented soon.
+There are more parameters like barPadding, strokeWidth, fill, opacity, etc. please check the documentation for details.
 
 ```javascript
 var xScale = d3.scale.ordinal(); //... + set it up appropriately
