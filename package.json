@@ -1,6 +1,6 @@
 {
 	"name": "react-d3-components",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "D3 components for React",
 	"main": "src/index.js",
 	"repository": {
@@ -12,7 +12,8 @@
 		"react",
 		"graph",
 		"visualization",
-		"chart"
+		"chart",
+		"react-component"
 	],
 	"author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
 	"license": "MIT",
