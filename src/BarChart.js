@@ -77,8 +77,7 @@ let BarChart = React.createClass({
 	},
 
 	_tooltipHtml(d, position) {
-		let total = this.props.y0(d[this.props.d.length - 1]) + this.props.y(d[this.props.d.length - 1]);
-		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d), total);
+		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d));
 	},
 
 	render() {

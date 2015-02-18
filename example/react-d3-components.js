@@ -124,11 +124,25 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var yScale = this.props.yScale;
 
 
+		var xValueCursor = xScale.invert(position[0]);
+
 		var xBisector = d3.bisector(function (e) {
 			return x(e);
 		}).right;
 		var xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
 		xIndex = xIndex == values(d[0]).length ? xIndex - 1 : xIndex;
+
+		var xIndexRight = xIndex == values(d[0]).length ? xIndex - 1 : xIndex;
+		var xValueRight = x(values(d[0])[xIndexRight]);
+
+		var xIndexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+		var xValueLeft = x(values(d[0])[xIndexLeft]);
+
+		if (Math.abs(xValueCursor - xValueRight) < Math.abs(xValueCursor - xValueLeft)) {
+			xIndex = xIndexRight;
+		} else {
+			xIndex = xIndexLeft;
+		}
 
 		var yValueCursor = yScale.invert(position[1]);
 
@@ -916,17 +930,20 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		}).left;
 		var xIndex = xBisector(data, xScale.invert(position[0]));
 
-		var valueLeft = x(data[xIndex == data.length ? xIndex - 1 : xIndex]);
-		var valueRight = x(data[xIndex == data.length ? xIndex - 1 : xIndex - 1]);
+		var indexRight = xIndex == data.length ? xIndex - 1 : xIndex;
+		var valueRight = x(data[indexRight]);
+
+		var indexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+		var valueLeft = x(data[indexLeft]);
 
 		var index = undefined;
-		if (Math.abs(xValueCursor - valueLeft) < Math.abs(xValueCursor - valueRight)) {
-			index = xIndex;
+		if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+			index = indexRight;
 		} else {
-			index = xIndex - 1;
+			index = indexLeft;
 		}
 
-		var yValue = y(data[index == data.length ? index - 1 : index]);
+		var yValue = y(data[index]);
 		var cursorValue = d3.round(yScale.invert(position[1]), 2);
 
 		return this.props.tooltipHtml(yValue, cursorValue);

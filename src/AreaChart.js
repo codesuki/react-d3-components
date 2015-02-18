@@ -90,9 +90,23 @@ let AreaChart = React.createClass({
 	_tooltipHtml(d, position) {
 		let {x, y0, y, values, label, xScale, yScale} = this.props;
 
+		let xValueCursor = xScale.invert(position[0]);
+
 		let xBisector = d3.bisector(e => { return x(e); }).right;
 		let xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
 		xIndex = (xIndex == values(d[0]).length) ? xIndex - 1: xIndex;
+
+		let xIndexRight = xIndex == values(d[0]).length ? xIndex - 1: xIndex;
+		let xValueRight = x(values(d[0])[xIndexRight]);
+
+		let xIndexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+		let xValueLeft = x(values(d[0])[xIndexLeft]);
+
+		if (Math.abs(xValueCursor - xValueRight) < Math.abs(xValueCursor - xValueLeft)) {
+			xIndex = xIndexRight;
+		} else {
+			xIndex = xIndexLeft;
+		}
 
 		let yValueCursor = yScale.invert(position[1]);
 
