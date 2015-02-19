@@ -78,7 +78,11 @@ var data = [{
 }];
 
 React.render(
-	<BarChart data={data} width={400} height={400} margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+	<BarChart
+		data={data}
+		width={400}
+		height={400}
+		margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
 	document.getElementById('location')
 );
 ```
@@ -107,8 +111,7 @@ React.render(<ScatterPlot
 				margin={{top: 10, bottom: 50, left: 50, right: 10}}
 				tooltipHtml={tooltipScatter}
 				xAxis={{label: "x-label"}}
-				yAxis={{label: "y-label"}}
-				/>,
+				yAxis={{label: "y-label"}}/>,
 			document.getElementById('scatterplot')
 );
 ```
@@ -127,9 +130,8 @@ React.render(<LineChart
 					tooltipHtml={tooltipLine}
 
 					xAxis={{innerTickSize: 10, label: "x-label"}}
-					yAxis={{label: "y-label"}}
-					/>,
-					document.getElementById('linechart'));
+					yAxis={{label: "y-label"}}/>,
+			document.getElementById('linechart'));
 ```
 
 The following are the default values.
@@ -168,9 +170,8 @@ React.render(<ScatterPlot
 				label={labelAccessor}
 				x={xAccessor}
 				y={yAccessor}
-				values={valuesAccessor}
-				/>,
-				document.getElementById('location'));
+				values={valuesAccessor}/>,
+			document.getElementById('location'));
 ```
 
 ### Overriding default parameters
@@ -219,8 +220,7 @@ React.render(<BarChart
 				data={data}
 				width={400}
 				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}
-			/>,
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
 			document.getElementById('location'));
 ```
 
@@ -254,8 +254,7 @@ React.render(<LineChart
 				data={data}
 				width={400}
 				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}
-				/>,
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
 			document.getElementById('location')
 );
 
@@ -263,8 +262,7 @@ React.render(<AreaChart
 				data={data}
 				width={400}
 				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}
-				/>,
+				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
 			document.getElementById('location')
 );
 ```
@@ -288,8 +286,7 @@ React.render(<PieChart
 				data={data}
 				width={600}
 				height={400}
-				margin={{top: 10, bottom: 10, left: 100, right: 100}}
-				/>,
+				margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
 			document.getElementById('location')
 );
 ```
