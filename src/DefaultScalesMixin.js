@@ -13,22 +13,32 @@ let DefaultScalesMixin = {
 	},
 
 	componentWillMount() {
-		let {xScale, yScale, x, y, values} = this.props;
-
-		if (!this.props.xScale) {
-			[this.props.xScale, this.props.xIntercept] = this._makeXScale();
-		}
-
-		if (!this.props.yScale) {
-			[this.props.yScale, this.props.yIntercept] = this._makeYScale();
-		}
+		this._makeScales(this.props);
 	},
 
 	componentWillReceiveProps(nextProps) {
+		this._makeScales(nextProps);
+	},
+
+	_makeScales(props) {
+		let {xScale, xIntercept, yScale, yIntercept} = props;
+
+		if (!xScale) {
+			[this._xScale, this._xIntercept] = this._makeXScale();
+		} else {
+			[this._xScale, this._xIntercept] = [xScale, xIntercept];
+		}
+
+		if (!this.props.yScale) {
+			[this._yScale, this._yIntercept] = this._makeYScale();
+		} else {
+			[this._yScale, this._yIntercept] = [yScale, yIntercept];
+		}
 	},
 
 	_makeXScale() {
-		let {data, x, values} = this.props;
+		let {x, values} = this.props;
+		let data = this._data;
 
 		if (Number.isFinite(x(values(data[0])[0]))) {
 			return this._makeLinearXScale();
@@ -38,7 +48,8 @@ let DefaultScalesMixin = {
 	},
 
 	_makeLinearXScale() {
-		let {data, innerWidth, x, values} = this.props;
+		let {x, values} = this.props;
+		let [data, innerWidth] = [this._data, this._innerWidth];
 
 		let extents = d3.extent(Array.prototype.concat.apply([],
 															 data.map(stack => {
@@ -58,7 +69,8 @@ let DefaultScalesMixin = {
 	},
 
 	_makeOrdinalXScale() {
-		let {data, innerWidth, x, values, barPadding} = this.props;
+		let {x, values, barPadding} = this.props;
+		let [data, innerWidth] = [this._data, this._innerWidth];
 
 		let scale = d3.scale.ordinal()
 				.domain(values(data[0]).map(e => { return x(e); }))
@@ -68,7 +80,8 @@ let DefaultScalesMixin = {
 	},
 
 	_makeYScale() {
-		let {data, y, values} = this.props;
+		let {y, values} = this.props;
+		let data = this._data;
 
 		if (Number.isFinite(y(values(data[0])[0]))) {
 			return this._makeLinearYScale();
@@ -78,7 +91,8 @@ let DefaultScalesMixin = {
 	},
 
 	_makeLinearYScale() {
-		let {data, innerHeight, y, y0, values} = this.props;
+		let {y, y0, values} = this.props;
+		let [data, innerHeight] = [this._data, this._innerHeight];
 
 		let extents = d3.extent(Array.prototype.concat.apply([],
 															 data.map(stack => {

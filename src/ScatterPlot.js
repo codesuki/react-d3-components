@@ -84,24 +84,31 @@ let ScatterPlot = React.createClass({
 	},
 
 	render() {
-		let {data,
-			 height,
+		let {height,
 			 width,
-			 innerHeight,
-			 innerWidth,
 			 margin,
-			 xScale,
-			 yScale,
 			 colorScale,
 			 rScale,
 			 shape,
-			 xIntercept,
-			 yIntercept,
 			 values,
 			 x,
 			 y,
 			 xAxis,
 			 yAxis} = this.props;
+
+		let [data,
+			 innerWidth,
+			 innerHeight,
+			 xScale,
+			 yScale,
+			 xIntercept,
+			 yIntercept] = [this._data,
+							this._innerWidth,
+							this._innerHeight,
+							this._xScale,
+							this._yScale,
+							this._xIntercept,
+							this._yIntercept];
 
 		let symbol = d3.svg.symbol().type(shape);
 

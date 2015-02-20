@@ -120,8 +120,10 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var y = this.props.y;
 		var values = this.props.values;
 		var label = this.props.label;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
+		var _ref = [this._xScale, this._yScale];
+
+		var xScale = _ref[0];
+		var yScale = _ref[1];
 
 
 		var xValueCursor = xScale.invert(position[0]);
@@ -159,20 +161,13 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 	},
 
 	render: function render() {
-		var data = this.props.data;
 		var height = this.props.height;
 		var width = this.props.width;
-		var innerHeight = this.props.innerHeight;
-		var innerWidth = this.props.innerWidth;
 		var margin = this.props.margin;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
 		var interpolate = this.props.interpolate;
 		var stroke = this.props.stroke;
 		var offset = this.props.offset;
-		var xIntercept = this.props.xIntercept;
-		var yIntercept = this.props.yIntercept;
 		var values = this.props.values;
 		var label = this.props.label;
 		var x = this.props.x;
@@ -180,6 +175,15 @@ var AreaChart = React.createClass({ displayName: "AreaChart",
 		var y0 = this.props.y0;
 		var xAxis = this.props.xAxis;
 		var yAxis = this.props.yAxis;
+		var _ref = [this._data, this._innerWidth, this._innerHeight, this._xScale, this._yScale, this._xIntercept, this._yIntercept];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
+		var innerHeight = _ref[2];
+		var xScale = _ref[3];
+		var yScale = _ref[4];
+		var xIntercept = _ref[5];
+		var yIntercept = _ref[6];
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -234,12 +238,20 @@ module.exports = AreaChart;
 
 var ArrayifyMixin = {
 	componentWillMount: function componentWillMount() {
-		if (!Array.isArray(this.props.data)) {
-			this.props.data = [this.props.data];
-		}
+		this._arrayify(this.props);
 	},
 
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {}
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this._arrayify(nextProps);
+	},
+
+	_arrayify: function _arrayify(props) {
+		if (!Array.isArray(props.data)) {
+			this._data = [props.data];
+		} else {
+			this._data = props.data;
+		}
+	}
 };
 
 module.exports = ArrayifyMixin;
@@ -526,14 +538,9 @@ var BarChart = React.createClass({ displayName: "BarChart",
 	},
 
 	render: function render() {
-		var data = this.props.data;
 		var height = this.props.height;
 		var width = this.props.width;
-		var innerHeight = this.props.innerHeight;
-		var innerWidth = this.props.innerWidth;
 		var margin = this.props.margin;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
 		var values = this.props.values;
 		var label = this.props.label;
@@ -542,6 +549,13 @@ var BarChart = React.createClass({ displayName: "BarChart",
 		var x = this.props.x;
 		var xAxis = this.props.xAxis;
 		var yAxis = this.props.yAxis;
+		var _ref = [this._data, this._innerWidth, this._innerHeight, this._xScale, this._yScale];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
+		var innerHeight = _ref[2];
+		var xScale = _ref[3];
+		var yScale = _ref[4];
 
 
 		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement(DataSet, {
@@ -674,39 +688,57 @@ var DefaultScalesMixin = {
 	},
 
 	componentWillMount: function componentWillMount() {
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
-		var x = this.props.x;
-		var y = this.props.y;
-		var values = this.props.values;
+		this._makeScales(this.props);
+	},
+
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this._makeScales(nextProps);
+	},
+
+	_makeScales: function _makeScales(props) {
+		var xScale = props.xScale;
+		var xIntercept = props.xIntercept;
+		var yScale = props.yScale;
+		var yIntercept = props.yIntercept;
 
 
-		if (!this.props.xScale) {
+		if (!xScale) {
 			var _ref = this._makeXScale();
 
 			var _ref2 = _slicedToArray(_ref, 2);
 
-			this.props.xScale = _ref2[0];
-			this.props.xIntercept = _ref2[1];
-		}
-
-		if (!this.props.yScale) {
-			var _ref3 = this._makeYScale();
+			this._xScale = _ref2[0];
+			this._xIntercept = _ref2[1];
+		} else {
+			var _ref3 = [xScale, xIntercept];
 
 			var _ref32 = _slicedToArray(_ref3, 2);
 
-			this.props.yScale = _ref32[0];
-			this.props.yIntercept = _ref32[1];
+			this._xScale = _ref32[0];
+			this._xIntercept = _ref32[1];
+		}
+
+		if (!this.props.yScale) {
+			var _ref4 = this._makeYScale();
+
+			var _ref42 = _slicedToArray(_ref4, 2);
+
+			this._yScale = _ref42[0];
+			this._yIntercept = _ref42[1];
+		} else {
+			var _ref5 = [yScale, yIntercept];
+
+			var _ref52 = _slicedToArray(_ref5, 2);
+
+			this._yScale = _ref52[0];
+			this._yIntercept = _ref52[1];
 		}
 	},
 
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {},
-
 	_makeXScale: function _makeXScale() {
-		var data = this.props.data;
 		var x = this.props.x;
 		var values = this.props.values;
-
+		var data = this._data;
 
 		if (Number.isFinite(x(values(data[0])[0]))) {
 			return this._makeLinearXScale();
@@ -716,10 +748,12 @@ var DefaultScalesMixin = {
 	},
 
 	_makeLinearXScale: function _makeLinearXScale() {
-		var data = this.props.data;
-		var innerWidth = this.props.innerWidth;
 		var x = this.props.x;
 		var values = this.props.values;
+		var _ref = [this._data, this._innerWidth];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
 
 
 		var extents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
@@ -737,11 +771,13 @@ var DefaultScalesMixin = {
 	},
 
 	_makeOrdinalXScale: function _makeOrdinalXScale() {
-		var data = this.props.data;
-		var innerWidth = this.props.innerWidth;
 		var x = this.props.x;
 		var values = this.props.values;
 		var barPadding = this.props.barPadding;
+		var _ref = [this._data, this._innerWidth];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
 
 
 		var scale = d3.scale.ordinal().domain(values(data[0]).map(function (e) {
@@ -752,10 +788,9 @@ var DefaultScalesMixin = {
 	},
 
 	_makeYScale: function _makeYScale() {
-		var data = this.props.data;
 		var y = this.props.y;
 		var values = this.props.values;
-
+		var data = this._data;
 
 		if (Number.isFinite(y(values(data[0])[0]))) {
 			return this._makeLinearYScale();
@@ -765,11 +800,13 @@ var DefaultScalesMixin = {
 	},
 
 	_makeLinearYScale: function _makeLinearYScale() {
-		var data = this.props.data;
-		var innerHeight = this.props.innerHeight;
 		var y = this.props.y;
 		var y0 = this.props.y0;
 		var values = this.props.values;
+		var _ref = [this._data, this._innerHeight];
+
+		var data = _ref[0];
+		var innerHeight = _ref[1];
 
 
 		var extents = d3.extent(Array.prototype.concat.apply([], data.map(function (stack) {
@@ -802,14 +839,22 @@ module.exports = DefaultScalesMixin;
 
 var HeightWidthMixin = {
 	componentWillMount: function componentWillMount() {
+		this._calculateInner(this.props);
+	},
+
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this._calculateInner(nextProps);
+	},
+
+	_calculateInner: function _calculateInner(props) {
 		var height = this.props.height;
 		var width = this.props.width;
 		var margin = this.props.margin;
-		this.props.innerHeight = height - margin.top - margin.bottom;
-		this.props.innerWidth = width - margin.left - margin.right;
-	},
 
-	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {}
+
+		this._innerHeight = height - margin.top - margin.bottom;
+		this._innerWidth = width - margin.left - margin.right;
+	}
 };
 
 module.exports = HeightWidthMixin;
@@ -918,8 +963,10 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var y = this.props.y;
 		var values = this.props.values;
 		var label = this.props.label;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
+		var _ref = [this._xScale, this._yScale];
+
+		var xScale = _ref[0];
+		var yScale = _ref[1];
 
 
 		var xValueCursor = xScale.invert(position[0]);
@@ -950,14 +997,9 @@ var LineChart = React.createClass({ displayName: "LineChart",
 	},
 
 	render: function render() {
-		var data = this.props.data;
 		var height = this.props.height;
 		var width = this.props.width;
-		var innerHeight = this.props.innerHeight;
-		var innerWidth = this.props.innerWidth;
 		var margin = this.props.margin;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
 		var interpolate = this.props.interpolate;
 		var strokeWidth = this.props.strokeWidth;
@@ -968,6 +1010,15 @@ var LineChart = React.createClass({ displayName: "LineChart",
 		var y = this.props.y;
 		var xAxis = this.props.xAxis;
 		var yAxis = this.props.yAxis;
+		var _ref = [this._data, this._innerWidth, this._innerHeight, this._xScale, this._yScale, this._xIntercept, this._yIntercept];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
+		var innerHeight = _ref[2];
+		var xScale = _ref[3];
+		var yScale = _ref[4];
+		var xIntercept = _ref[5];
+		var yIntercept = _ref[6];
 
 
 		var line = d3.svg.line().x(function (e) {
@@ -982,6 +1033,7 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			data: data,
 			line: line,
 			strokeWidth: strokeWidth,
+			stroke: stroke,
 			colorScale: colorScale,
 			values: values,
 			label: label,
@@ -991,12 +1043,14 @@ var LineChart = React.createClass({ displayName: "LineChart",
 			orientation: "bottom",
 			scale: xScale,
 			height: innerHeight,
-			width: innerWidth }, xAxis)), React.createElement(Axis, React.__spread({
+			width: innerWidth,
+			zero: yIntercept }, xAxis)), React.createElement(Axis, React.__spread({
 			className: "y axis",
 			orientation: "left",
 			scale: yScale,
 			height: innerHeight,
-			width: innerWidth }, yAxis))), React.createElement(Tooltip, {
+			width: innerWidth,
+			zero: xIntercept }, yAxis))), React.createElement(Tooltip, {
 			hidden: this.state.tooltip.hidden,
 			top: this.state.tooltip.top,
 			left: this.state.tooltip.left,
@@ -1199,12 +1253,10 @@ var PieChart = React.createClass({ displayName: "PieChart",
 	},
 
 	render: function render() {
+		var data = this.props.data;
 		var width = this.props.width;
 		var height = this.props.height;
-		var innerWidth = this.props.innerWidth;
-		var innerHeight = this.props.innerHeight;
 		var margin = this.props.margin;
-		var data = this.props.data;
 		var colorScale = this.props.colorScale;
 		var innerRadius = this.props.innerRadius;
 		var outerRadius = this.props.outerRadius;
@@ -1213,6 +1265,11 @@ var PieChart = React.createClass({ displayName: "PieChart",
 		var cornerRadius = this.props.cornerRadius;
 		var x = this.props.x;
 		var y = this.props.y;
+		var values = this.props.values;
+		var _ref = [this._innerWidth, this._innerHeight];
+
+		var innerWidth = _ref[0];
+		var innerHeight = _ref[1];
 
 
 		var pie = d3.layout.pie().value(function (e) {
@@ -1236,7 +1293,7 @@ var PieChart = React.createClass({ displayName: "PieChart",
 
 		var outerArc = d3.svg.arc().innerRadius(labelRadius).outerRadius(labelRadius);
 
-		var pieData = pie(data.values);
+		var pieData = pie(values(data));
 
 		var translation = "translate(" + innerWidth / 2 + ", " + innerHeight / 2 + ")";
 		return React.createElement("div", null, React.createElement(Chart, { height: height, width: width, margin: margin }, React.createElement("g", { transform: translation }, React.createElement(DataSet, {
@@ -1352,24 +1409,26 @@ var ScatterPlot = React.createClass({ displayName: "ScatterPlot",
 	},
 
 	render: function render() {
-		var data = this.props.data;
 		var height = this.props.height;
 		var width = this.props.width;
-		var innerHeight = this.props.innerHeight;
-		var innerWidth = this.props.innerWidth;
 		var margin = this.props.margin;
-		var xScale = this.props.xScale;
-		var yScale = this.props.yScale;
 		var colorScale = this.props.colorScale;
 		var rScale = this.props.rScale;
 		var shape = this.props.shape;
-		var xIntercept = this.props.xIntercept;
-		var yIntercept = this.props.yIntercept;
 		var values = this.props.values;
 		var x = this.props.x;
 		var y = this.props.y;
 		var xAxis = this.props.xAxis;
 		var yAxis = this.props.yAxis;
+		var _ref = [this._data, this._innerWidth, this._innerHeight, this._xScale, this._yScale, this._xIntercept, this._yIntercept];
+
+		var data = _ref[0];
+		var innerWidth = _ref[1];
+		var innerHeight = _ref[2];
+		var xScale = _ref[3];
+		var yScale = _ref[4];
+		var xIntercept = _ref[5];
+		var yIntercept = _ref[6];
 
 
 		var symbol = d3.svg.symbol().type(shape);
@@ -1469,7 +1528,14 @@ var StackDataMixin = {
 	},
 
 	componentWillMount: function componentWillMount() {
-		var data = this.props.data;
+		this._stackData(this.props);
+	},
+
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this._stackData(nextProps);
+	},
+
+	_stackData: function _stackData(props) {
 		var offset = this.props.offset;
 		var x = this.props.x;
 		var y = this.props.y;
@@ -1478,7 +1544,7 @@ var StackDataMixin = {
 
 		var stack = d3.layout.stack().offset(offset).x(x).y(y).values(values);
 
-		this.props.data = stack(data);
+		this._data = stack(this._data);
 	}
 };
 

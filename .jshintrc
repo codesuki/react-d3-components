@@ -1,0 +1,16 @@
+{
+"browser": true,
+"browserify": true,
+"esnext": true,
+"bitwise": true,
+"curly": true,
+"eqeqeq": true,
+"forin": true,
+"funcscope": true,
+"immed": true,
+"indent": 4,
+"latedef": true,
+"singleGroups": true,
+"undef": true,
+"unused": true
+}

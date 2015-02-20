@@ -88,7 +88,8 @@ let AreaChart = React.createClass({
 	},
 
 	_tooltipHtml(d, position) {
-		let {x, y0, y, values, label, xScale, yScale} = this.props;
+		let {x, y0, y, values, label} = this.props;
+		let [xScale, yScale] = [this._xScale, this._yScale];
 
 		let xValueCursor = xScale.invert(position[0]);
 
@@ -121,20 +122,13 @@ let AreaChart = React.createClass({
 	},
 
 	render() {
-		let {data,
-			 height,
+		let {height,
 			 width,
-			 innerHeight,
-			 innerWidth,
 			 margin,
-			 xScale,
-			 yScale,
 			 colorScale,
 			 interpolate,
 			 stroke,
 			 offset,
-			 xIntercept,
-			 yIntercept,
 			 values,
 			 label,
 			 x,
@@ -142,6 +136,20 @@ let AreaChart = React.createClass({
 			 y0,
 			 xAxis,
 			 yAxis} = this.props;
+
+		let [data,
+			 innerWidth,
+			 innerHeight,
+			 xScale,
+			 yScale,
+			 xIntercept,
+			 yIntercept] = [this._data,
+							this._innerWidth,
+							this._innerHeight,
+							this._xScale,
+							this._yScale,
+							this._xIntercept,
+							this._yIntercept];
 
 		let line = d3.svg.line()
 				.x(function(e) { return xScale(x(e)); })

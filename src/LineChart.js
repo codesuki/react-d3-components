@@ -108,7 +108,8 @@ let LineChart = React.createClass({
 	 }
 	 */
 	_tooltipHtml(data, position) {
-		let {x, y0, y, values, label, xScale, yScale} = this.props;
+		let {x, y0, y, values, label} = this.props;
+		let [xScale, yScale] = [this._xScale, this._yScale];
 
 		let xValueCursor = xScale.invert(position[0]);
 		let yValueCursor = yScale.invert(position[1]);
@@ -136,14 +137,9 @@ let LineChart = React.createClass({
 	},
 
 	render() {
-		let {data,
-			 height,
+		let {height,
 			 width,
-			 innerHeight,
-			 innerWidth,
 			 margin,
-			 xScale,
-			 yScale,
 			 colorScale,
 			 interpolate,
 			 strokeWidth,
@@ -154,6 +150,20 @@ let LineChart = React.createClass({
 			 y,
 			 xAxis,
 			 yAxis} = this.props;
+
+		let [data,
+			 innerWidth,
+			 innerHeight,
+			 xScale,
+			 yScale,
+			 xIntercept,
+			 yIntercept] = [this._data,
+							this._innerWidth,
+							this._innerHeight,
+							this._xScale,
+							this._yScale,
+							this._xIntercept,
+							this._yIntercept];
 
 		let line = d3.svg.line()
 				.x(function(e) { return xScale(x(e)); })
@@ -170,6 +180,7 @@ let LineChart = React.createClass({
 			data={data}
 			line={line}
 			strokeWidth={strokeWidth}
+			stroke={stroke}
 			colorScale={colorScale}
 			values={values}
 			label={label}
@@ -183,6 +194,7 @@ let LineChart = React.createClass({
 			scale={xScale}
 			height={innerHeight}
 			width={innerWidth}
+			zero={yIntercept}
 			{...xAxis}
 				/>
 
@@ -192,6 +204,7 @@ let LineChart = React.createClass({
 			scale={yScale}
 			height={innerHeight}
 			width={innerWidth}
+			zero={xIntercept}
 			{...yAxis}
 				/>
 				</Chart>

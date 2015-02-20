@@ -13,7 +13,15 @@ let StackDataMixin = {
 	},
 
 	componentWillMount() {
-		let {data, offset, x, y, values} = this.props;
+		this._stackData(this.props);
+	},
+
+	componentWillReceiveProps(nextProps) {
+		this._stackData(nextProps);
+	},
+
+	_stackData(props) {
+		let {offset, x, y, values} = this.props;
 
 		let stack = d3.layout.stack()
 				.offset(offset)
@@ -21,7 +29,7 @@ let StackDataMixin = {
 				.y(y)
 				.values(values);
 
-		this.props.data = stack(data);
+		this._data = stack(this._data);
 	}
 };
 

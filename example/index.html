@@ -216,6 +216,24 @@
 					/>,
 	document.getElementById('scatterplot3')
 	);
+
+	data = [{
+	label: 'somethingA',
+	values: [{x: -4, y: -3}, {x: -3.1, y: -2}, {x: -2, y: 0.5}, {x: -1, y: -1}, {x: 0, y: 0}, {x: 1, y: 1.5}, {x: 1.9, y: 2}, {x: 3, y: 4}, {x: 4, y: 5.6}]
+	}];
+
+	React.render(<LineChart
+					data={data}
+					width={400}
+					height={400}
+					margin={{top: 10, bottom: 50, left: 50, right: 10}}
+					tooltipHtml={tooltipLine}
+					xAxis={{innerTickSize: 6, label: "x-label"}}
+					yAxis={{label: "y-label"}}
+					/>,
+	document.getElementById('linechart2')
+	);
+
 /*
 	data = [{
 	customLabel: 'somethingA',

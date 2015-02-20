@@ -145,12 +145,10 @@ let PieChart = React.createClass({
 	},
 
 	render() {
-		let {width,
+		let {data,
+			 width,
 			 height,
-			 innerWidth,
-			 innerHeight,
 			 margin,
-			 data,
 			 colorScale,
 			 innerRadius,
 			 outerRadius,
@@ -158,7 +156,12 @@ let PieChart = React.createClass({
 			 padRadius,
 			 cornerRadius,
 			 x,
-			 y} = this.props;
+			 y,
+			 values} = this.props;
+
+		let [innerWidth,
+			 innerHeight] = [this._innerWidth,
+							 this._innerHeight];
 
 		let pie = d3.layout.pie().value(e => { return y(e); });
 
@@ -185,7 +188,7 @@ let PieChart = React.createClass({
 				.innerRadius(labelRadius)
 				.outerRadius(labelRadius);
 
-		let pieData = pie(data.values);
+		let pieData = pie(values(data));
 
 		let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
 		return (

@@ -81,14 +81,9 @@ let BarChart = React.createClass({
 	},
 
 	render() {
-		let {data,
-			 height,
+		let {height,
 			 width,
-			 innerHeight,
-			 innerWidth,
 			 margin,
-			 xScale,
-			 yScale,
 			 colorScale,
 			 values,
 			 label,
@@ -97,6 +92,16 @@ let BarChart = React.createClass({
 			 x,
 			 xAxis,
 			 yAxis} = this.props;
+
+		let [data,
+			 innerWidth,
+			 innerHeight,
+			 xScale,
+			 yScale] = [this._data,
+						this._innerWidth,
+						this._innerHeight,
+						this._xScale,
+						this._yScale];
 
 		return (
 				<div>
