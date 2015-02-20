@@ -1,6 +1,6 @@
 {
 	"name": "react-d3-components",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "D3 components for React",
 	"main": "src/index.js",
 	"repository": {

@@ -60,6 +60,7 @@ For quick testing the [examples](#examples) might be enough.
 
 ## Changelog
 
+* 0.3.3: Charts now render correctly when included in another component. Line chart default axes now meet at 0.
 * 0.3.0: Added tooltips and made axis properties accessible.
 * 0.2.2: Fixed accessors not being used everywhere
 * 0.2.1: Excluded external libraries from build and make it usable as a browser include
