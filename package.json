@@ -2,7 +2,7 @@
 	"name": "react-d3-components",
 	"version": "0.3.4",
 	"description": "D3 components for React",
-	"main": "src/index.js",
+	"main": "dist/react-d3-components.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/codesuki/react-d3-components.git"
