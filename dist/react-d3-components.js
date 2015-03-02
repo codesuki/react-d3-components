@@ -693,11 +693,11 @@ module.exports = Chart;
 },{"./ReactProvider":15}],8:[function(require,module,exports){
 "use strict";
 
-var d3 = window.d3 || require("./D3Provider");
+var d3 = window.d3 || require("d3");
 
 module.exports = d3;
 
-},{"./D3Provider":8}],9:[function(require,module,exports){
+},{"d3":undefined}],9:[function(require,module,exports){
 "use strict";
 
 var React = require("./ReactProvider");

@@ -59,7 +59,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
-
+* 0.3.6: Fixed not correctly requiring D3.
 * 0.3.5: Fix npm packaging.
 * 0.3.4: Charts now render correctly when included in another component. Line chart default axes now meet at 0.
 * 0.3.0: Added tooltips and made axis properties accessible.
