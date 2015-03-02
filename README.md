@@ -60,6 +60,7 @@ For quick testing the [examples](#examples) might be enough.
 
 ## Changelog
 
+* 0.3.5: Fix npm packaging.
 * 0.3.4: Charts now render correctly when included in another component. Line chart default axes now meet at 0.
 * 0.3.0: Added tooltips and made axis properties accessible.
 * 0.2.2: Fixed accessors not being used everywhere

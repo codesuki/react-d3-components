@@ -8,7 +8,8 @@ let StackDataMixin = {
 
 	getDefaultProps() {
 		return {
-			offset: 'zero'
+			offset: 'zero',
+			order: 'default'
 		};
 	},
 
@@ -21,10 +22,11 @@ let StackDataMixin = {
 	},
 
 	_stackData(props) {
-		let {offset, x, y, values} = this.props;
+		let {offset, order, x, y, values} = this.props;
 
 		let stack = d3.layout.stack()
 				.offset(offset)
+				.order(order)
 				.x(x)
 				.y(y)
 				.values(values);
