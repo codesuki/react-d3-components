@@ -42,6 +42,8 @@ let DefaultScalesMixin = {
 
 		if (Number.isFinite(x(values(data[0])[0]))) {
 			return this._makeLinearXScale();
+		} else if (typeof x(values(data[0])[0]).getMonth === 'function') {
+			return this._makeTimeXScale();
 		} else {
 			return this._makeOrdinalXScale();
 		}
@@ -75,6 +77,17 @@ let DefaultScalesMixin = {
 		let scale = d3.scale.ordinal()
 				.domain(values(data[0]).map(e => { return x(e); }))
 				.rangeRoundBands([0, innerWidth], barPadding);
+
+		return [scale, 0];
+	},
+
+	_makeTimeXScale() {
+		let {x, values, barPadding} = this.props;
+		let [data, innerWidth] = [this._data, this._innerWidth];
+
+		let scale = d3.time.scale()
+				.domain(values(data[0]).map(e => { return x(e); }))
+				.range([0, innerWidth]);
 
 		return [scale, 0];
 	},
