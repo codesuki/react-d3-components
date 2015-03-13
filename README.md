@@ -176,6 +176,7 @@ var SomeComponent = React.createClass({
 	}
 });
 ```
+![brush](http://codesuki.github.io/react-d3-components/brush.png)
 
 ### Tooltips
 You can provide a callback to every chart that will return html for the tooltip.
