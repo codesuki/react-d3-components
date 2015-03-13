@@ -823,6 +823,7 @@ var Brush = React.createClass({
 	},
 
 	_onMouseDownBackground: function _onMouseDownBackground(e) {
+		e.preventDefault();
 		var range = this._d3_scaleRange(this.props.xScale);
 		var point = this._getMousePosition(e);
 
@@ -836,6 +837,7 @@ var Brush = React.createClass({
 
 	// TODO: use constants instead of strings
 	_onMouseDownExtent: function _onMouseDownExtent(e) {
+		e.preventDefault();
 		this._mouseMode = "drag";
 
 		var point = this._getMousePosition(e);
@@ -845,6 +847,7 @@ var Brush = React.createClass({
 	},
 
 	_onMouseDownResizer: function _onMouseDownResizer(e, dir) {
+		e.preventDefault();
 		this._mouseMode = "resize";
 		this._resizeDir = dir;
 	},
@@ -887,6 +890,8 @@ var Brush = React.createClass({
 	},
 
 	_onMouseMove: function _onMouseMove(e) {
+		e.preventDefault();
+
 		if (this._mouseMode == "resize") {
 			this._onResize(e);
 		} else if (this._mouseMode == "drag") {
@@ -895,6 +900,8 @@ var Brush = React.createClass({
 	},
 
 	_onMouseUp: function _onMouseUp(e) {
+		e.preventDefault();
+
 		this._mouseMode = null;
 
 		this.props.onChange(this._extent());
