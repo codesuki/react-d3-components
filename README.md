@@ -61,7 +61,8 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
-* 0.3.7: Added X-Axis Brush. Functioning but might change to improve ease of usage etc. Fixed Axis tickFormat not being set correctly.
+* 0.4.1: Fixed compatibility issues with Safari and possible other browsers not supporting Number.isFinite()
+* 0.4.0: Added X-Axis Brush. Functioning but might change to improve ease of usage etc. Fixed Axis tickFormat not being set correctly.
 * 0.3.6: Fixed not correctly requiring D3.
 * 0.3.5: Fixed npm packaging.
 * 0.3.4: Charts now render correctly when included in another component. Line chart default axes now meet at 0.
