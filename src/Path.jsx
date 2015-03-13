@@ -22,6 +22,7 @@ let Path = React.createClass({
 			 stroke,
 			 fill,
 			 d,
+			 style,
 			 data,
 			 onMouseEnter,
 			 onMouseLeave} = this.props;
@@ -35,6 +36,7 @@ let Path = React.createClass({
 			d={d}
 			onMouseMove={ evt => { onMouseEnter(evt, data); } }
 			onMouseLeave={  evt => { onMouseLeave(evt); } }
+			style={style}
 				/>
 		);
 	}

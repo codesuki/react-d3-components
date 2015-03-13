@@ -30,7 +30,7 @@ let TooltipMixin = {
 			return;
 		}
 
-		let {margin, xScale, yScale, tooltipHtml} = this.props;
+		let {margin, tooltipHtml} = this.props;
 
 		let svg = this._svg_node;
 		let position;

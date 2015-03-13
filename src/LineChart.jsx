@@ -41,6 +41,7 @@ let DataSet = React.createClass({
 				data={values(stack)}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
+				style={{clipPath: 'url(#lineClip)'}}
 					/>
 			);
 		});
@@ -55,8 +56,11 @@ let DataSet = React.createClass({
 			onMouseLeave={  evt => { onMouseLeave(evt); } }
 				/>
 		 */
+
+		let rect = React.renderToString(<rect width={width} height={height}/>);
 		return (
 				<g>
+				<g dangerouslySetInnerHTML={{__html: `<defs><clipPath id="lineClip">${rect}`}}/>
 				{lines}
 			</g>
 		);

@@ -20,7 +20,7 @@ let Axis = React.createClass({
 		return {
 			tickArguments: [10],
 			tickValues: null,
-			tickFormat: x => { return x; },
+			tickFormat: null,
 			innerTickSize: 6,
 			tickPadding: 3,
 			outerTickSize: 6,
@@ -63,8 +63,13 @@ let Axis = React.createClass({
 
 		let ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
 
-		if (scale.tickFormat) {
-			tickFormat = scale.tickFormat.apply(scale, tickArguments);
+		if (!tickFormat)
+		{
+			if (scale.tickFormat) {
+				tickFormat = scale.tickFormat.apply(scale, tickArguments);
+			} else {
+				tickFormat = x => { return x; };
+			}
 		}
 
 		// TODO: is there a cleaner way? removes the 0 tick if axes are crossing
