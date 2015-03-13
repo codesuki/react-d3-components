@@ -1134,7 +1134,7 @@ var DefaultScalesMixin = {
 
 		var data = this._data;
 
-		if (Number.isFinite(x(values(data[0])[0]))) {
+		if (typeof x(values(data[0])[0]) === "number") {
 			return this._makeLinearXScale();
 		} else if (typeof x(values(data[0])[0]).getMonth === "function") {
 			return this._makeTimeXScale();
@@ -1201,7 +1201,7 @@ var DefaultScalesMixin = {
 
 		var data = this._data;
 
-		if (Number.isFinite(y(values(data[0])[0]))) {
+		if (typeof y(values(data[0])[0]) === "number") {
 			return this._makeLinearYScale();
 		} else {
 			return this._makeOrdinalYScale();
