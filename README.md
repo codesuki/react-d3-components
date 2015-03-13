@@ -40,6 +40,7 @@ Documentation is in the [Wiki](https://github.com/codesuki/react-d3-components/w
 For quick testing the [examples](#examples) might be enough.
 
 ## Features
+* Brushes
 * Tooltips
 * Custom accessors to support any data format
 * Negative axes
