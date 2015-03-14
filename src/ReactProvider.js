@@ -1,3 +1,7 @@
-var React = window.React || require('react');
+if(typeof require === 'function') {
+  module.exports = require('d3');
+}
 
-module.exports = React;
+else {
+  module.exports = window.d3;
+}

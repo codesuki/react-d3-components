@@ -1,3 +1,7 @@
-var d3 = window.d3 || require('d3');
+if(typeof require === 'function') {
+  module.exports = require('d3');
+}
 
-module.exports = d3;
+else {
+  module.exports = window.d3;
+}
