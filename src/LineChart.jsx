@@ -219,4 +219,6 @@ let LineChart = React.createClass({
 	}
 });
 
+console.log(LineChart);
+
 module.exports = LineChart;

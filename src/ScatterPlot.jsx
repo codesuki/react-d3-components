@@ -1,83 +1,86 @@
-let React = require('./ReactProvider');
-let d3 = require('./D3Provider');
+let React = require('react');
+let d3 = require('d3');
 
 let Chart = require('./Chart');
 let Axis = require('./Axis');
-let Bar = require('./Bar');
 let Tooltip = require('./Tooltip');
 
 let DefaultPropsMixin = require('./DefaultPropsMixin');
 let HeightWidthMixin = require('./HeightWidthMixin');
 let ArrayifyMixin = require('./ArrayifyMixin');
-let StackAccessorMixin = require('./StackAccessorMixin');
-let StackDataMixin = require('./StackDataMixin');
+let AccessorMixin = require('./AccessorMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
 let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
 	propTypes: {
 		data: React.PropTypes.array.isRequired,
+		symbol: React.PropTypes.func.isRequired,
 		xScale: React.PropTypes.func.isRequired,
 		yScale: React.PropTypes.func.isRequired,
 		colorScale: React.PropTypes.func.isRequired,
-		values: React.PropTypes.func.isRequired,
-		label: React.PropTypes.func.isRequired,
-		x: React.PropTypes.func.isRequired,
-		y: React.PropTypes.func.isRequired,
-		y0: React.PropTypes.func.isRequired
+		onMouseEnter: React.PropTypes.func,
+		onMouseLeave: React.PropTypes.func
 	},
 
 	render() {
 		let {data,
+			 symbol,
 			 xScale,
 			 yScale,
 			 colorScale,
 			 values,
-			 label,
 			 x,
 			 y,
-			 y0,
 			 onMouseEnter,
 			 onMouseLeave} = this.props;
 
-		let bars = data.map(stack => {
+		let circles = data.map(stack => {
 			return values(stack).map(e => {
+				let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
 				return (
-						<Bar
-					width={xScale.rangeBand()}
-					height={yScale(yScale.domain()[0]) - yScale(y(e))}
-					x={xScale(x(e))}
-					y={yScale(y0(e) + y(e))}
-					fill={colorScale(label(stack))}
-					data={e}
-					onMouseEnter={onMouseEnter}
-					onMouseLeave={onMouseLeave}
+						<path
+					className="dot"
+					d={symbol()}
+					transform={translate}
+					fill={colorScale(stack.label)}
+					onMouseOver={ evt => { onMouseEnter(evt, e); } }
+					onMouseLeave={  evt => { onMouseLeave(evt); } }
 						/>
 				);
 			});
 		});
 
 		return (
-				<g>{bars}</g>
+				<g>
+				{circles}
+			</g>
 		);
 	}
 });
 
-let BarChart = React.createClass({
+let ScatterPlot = React.createClass({
 	mixins: [DefaultPropsMixin,
 			 HeightWidthMixin,
 			 ArrayifyMixin,
-			 StackAccessorMixin,
-			 StackDataMixin,
+			 AccessorMixin,
 			 DefaultScalesMixin,
 			 TooltipMixin],
 
+	propTypes: {
+		rScale: React.PropTypes.func,
+		shape: React.PropTypes.string
+	},
+
 	getDefaultProps() {
-		return {};
+		return {
+			rScale: null,
+			shape: 'circle'
+		};
 	},
 
 	_tooltipHtml(d, position) {
-		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d));
+		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 	},
 
 	render() {
@@ -85,11 +88,11 @@ let BarChart = React.createClass({
 			 width,
 			 margin,
 			 colorScale,
+			 rScale,
+			 shape,
 			 values,
-			 label,
-			 y,
-			 y0,
 			 x,
+			 y,
 			 xAxis,
 			 yAxis} = this.props;
 
@@ -97,45 +100,56 @@ let BarChart = React.createClass({
 			 innerWidth,
 			 innerHeight,
 			 xScale,
-			 yScale] = [this._data,
-						this._innerWidth,
-						this._innerHeight,
-						this._xScale,
-						this._yScale];
+			 yScale,
+			 xIntercept,
+			 yIntercept] = [this._data,
+							this._innerWidth,
+							this._innerHeight,
+							this._xScale,
+							this._yScale,
+							this._xIntercept,
+							this._yIntercept];
+
+		let symbol = d3.svg.symbol().type(shape);
+
+		if (rScale) {
+			symbol = symbol.size(rScale);
+		}
 
 		return (
-				<div>
+			<div>
 				<Chart height={height} width={width} margin={margin}>
-				<DataSet
-			data={data}
-			xScale={xScale}
-			yScale={yScale}
-			colorScale={colorScale}
-			values={values}
-			label={label}
-			y={y}
-			y0={y0}
-			x={x}
-			onMouseEnter={this.onMouseEnter}
-			onMouseLeave={this.onMouseLeave}
-				/>
-
 				<Axis
 			className={"x axis"}
-			orientation={"bottom"}
+			orientation="bottom"
 			scale={xScale}
 			height={innerHeight}
 			width={innerWidth}
+			zero={yIntercept}
 			{...xAxis}
 				/>
 
 				<Axis
 			className={"y axis"}
-			orientation={"left"}
+			orientation="left"
 			scale={yScale}
 			height={innerHeight}
 			width={innerWidth}
+			zero={xIntercept}
 			{...yAxis}
+				/>
+
+				<DataSet
+			data={data}
+			xScale={xScale}
+			yScale={yScale}
+			colorScale={colorScale}
+			symbol={symbol}
+			values={values}
+			x={x}
+			y={y}
+			onMouseEnter={this.onMouseEnter}
+			onMouseLeave={this.onMouseLeave}
 				/>
 				</Chart>
 
@@ -149,4 +163,4 @@ let BarChart = React.createClass({
 	}
 });
 
-module.exports = BarChart;
+module.exports = ScatterPlot;
