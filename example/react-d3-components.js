@@ -1322,19 +1322,30 @@ var DataSet = React.createClass({
    The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
    Not sure if this should be used.
    */
-		/*
-  <rect width={width} height={height} fill={"none"} stroke={"none"} style={{pointerEvents: "all"}}
-  	onMouseMove={ evt => { onMouseEnter(evt, data); } }
-  	onMouseLeave={  evt => { onMouseLeave(evt); } }
-  		/>
-   */
+
+		React.createElement("rect", { width: width, height: height, fill: "none", stroke: "none", style: { pointerEvents: "all" },
+			onMouseMove: function (evt) {
+				onMouseEnter(evt, data);
+			},
+			onMouseLeave: function (evt) {
+				onMouseLeave(evt);
+			}
+		});
 
 		var rect = React.renderToString(React.createElement("rect", { width: width, height: height }));
 		return React.createElement(
 			"g",
 			null,
 			React.createElement("g", { dangerouslySetInnerHTML: { __html: "<defs><clipPath id=\"lineClip\">" + rect } }),
-			lines
+			lines,
+			React.createElement("rect", { width: width, height: height, fill: "none", stroke: "none", style: { pointerEvents: "all" },
+				onMouseMove: function (evt) {
+					onMouseEnter(evt, data);
+				},
+				onMouseLeave: function (evt) {
+					onMouseLeave(evt);
+				}
+			})
 		);
 	}
 });
@@ -1350,7 +1361,9 @@ var LineChart = React.createClass({
 
 	getDefaultProps: function getDefaultProps() {
 		return {
-			interpolate: "linear"
+			interpolate: "linear",
+			shape: "circle",
+			shapeColor: null
 		};
 	},
 
@@ -1358,22 +1371,6 @@ var LineChart = React.createClass({
   The code below supports finding the data values for the line closest to the mouse cursor.
   Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
   For now I don't want to use this method.
-  */
-	/*
-  tooltipHtml: (d, position, xScale, yScale) => {
-  let xValueCursor = xScale.invert(position[0]);
-  let yValueCursor = yScale.invert(position[1]);
- 	 let xBisector = d3.bisector(e => { return e.x; }).left;
-  let valuesAtX = d.map(stack => {
-  let idx = xBisector(stack.values, xValueCursor);
-  return stack.values[idx];
-  });
- 	 valuesAtX.sort((a, b) => { return a.y - b.y; });
- 	 let yBisector = d3.bisector(e => { return e.y; }).left;
-  let yIndex = yBisector(valuesAtX, yValueCursor);
- 	 let yValue = valuesAtX[yIndex == valuesAtX.length ? yIndex - 1 : yIndex].y;
- 	 return `Value: ${yValue}`;
-  }
   */
 	_tooltipHtml: function _tooltipHtml(data, position) {
 		var _props = this.props;
@@ -1391,26 +1388,75 @@ var LineChart = React.createClass({
 		var xBisector = d3.bisector(function (e) {
 			return x(e);
 		}).left;
-		var xIndex = xBisector(data, xScale.invert(position[0]));
+		var valuesAtX = data.map(function (stack) {
+			var idx = xBisector(values(stack), xValueCursor);
 
-		var indexRight = xIndex == data.length ? xIndex - 1 : xIndex;
-		var valueRight = x(data[indexRight]);
+			var indexRight = idx == stack.length ? idx - 1 : idx;
+			var valueRight = x(values(stack)[indexRight]);
 
-		var indexLeft = xIndex == 0 ? xIndex : xIndex - 1;
-		var valueLeft = x(data[indexLeft]);
+			var indexLeft = idx == 0 ? idx : idx - 1;
+			var valueLeft = x(values(stack)[indexLeft]);
+
+			var index = undefined;
+			if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+				index = indexRight;
+			} else {
+				index = indexLeft;
+			}
+
+			return { label: label(stack), value: values(stack)[index] };
+		});
+
+		valuesAtX.sort(function (a, b) {
+			return y(a.value) - y(b.value);
+		});
+
+		var yBisector = d3.bisector(function (e) {
+			return y(e.value);
+		}).left;
+		var yIndex = yBisector(valuesAtX, yValueCursor);
+
+		var yIndexRight = yIndex == valuesAtX.length ? yIndex - 1 : yIndex;
+		var yIndexLeft = yIndex == 0 ? yIndex : yIndex - 1;
+
+		var yValueRight = y(valuesAtX[yIndexRight].value);
+		var yValueLeft = y(valuesAtX[yIndexLeft].value);
 
 		var index = undefined;
-		if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
-			index = indexRight;
+		if (Math.abs(yValueCursor - yValueRight) < Math.abs(yValueCursor - yValueLeft)) {
+			index = yIndexRight;
 		} else {
-			index = indexLeft;
+			index = yIndexLeft;
 		}
 
-		var yValue = y(data[index]);
-		var cursorValue = d3.round(yScale.invert(position[1]), 2);
+		this._tooltipData = valuesAtX[index];
 
-		return this.props.tooltipHtml(yValue, cursorValue);
+		return this.props.tooltipHtml(valuesAtX[index].label, valuesAtX[index].value);
 	},
+
+	/*
+ _tooltipHtml(data, position) {
+ 	let {x, y0, y, values, label} = this.props;
+ 	let [xScale, yScale] = [this._xScale, this._yScale];
+ 		let xValueCursor = xScale.invert(position[0]);
+ 	let yValueCursor = yScale.invert(position[1]);
+ 		let xBisector = d3.bisector(e => { return x(e); }).left;
+ 	let xIndex = xBisector(data, xScale.invert(position[0]));
+ 		let indexRight = xIndex == data.length ? xIndex - 1 : xIndex;
+ 	let valueRight = x(data[indexRight]);
+ 		let indexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+ 	let valueLeft = x(data[indexLeft]);
+ 		let index;
+ 	if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+ 		index = indexRight;
+ 	} else {
+ 		index = indexLeft;
+ 	}
+ 		let yValue = y(data[index]);
+ 	let cursorValue = d3.round(yScale.invert(position[1]), 2);
+ 		return this.props.tooltipHtml(yValue, cursorValue);
+ },
+   */
 
 	render: function render() {
 		var _props = this.props;
@@ -1427,6 +1473,8 @@ var LineChart = React.createClass({
 		var y = _props.y;
 		var xAxis = _props.xAxis;
 		var yAxis = _props.yAxis;
+		var shape = _props.shape;
+		var shapeColor = _props.shapeColor;
 		var data = this._data;
 		var innerWidth = this._innerWidth;
 		var innerHeight = this._innerHeight;
@@ -1440,6 +1488,15 @@ var LineChart = React.createClass({
 		}).y(function (e) {
 			return yScale(y(e));
 		}).interpolate(interpolate);
+
+		var tooltipSymbol = undefined;
+		if (!this.state.tooltip.hidden) {
+			var symbol = d3.svg.symbol().type(shape);
+			var symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
+
+			var translate = this._tooltipData ? "translate(" + xScale(x(this._tooltipData.value)) + ", " + yScale(y(this._tooltipData.value)) + ")" : "";
+			tooltipSymbol = this.state.tooltip.hidden ? null : React.createElement("path", { className: "dot", d: symbol(), transform: translate, fill: symbolColor });
+		}
 
 		return React.createElement(
 			"div",
@@ -1475,13 +1532,15 @@ var LineChart = React.createClass({
 					height: innerHeight,
 					width: innerWidth,
 					zero: xIntercept
-				}, yAxis))
+				}, yAxis)),
+				tooltipSymbol
 			),
 			React.createElement(Tooltip, {
 				hidden: this.state.tooltip.hidden,
 				top: this.state.tooltip.top,
 				left: this.state.tooltip.left,
-				html: this.state.tooltip.html })
+				html: this.state.tooltip.html
+			})
 		);
 	}
 });
@@ -2113,6 +2172,8 @@ var TooltipMixin = {
 			return;
 		}
 
+		e.preventDefault();
+
 		var _props = this.props;
 		var margin = _props.margin;
 		var tooltipHtml = _props.tooltipHtml;
@@ -2143,6 +2204,8 @@ var TooltipMixin = {
 		if (!this.props.tooltipHtml) {
 			return;
 		}
+
+		e.preventDefault();
 
 		this.setState({
 			tooltip: {

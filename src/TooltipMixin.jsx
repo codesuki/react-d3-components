@@ -30,6 +30,8 @@ let TooltipMixin = {
 			return;
 		}
 
+		e.preventDefault();
+
 		let {margin, tooltipHtml} = this.props;
 
 		let svg = this._svg_node;
@@ -59,6 +61,8 @@ let TooltipMixin = {
 		if (!this.props.tooltipHtml) {
 			return;
 		}
+
+		e.preventDefault();
 
 		this.setState({
 			tooltip: {

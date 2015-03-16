@@ -3,9 +3,9 @@
   <meta charset="utf-8">
   <title>React D3 Components Examples</title>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
   <script src="react-d3-components.js"></script>
 </head>
 <body>
@@ -117,8 +117,8 @@ var SomeComponent = React.createClass({
 	return "Total: " + cumulative + " Selected: " + value;
 	}
 
-	var tooltipLine = function(value, cursorValue) {
-	return "Nearest value: " + value + " Cursor: " + cursorValue;
+	var tooltipLine = function(label, data) {
+	return label + " x: " + data.x + " y: " + data.y;
 	}
 
 	var data = [{
@@ -189,7 +189,7 @@ var SomeComponent = React.createClass({
 
 	data = {
 	label: 'somethingA',
-	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 2}, {x: 'SomethingC', y: 3}]
 	};
 
 	React.render(<PieChart
@@ -242,6 +242,7 @@ var SomeComponent = React.createClass({
 					tooltipHtml={tooltipLine}
 					xAxis={{innerTickSize: 6, label: "x-label"}}
 					yAxis={{label: "y-label"}}
+					shapeColor={"red"}
 					/>,
 	document.getElementById('linechart')
 	);
