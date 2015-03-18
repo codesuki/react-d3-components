@@ -32,6 +32,10 @@
 	var LineChart = ReactD3.LineChart;
 	var Brush = ReactD3.Brush;
 
+	var tooltipLine = function(label, data) {
+	return label + " x: " + data.x + " y: " + data.y;
+	}
+
 var SomeComponent = React.createClass({
 	getInitialState: function() {
 		return {
@@ -75,6 +79,7 @@ var SomeComponent = React.createClass({
 				   margin={{top: 10, bottom: 50, left: 50, right: 20}}
 				   xScale={this.state.xScale}
 				   xAxis={{tickValues: this.state.xScale.ticks(d3.time.day, 2), tickFormat: d3.time.format("%m/%d")}}
+				   tooltipHtml={tooltipLine}
 				/>
 				<div className="brush" style={{float: 'none'}}>
 				<Brush
@@ -115,10 +120,6 @@ var SomeComponent = React.createClass({
 
 	var tooltipArea = function(value, cumulative) {
 	return "Total: " + cumulative + " Selected: " + value;
-	}
-
-	var tooltipLine = function(label, data) {
-	return label + " x: " + data.x + " y: " + data.y;
 	}
 
 	var data = [{
