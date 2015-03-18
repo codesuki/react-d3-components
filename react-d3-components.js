@@ -1456,7 +1456,7 @@ var LineChart = React.createClass({
  	let cursorValue = d3.round(yScale.invert(position[1]), 2);
  		return this.props.tooltipHtml(yValue, cursorValue);
  },
-   */
+  */
 
 	render: function render() {
 		var _props = this.props;
@@ -2121,7 +2121,7 @@ var Tooltip = React.createClass({
 		var html = _props.html;
 
 		var style = {
-			display: hidden ? "none" : "flex",
+			display: hidden ? "none" : "block",
 			position: "absolute",
 			top: top,
 			left: left
