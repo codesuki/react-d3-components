@@ -1,7 +1,7 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.ReactD3=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
+var React = require("react");
 
 var AccessorMixin = {
 	propTypes: {
@@ -35,13 +35,13 @@ var AccessorMixin = {
 
 module.exports = AccessorMixin;
 
-},{"./ReactProvider":16}],2:[function(require,module,exports){
+},{"react":undefined}],2:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
@@ -249,7 +249,7 @@ var AreaChart = React.createClass({
 
 module.exports = AreaChart;
 
-},{"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./D3Provider":9,"./DefaultPropsMixin":10,"./DefaultScalesMixin":11,"./HeightWidthMixin":12,"./Path":14,"./ReactProvider":16,"./StackAccessorMixin":18,"./StackDataMixin":19,"./Tooltip":20,"./TooltipMixin":21}],3:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./StackAccessorMixin":16,"./StackDataMixin":17,"./Tooltip":18,"./TooltipMixin":19,"d3":undefined,"react":undefined}],3:[function(require,module,exports){
 "use strict";
 
 var ArrayifyMixin = {
@@ -275,8 +275,8 @@ module.exports = ArrayifyMixin;
 },{}],4:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Axis = React.createClass({
 	displayName: "Axis",
@@ -454,11 +454,11 @@ var Axis = React.createClass({
 
 module.exports = Axis;
 
-},{"./D3Provider":9,"./ReactProvider":16}],5:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],5:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Bar = React.createClass({
 	displayName: "Bar",
@@ -504,13 +504,13 @@ var Bar = React.createClass({
 
 module.exports = Bar;
 
-},{"./D3Provider":9,"./ReactProvider":16}],6:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],6:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
@@ -654,13 +654,13 @@ var BarChart = React.createClass({
 
 module.exports = BarChart;
 
-},{"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":8,"./D3Provider":9,"./DefaultPropsMixin":10,"./DefaultScalesMixin":11,"./HeightWidthMixin":12,"./ReactProvider":16,"./StackAccessorMixin":18,"./StackDataMixin":19,"./Tooltip":20,"./TooltipMixin":21}],7:[function(require,module,exports){
+},{"./ArrayifyMixin":3,"./Axis":4,"./Bar":5,"./Chart":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./StackAccessorMixin":16,"./StackDataMixin":17,"./Tooltip":18,"./TooltipMixin":19,"d3":undefined,"react":undefined}],7:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
@@ -980,10 +980,10 @@ var Brush = React.createClass({
 
 module.exports = Brush;
 
-},{"./Axis":4,"./Chart":8,"./D3Provider":9,"./HeightWidthMixin":12,"./ReactProvider":16}],8:[function(require,module,exports){
+},{"./Axis":4,"./Chart":8,"./HeightWidthMixin":11,"d3":undefined,"react":undefined}],8:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
+var React = require("react");
 
 var Chart = React.createClass({
 	displayName: "Chart",
@@ -1020,18 +1020,11 @@ var Chart = React.createClass({
 
 module.exports = Chart;
 
-},{"./ReactProvider":16}],9:[function(require,module,exports){
+},{"react":undefined}],9:[function(require,module,exports){
 "use strict";
 
-var d3 = window.d3 || require("d3");
-
-module.exports = d3;
-
-},{"d3":undefined}],10:[function(require,module,exports){
-"use strict";
-
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var DefaultPropsMixin = {
 	propTypes: {
@@ -1061,13 +1054,13 @@ var DefaultPropsMixin = {
 
 module.exports = DefaultPropsMixin;
 
-},{"./D3Provider":9,"./ReactProvider":16}],11:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],10:[function(require,module,exports){
 "use strict";
 
 var _slicedToArray = function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) { _arr.push(_step.value); if (i && _arr.length === i) break; } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var DefaultScalesMixin = {
 	propTypes: {
@@ -1239,7 +1232,7 @@ var DefaultScalesMixin = {
 
 module.exports = DefaultScalesMixin;
 
-},{"./D3Provider":9,"./ReactProvider":16}],12:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],11:[function(require,module,exports){
 "use strict";
 
 var HeightWidthMixin = {
@@ -1264,13 +1257,13 @@ var HeightWidthMixin = {
 
 module.exports = HeightWidthMixin;
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
@@ -1547,11 +1540,11 @@ var LineChart = React.createClass({
 
 module.exports = LineChart;
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./D3Provider":9,"./DefaultPropsMixin":10,"./DefaultScalesMixin":11,"./HeightWidthMixin":12,"./Path":14,"./ReactProvider":16,"./Tooltip":20,"./TooltipMixin":21}],14:[function(require,module,exports){
+},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Path":13,"./Tooltip":18,"./TooltipMixin":19,"d3":undefined,"react":undefined}],13:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Path = React.createClass({
 	displayName: "Path",
@@ -1601,11 +1594,11 @@ var Path = React.createClass({
 
 module.exports = Path;
 
-},{"./D3Provider":9,"./ReactProvider":16}],15:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],14:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Tooltip = require("./Tooltip");
@@ -1839,20 +1832,13 @@ var PieChart = React.createClass({
 
 module.exports = PieChart;
 
-},{"./AccessorMixin":1,"./Chart":8,"./D3Provider":9,"./DefaultPropsMixin":10,"./HeightWidthMixin":12,"./ReactProvider":16,"./Tooltip":20,"./TooltipMixin":21}],16:[function(require,module,exports){
-"use strict";
-
-var React = window.React || require("react");
-
-module.exports = React;
-
-},{"react":undefined}],17:[function(require,module,exports){
+},{"./AccessorMixin":1,"./Chart":8,"./DefaultPropsMixin":9,"./HeightWidthMixin":11,"./Tooltip":18,"./TooltipMixin":19,"d3":undefined,"react":undefined}],15:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Chart = require("./Chart");
 var Axis = require("./Axis");
@@ -2011,10 +1997,10 @@ var ScatterPlot = React.createClass({
 
 module.exports = ScatterPlot;
 
-},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./D3Provider":9,"./DefaultPropsMixin":10,"./DefaultScalesMixin":11,"./HeightWidthMixin":12,"./ReactProvider":16,"./Tooltip":20,"./TooltipMixin":21}],18:[function(require,module,exports){
+},{"./AccessorMixin":1,"./ArrayifyMixin":3,"./Axis":4,"./Chart":8,"./DefaultPropsMixin":9,"./DefaultScalesMixin":10,"./HeightWidthMixin":11,"./Tooltip":18,"./TooltipMixin":19,"d3":undefined,"react":undefined}],16:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
+var React = require("react");
 
 var StackAccessorMixin = {
 	propTypes: {
@@ -2048,11 +2034,11 @@ var StackAccessorMixin = {
 
 module.exports = StackAccessorMixin;
 
-},{"./ReactProvider":16}],19:[function(require,module,exports){
+},{"react":undefined}],17:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var StackDataMixin = {
 	propTypes: {
@@ -2090,11 +2076,11 @@ var StackDataMixin = {
 
 module.exports = StackDataMixin;
 
-},{"./D3Provider":9,"./ReactProvider":16}],20:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],18:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var Tooltip = React.createClass({
 	displayName: "Tooltip",
@@ -2137,11 +2123,11 @@ var Tooltip = React.createClass({
 
 module.exports = Tooltip;
 
-},{"./D3Provider":9,"./ReactProvider":16}],21:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],19:[function(require,module,exports){
 "use strict";
 
-var React = require("./ReactProvider");
-var d3 = require("./D3Provider");
+var React = require("react");
+var d3 = require("d3");
 
 var TooltipMixin = {
 	propTypes: {
@@ -2217,7 +2203,7 @@ var TooltipMixin = {
 
 module.exports = TooltipMixin;
 
-},{"./D3Provider":9,"./ReactProvider":16}],22:[function(require,module,exports){
+},{"d3":undefined,"react":undefined}],20:[function(require,module,exports){
 "use strict";
 
 var BarChart = require("./BarChart");
@@ -2236,5 +2222,5 @@ module.exports = {
 	Brush: Brush
 };
 
-},{"./AreaChart":2,"./BarChart":6,"./Brush":7,"./LineChart":13,"./PieChart":15,"./ScatterPlot":17}]},{},[22])(22)
+},{"./AreaChart":2,"./BarChart":6,"./Brush":7,"./LineChart":12,"./PieChart":14,"./ScatterPlot":15}]},{},[20])(20)
 });
