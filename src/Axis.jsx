@@ -114,7 +114,7 @@ let Axis = React.createClass({
 			let position = activeScale(tick);
 			let translate = transform.replace("{}", position);
 			return (
-					<g className="tick" transform={translate}>
+					<g key={tick} className="tick" transform={translate}>
 					<line x2={x2} y2={y2} stroke="#aaa"/>
 					<text x={x} y={y} dy={dy} textAnchor={textAnchor}>
 					{tickFormat(tick)}</text>

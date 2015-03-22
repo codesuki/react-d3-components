@@ -37,6 +37,7 @@ let DataSet = React.createClass({
 		let areas = data.map(stack => {
 			return (
 					<Path
+				key={stack}
 				className="area"
 				stroke="none"
 				fill={colorScale(label(stack))}
