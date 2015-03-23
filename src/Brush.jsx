@@ -99,6 +99,7 @@ let Brush = React.createClass({
 		let resizers = this.state.resizers.map((e) => {
 			return (
 					<g
+				key={e}
 				className={`resize ${e}`}
 				style={{ cursor: _d3_svg_brushCursor[e] }}
 				transform={`translate(${this.state.xExtent[+/e$/.test(e)]}, ${this.state.yExtent[+/^s/.test(e)]})`}

@@ -44,6 +44,7 @@ let DataSet = React.createClass({
 			return values(stack).map(e => {
 				return (
 						<Bar
+					key={stack}
 					width={xScale.rangeBand()}
 					height={yScale(yScale.domain()[0]) - yScale(y(e))}
 					x={xScale(x(e))}

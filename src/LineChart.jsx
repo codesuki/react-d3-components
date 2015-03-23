@@ -35,6 +35,7 @@ let DataSet = React.createClass({
 		let lines = data.map(stack => {
 			return (
 					<Path
+				key={stack}
 				className="line"
 				d={line(values(stack))}
 				stroke={colorScale(label(stack))}

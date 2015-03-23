@@ -82,7 +82,7 @@ let DataSet = React.createClass({
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
 			return (
-					<g className="arc">
+					<g key={e} className="arc">
 					<Wedge
 				data={e.data}
 				fill={colorScale(x(e.data))}

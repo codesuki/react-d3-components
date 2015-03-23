@@ -40,6 +40,7 @@ let DataSet = React.createClass({
 				let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
 				return (
 						<path
+					key={e}
 					className="dot"
 					d={symbol()}
 					transform={translate}
