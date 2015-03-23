@@ -110,11 +110,11 @@ let Axis = React.createClass({
 			labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={".75em"} transform={"rotate(-90)"}>{label}</text>;
 		}
 
-		let tickElements = ticks.map(tick => {
+		let tickElements = ticks.map((tick, index) => {
 			let position = activeScale(tick);
 			let translate = transform.replace("{}", position);
 			return (
-					<g key={tick} className="tick" transform={translate}>
+					<g key={`${tick}.${index}`} className="tick" transform={translate}>
 					<line x2={x2} y2={y2} stroke="#aaa"/>
 					<text x={x} y={y} dy={dy} textAnchor={textAnchor}>
 					{tickFormat(tick)}</text>

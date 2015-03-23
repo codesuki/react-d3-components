@@ -63,10 +63,11 @@ let DataSet = React.createClass({
 			 fill,
 			 opacity,
 			 x,
+			 y,
 			 onMouseEnter,
 			 onMouseLeave} = this.props;
 
-		let wedges = pie.map(e => {
+		let wedges = pie.map((e, index) => {
 			function midAngle(d){
 				return d.startAngle + (d.endAngle - d.startAngle)/2;
 			}
@@ -82,7 +83,7 @@ let DataSet = React.createClass({
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
 			return (
-					<g key={e} className="arc">
+					<g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
 					<Wedge
 				data={e.data}
 				fill={colorScale(x(e.data))}
@@ -204,6 +205,7 @@ let PieChart = React.createClass({
 			outerArc={outerArc}
 			radius={radius}
 			x={x}
+			y={y}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 				/>

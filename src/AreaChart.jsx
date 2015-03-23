@@ -34,10 +34,10 @@ let DataSet = React.createClass({
 			 onMouseEnter,
 			 onMouseLeave} = this.props;
 
-		let areas = data.map(stack => {
+		let areas = data.map((stack, index) => {
 			return (
 					<Path
-				key={stack}
+				key={`${label(stack)}.${index}`}
 				className="area"
 				stroke="none"
 				fill={colorScale(label(stack))}

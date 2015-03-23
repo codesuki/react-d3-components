@@ -29,6 +29,7 @@ let DataSet = React.createClass({
 			 xScale,
 			 yScale,
 			 colorScale,
+			 label,
 			 values,
 			 x,
 			 y,
@@ -36,15 +37,15 @@ let DataSet = React.createClass({
 			 onMouseLeave} = this.props;
 
 		let circles = data.map(stack => {
-			return values(stack).map(e => {
+			return values(stack).map((e, index) => {
 				let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
 				return (
 						<path
-					key={e}
+					key={`${label(stack)}.${index}`}
 					className="dot"
 					d={symbol()}
 					transform={translate}
-					fill={colorScale(stack.label)}
+					fill={colorScale(label(stack))}
 					onMouseOver={ evt => { onMouseEnter(evt, e); } }
 					onMouseLeave={  evt => { onMouseLeave(evt); } }
 						/>
@@ -91,6 +92,7 @@ let ScatterPlot = React.createClass({
 			 colorScale,
 			 rScale,
 			 shape,
+			 label,
 			 values,
 			 x,
 			 y,
@@ -146,6 +148,7 @@ let ScatterPlot = React.createClass({
 			yScale={yScale}
 			colorScale={colorScale}
 			symbol={symbol}
+			label={label}
 			values={values}
 			x={x}
 			y={y}

@@ -32,10 +32,10 @@ let DataSet = React.createClass({
 			 onMouseEnter,
 			 onMouseLeave} = this.props;
 
-		let lines = data.map(stack => {
+		let lines = data.map((stack, index) => {
 			return (
 					<Path
-				key={stack}
+				key={`${label(stack)}.${index}`}
 				className="line"
 				d={line(values(stack))}
 				stroke={colorScale(label(stack))}

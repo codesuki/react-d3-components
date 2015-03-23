@@ -96,7 +96,7 @@ let Brush = React.createClass({
 				/>;
 		}
 
-		let resizers = this.state.resizers.map((e) => {
+		let resizers = this.state.resizers.map(e => {
 			return (
 					<g
 				key={e}

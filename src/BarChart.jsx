@@ -41,10 +41,10 @@ let DataSet = React.createClass({
 			 onMouseLeave} = this.props;
 
 		let bars = data.map(stack => {
-			return values(stack).map(e => {
+			return values(stack).map((e, index) => {
 				return (
 						<Bar
-					key={stack}
+					key={`${label(stack)}.${index}`}
 					width={xScale.rangeBand()}
 					height={yScale(yScale.domain()[0]) - yScale(y(e))}
 					x={xScale(x(e))}
