@@ -1,4 +1,4 @@
-let React = require('./ReactProvider');
+let React = require('react');
 
 let AccessorMixin = {
 	propTypes: {
