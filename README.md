@@ -61,6 +61,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.4.4: Fixed tooltip position inside relative layout containers. Moved to webpack.
 * 0.4.3: Fixed tooltip not showing in Safari.
 * 0.4.2: Improved LineChart tooltip to show d3.svg.symbol() on nearest data point. Can be customized with shape and shapeColor props. LineChart toolip callback is callback(label, value) now where the format of value depends on your data format, default is {x: x, y: y}.
 * 0.4.1: Fixed compatibility issues with Safari and possible other browsers not supporting Number.isFinite().
