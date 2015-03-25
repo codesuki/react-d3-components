@@ -49,8 +49,8 @@ let TooltipMixin = {
 
 		this.setState({
 			tooltip: {
-				top: e.pageY + this.props.tooltipOffset.top,
-				left: e.pageX + this.props.tooltipOffset.left,
+				top: e.clientY + this.props.tooltipOffset.top,
+				left: e.clientX + this.props.tooltipOffset.left,
 				hidden: false,
 				html: this._tooltipHtml(data, position)
 			}

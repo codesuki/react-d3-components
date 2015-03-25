@@ -21,7 +21,7 @@ let Tooltip = React.createClass({
 
 		let style = {
 			display: hidden ? "none" : "block",
-			position: "absolute",
+			position: "fixed",
 			top: top,
 			left: left
 		};
