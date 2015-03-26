@@ -128,7 +128,8 @@ let PieChart = React.createClass({
 		outerRadius: React.PropTypes.number,
 		labelRadius: React.PropTypes.number,
 		padRadius: React.PropTypes.string,
-		cornerRadius: React.PropTypes.number
+		cornerRadius: React.PropTypes.number,
+		sort: React.PropTypes.any
 	},
 
 	getDefaultProps() {
@@ -137,7 +138,8 @@ let PieChart = React.createClass({
 			outerRadius: null,
 			labelRadius: null,
 			padRadius: "auto",
-			cornerRadius: 0
+			cornerRadius: 0,
+			sort: undefined
 		};
 	},
 
@@ -156,6 +158,7 @@ let PieChart = React.createClass({
 			 labelRadius,
 			 padRadius,
 			 cornerRadius,
+			 sort,
 			 x,
 			 y,
 			 values} = this.props;
@@ -164,7 +167,12 @@ let PieChart = React.createClass({
 			 innerHeight] = [this._innerWidth,
 							 this._innerHeight];
 
-		let pie = d3.layout.pie().value(e => { return y(e); });
+		let pie = d3.layout.pie()
+				.value(e => { return y(e); });
+
+		if (typeof sort !== 'undefined') {
+			pie = pie.sort(sort);
+		}
 
 		let radius = Math.min(innerWidth, innerHeight) / 2;
 		if (!innerRadius) {
