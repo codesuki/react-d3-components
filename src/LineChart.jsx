@@ -51,13 +51,6 @@ let DataSet = React.createClass({
 		 The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
 		 Not sure if this should be used.
 		 */
-
-		<rect width={width} height={height} fill={"none"} stroke={"none"} style={{pointerEvents: "all"}}
-			onMouseMove={ evt => { onMouseEnter(evt, data); } }
-			onMouseLeave={  evt => { onMouseLeave(evt); } }
-				/>
-
-
 		let rect = React.renderToString(<rect width={width} height={height}/>);
 		return (
 				<g>
@@ -220,7 +213,15 @@ let LineChart = React.createClass({
 			let symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
 
 			let translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : "";
-			tooltipSymbol = this.state.tooltip.hidden ? null : <path className="dot" d={symbol()} transform={translate} fill={symbolColor}/>;
+			tooltipSymbol = this.state.tooltip.hidden ? null :
+				<path
+			className="dot"
+			d={symbol()}
+			transform={translate}
+			fill={symbolColor}
+			onMouseEnter={evt => { this.onMouseEnter(evt, data); }}
+			onMouseLeave={evt => { this.onMouseLeave(evt); }}
+				/>;
 		}
 
 		return (
@@ -262,6 +263,7 @@ let LineChart = React.createClass({
 				/>
 
 				{tooltipSymbol}
+
 				</Chart>
 
 				<Tooltip
