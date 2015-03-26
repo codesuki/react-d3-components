@@ -101,7 +101,7 @@ let LineChart = React.createClass({
 		let valuesAtX = data.map(stack => {
 			let idx = xBisector(values(stack), xValueCursor);
 
-			let indexRight = idx == stack.length ? idx - 1 : idx;
+			let indexRight = idx == values(stack).length ? idx - 1 : idx;
 			let valueRight = x(values(stack)[indexRight]);
 
 			let indexLeft = idx == 0 ? idx : idx - 1;
