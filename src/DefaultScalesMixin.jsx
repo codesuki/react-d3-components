@@ -29,7 +29,7 @@ let DefaultScalesMixin = {
 			[this._xScale, this._xIntercept] = [xScale, xIntercept];
 		}
 
-		if (!this.props.yScale) {
+		if (!yScale) {
 			[this._yScale, this._yIntercept] = this._makeYScale();
 		} else {
 			[this._yScale, this._yIntercept] = [yScale, yIntercept];
@@ -127,7 +127,14 @@ let DefaultScalesMixin = {
 	},
 
 	_makeOrdinalYScale() {
-		return [null, 0];
+		let [data, innerHeight] = [this._data, this._innerHeight];
+
+		let scale = d3.scale.ordinal()
+				.range([innerHeight, 0]);
+
+		let yIntercept = scale(0);
+
+		return [scale, yIntercept];
 	}
 };
 

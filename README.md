@@ -33,7 +33,7 @@ npm install react-d3-components
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
 I try to provide sensible defaults, but since for most use-cases we need to customize D3's parameters they will be made accessible to the user. Most Charts will turn into their stacked variant when given an array as input.
 
-If you like the project please consider star'ing and a pull request. I am open for any additions.
+If you like the project please consider starring and a pull request. I am open for any additions.
 
 ## Documentation
 Documentation is in the [Wiki](https://github.com/codesuki/react-d3-components/wiki).
@@ -61,6 +61,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.4.6: Added sort property to PieChart, same usage as d3.Pie.sort(). Added support for strokeWidth, strokeDasharray, strokeLinecap to LineChart, can be string or function. Small bug fixes.
 * 0.4.5: Fixed tooltip not showing when mouse is over tooltip symbol. Tooltip will soon be revamped to allow custom components.
 * 0.4.4: Fixed tooltip position inside relative layout containers. Moved to webpack.
 * 0.4.3: Fixed tooltip not showing in Safari.
@@ -292,6 +293,49 @@ var colorScale = d3.scale.category20();
 	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
 
+#### LineChart stroke style
+You can customize the line style of LineCharts with CSS or if you want to have more control how each line in your dataset gets rendered you can use the stroke property of LineChart as follows. Note that you do not have to set all the properties in the object.
+
+```javascript
+	var dashFunc = function(label) {
+		if (label == "somethingA") {
+			return "4 4 4";
+		}
+		if (label == "somethingB") {
+			return "3 4 3";
+		}
+	}
+
+	var widthFunc = function(label) {
+		if (label == "somethingA") {
+			return "4";
+		}
+		if (label == "somethingB") {
+			return "2";
+		}
+	}
+
+	var linecapFunc = function(label) {
+		if (label == "somethingA") {
+			return "round";
+		}
+	}
+
+	React.render(<LineChart
+					data={data}
+					width={400}
+					height={400}
+					margin={{top: 10, bottom: 50, left: 50, right: 10}}
+					tooltipHtml={tooltipLine}
+					xAxis={{innerTickSize: 6, label: "x-label"}}
+					yAxis={{label: "y-label"}}
+					shapeColor={"red"}
+					stroke={{strokeDasharray: dashFunc, strokeWidth: widthFunc, strokeLinecap: linecapFunc}}
+					/>,
+	document.getElementById('linechart')
+	);
+```
+
 ### StackedBarChart
 ```javascript
 var BarChart = ReactD3.BarChart;
@@ -369,19 +413,25 @@ React.render(<AreaChart
 ![areachart](http://codesuki.github.io/react-d3-components/areachart.png)
 
 ### PieChart
+By default d3 sorts the PieChart but you can use the sort property to pass a custom comparator or null to disable sorting.
+
 ```javascript
 var PieChart = ReactD3.PieChart;
 
-data = {
-	label: 'somethingA',
-	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+var data = {
+		label: 'somethingA',
+		values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 };
+
+var sort = null; // d3.ascending(), d3.descending(), func(a,b) { return a - b; }, etc...
 
 React.render(<PieChart
 				data={data}
 				width={600}
 				height={400}
-				margin={{top: 10, bottom: 10, left: 100, right: 100}}/>,
+				margin={{top: 10, bottom: 10, left: 100, right: 100}}
+				sort={sort}
+				/>,
 			document.getElementById('location')
 );
 ```

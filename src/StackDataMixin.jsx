@@ -22,7 +22,7 @@ let StackDataMixin = {
 	},
 
 	_stackData(props) {
-		let {offset, order, x, y, values} = this.props;
+		let {offset, order, x, y, values} = props;
 
 		let stack = d3.layout.stack()
 				.offset(offset)

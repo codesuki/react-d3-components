@@ -8,7 +8,12 @@ let ArrayifyMixin = {
 	},
 
 	_arrayify(props) {
-		if (!Array.isArray(props.data)) {
+		if (props.data === null) {
+			this._data = [{
+				label: 'No data available',
+				values: [{x: 'No data available', y: 1}]
+			}];
+		} else if (!Array.isArray(props.data)) {
 			this._data = [props.data];
 		} else {
 			this._data = props.data;

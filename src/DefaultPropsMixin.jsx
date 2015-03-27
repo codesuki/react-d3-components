@@ -22,6 +22,7 @@ let DefaultPropsMixin = {
 
 	getDefaultProps() {
 		return {
+			data: {label: 'No data available', values: [{x: 'No data available', y: 1}]},
 			margin: {top: 0, bottom: 0, left: 0, right: 0},
 			xScale: null,
 			yScale: null,
