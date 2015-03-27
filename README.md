@@ -335,6 +335,7 @@ You can customize the line style of LineCharts with CSS or if you want to have m
 	document.getElementById('linechart')
 	);
 ```
+![strokestyle](http://codesuki.github.io/react-d3-components/strokestyle.png)
 
 ### StackedBarChart
 ```javascript
