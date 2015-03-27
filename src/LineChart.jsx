@@ -26,6 +26,8 @@ let DataSet = React.createClass({
 			 data,
 			 line,
 			 strokeWidth,
+			 strokeLinecap,
+			 strokeDasharray,
 			 colorScale,
 			 values,
 			 label,
@@ -36,9 +38,12 @@ let DataSet = React.createClass({
 			return (
 					<Path
 				key={`${label(stack)}.${index}`}
-				className="line"
+				className={'line'}
 				d={line(values(stack))}
 				stroke={colorScale(label(stack))}
+				strokeWidth={typeof strokeWidth === 'function' ? strokeWidth(label(stack)) : strokeWidth}
+				strokeLinecap={typeof strokeLinecap === 'function' ? strokeLinecap(label(stack)) : strokeLinecap}
+				strokeDasharray={typeof strokeDasharray === 'function' ? strokeDasharray(label(stack)) : strokeDasharray}
 				data={values(stack)}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
@@ -56,7 +61,7 @@ let DataSet = React.createClass({
 				<g>
 				<g dangerouslySetInnerHTML={{__html: `<defs><clipPath id="lineClip">${rect}`}}/>
 				{lines}
-				<rect width={width} height={height} fill={"none"} stroke={"none"} style={{pointerEvents: "all"}}
+				<rect width={width} height={height} fill={'none'} stroke={'none'} style={{pointerEvents: 'all'}}
 			onMouseMove={ evt => { onMouseEnter(evt, data); } }
 			onMouseLeave={  evt => { onMouseLeave(evt); } }
 				/>
@@ -101,10 +106,10 @@ let LineChart = React.createClass({
 		let valuesAtX = data.map(stack => {
 			let idx = xBisector(values(stack), xValueCursor);
 
-			let indexRight = idx == values(stack).length ? idx - 1 : idx;
+			let indexRight = idx === values(stack).length ? idx - 1 : idx;
 			let valueRight = x(values(stack)[indexRight]);
 
-			let indexLeft = idx == 0 ? idx : idx - 1;
+			let indexLeft = idx === 0 ? idx : idx - 1;
 			let valueLeft = x(values(stack)[indexLeft]);
 
 			let index;
@@ -122,8 +127,8 @@ let LineChart = React.createClass({
 		let yBisector = d3.bisector(e => { return y(e.value); }).left;
 		let yIndex = yBisector(valuesAtX, yValueCursor);
 
-		let yIndexRight = yIndex == valuesAtX.length ? yIndex - 1 : yIndex;
-		let yIndexLeft = yIndex == 0 ? yIndex : yIndex - 1;
+		let yIndexRight = yIndex === valuesAtX.length ? yIndex - 1 : yIndex;
+		let yIndexLeft = yIndex === 0 ? yIndex : yIndex - 1;
 
 		let yValueRight = y(valuesAtX[yIndexRight].value);
 		let yValueLeft = y(valuesAtX[yIndexLeft].value);
@@ -171,13 +176,18 @@ let LineChart = React.createClass({
 	},
 	 */
 
+	/*
+			 stroke,
+			 strokeWidth,
+			 strokeLinecap,
+			 strokeDasharray,
+	 */
 	render() {
 		let {height,
 			 width,
 			 margin,
 			 colorScale,
 			 interpolate,
-			 strokeWidth,
 			 stroke,
 			 values,
 			 label,
@@ -233,18 +243,17 @@ let LineChart = React.createClass({
 			width={innerWidth}
 			data={data}
 			line={line}
-			strokeWidth={strokeWidth}
-			stroke={stroke}
 			colorScale={colorScale}
 			values={values}
 			label={label}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
+			{...stroke}
 				/>
 
 				<Axis
-			className={"x axis"}
-			orientation={"bottom"}
+			className={'x axis'}
+			orientation={'bottom'}
 			scale={xScale}
 			height={innerHeight}
 			width={innerWidth}
@@ -253,8 +262,8 @@ let LineChart = React.createClass({
 				/>
 
 				<Axis
-			className={"y axis"}
-			orientation={"left"}
+			className={'y axis'}
+			orientation={'left'}
 			scale={yScale}
 			height={innerHeight}
 			width={innerWidth}

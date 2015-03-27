@@ -236,6 +236,24 @@ var SomeComponent = React.createClass({
 	document.getElementById('stackedareachart')
 	);
 
+	var dashFunc = function(label) {
+		if (label == "somethingA") {
+			return "4 4 4";
+		}
+		if (label == "somethingB") {
+			return "3 4 3";
+		}
+	}
+
+	var widthFunc = function(label) {
+		if (label == "somethingA") {
+			return "4";
+		}
+		if (label == "somethingB") {
+			return "2";
+		}
+	}
+
 	React.render(<LineChart
 					data={data}
 					width={400}
@@ -245,6 +263,7 @@ var SomeComponent = React.createClass({
 					xAxis={{innerTickSize: 6, label: "x-label"}}
 					yAxis={{label: "y-label"}}
 					shapeColor={"red"}
+					stroke={{strokeDasharray: dashFunc, strokeWidth: widthFunc}}
 					/>,
 	document.getElementById('linechart')
 	);

@@ -5,6 +5,9 @@ let Path = React.createClass({
 	propTypes: {
 		className: React.PropTypes.string,
 		stroke: React.PropTypes.string.isRequired,
+		strokeLinecap: React.PropTypes.string,
+		strokeWidth: React.PropTypes.string,
+		strokeDasharray: React.PropTypes.string,
 		fill: React.PropTypes.string,
 		d: React.PropTypes.string.isRequired,
 		data: React.PropTypes.array.isRequired
@@ -13,13 +16,19 @@ let Path = React.createClass({
 	getDefaultProps() {
 		return {
 			className: 'path',
-			fill: 'none'
+			fill: 'none',
+			strokeWidth: '2',
+			strokeLinecap: 'butt',
+			strokeDasharray: 'none'
 		};
 	},
 
 	render() {
 		let {className,
 			 stroke,
+			 strokeWidth,
+			 strokeLinecap,
+			 strokeDasharray,
 			 fill,
 			 d,
 			 style,
@@ -30,8 +39,10 @@ let Path = React.createClass({
 		return (
 				<path
 			className={className}
-			strokeWidth={"2"}
 			stroke={stroke}
+			strokeWidth={strokeWidth}
+			strokeLinecap={strokeLinecap}
+			strokeDasharray={strokeDasharray}
 			fill={fill}
 			d={d}
 			onMouseMove={ evt => { onMouseEnter(evt, data); } }
