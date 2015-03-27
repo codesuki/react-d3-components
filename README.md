@@ -294,7 +294,7 @@ var colorScale = d3.scale.category20();
 ```
 
 #### LineChart stroke style
-You can customize the line style of LineCharts with CSS or if you want to have more control how each line in your dataset gets rendered you can use the stroke property of LineChart as follows. Note that you do not have to set all the properties in the object.
+You can customize the line style of LineCharts with CSS or if you want to have more control over how each line in your dataset gets rendered you can use the stroke property of LineChart as follows. Note that you do not have to set all the properties in the object.
 
 ```javascript
 	var dashFunc = function(label) {
