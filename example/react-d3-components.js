@@ -138,7 +138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("\"use strict\";\n\nvar HeightWidthMixin = {\n\tcomponentWillMount: function componentWillMount() {\n\t\tthis._calculateInner(this.props);\n\t},\n\n\tcomponentWillReceiveProps: function componentWillReceiveProps(nextProps) {\n\t\tthis._calculateInner(nextProps);\n\t},\n\n\t_calculateInner: function _calculateInner(props) {\n\t\tvar _props = this.props;\n\t\tvar height = _props.height;\n\t\tvar width = _props.width;\n\t\tvar margin = _props.margin;\n\n\t\tthis._innerHeight = height - margin.top - margin.bottom;\n\t\tthis._innerWidth = width - margin.left - margin.right;\n\t}\n};\n\nmodule.exports = HeightWidthMixin;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/HeightWidthMixin.jsx\n ** module id = 14\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/HeightWidthMixin.jsx?");
+	eval("\"use strict\";\n\nvar HeightWidthMixin = {\n\tcomponentWillMount: function componentWillMount() {\n\t\tthis._calculateInner(this.props);\n\t},\n\n\tcomponentWillReceiveProps: function componentWillReceiveProps(nextProps) {\n\t\tthis._calculateInner(nextProps);\n\t},\n\n\t_calculateInner: function _calculateInner(props) {\n\t\tvar height = props.height;\n\t\tvar width = props.width;\n\t\tvar margin = props.margin;\n\n\t\tthis._innerHeight = height - margin.top - margin.bottom;\n\t\tthis._innerWidth = width - margin.left - margin.right;\n\t}\n};\n\nmodule.exports = HeightWidthMixin;\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/HeightWidthMixin.jsx\n ** module id = 14\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/HeightWidthMixin.jsx?");
 
 /***/ },
 /* 15 */

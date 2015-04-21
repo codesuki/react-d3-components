@@ -61,6 +61,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.4.8: Fixed bug were graphs don't resize correctly.
 * 0.4.7: Moved to React 0.13.1
 * 0.4.6: Added sort property to PieChart, same usage as d3.Pie.sort(). Added support for strokeWidth, strokeDasharray, strokeLinecap to LineChart, can be string or function. Small bug fixes.
 * 0.4.5: Fixed tooltip not showing when mouse is over tooltip symbol. Tooltip will soon be revamped to allow custom components.
