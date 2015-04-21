@@ -1,13 +1,12 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
+import Chart from './Chart';
+import Axis from './Axis';
 
-let HeightWidthMixin = require('./HeightWidthMixin');
+import HeightWidthMixin from './HeightWidthMixin';
 
 // Adapted for React from https://github.com/mbostock/d3/blob/master/src/svg/brush.js
-// TODO: Add D3 License
 let _d3_svg_brushCursor = {
 	n: "ns-resize",
 	e: "ew-resize",
@@ -27,7 +26,7 @@ let _d3_svg_brushResizes = [
 ];
 
 // TODO: add y axis support
-let Brush = React.createClass({
+export default React.createClass({
 	mixins: [HeightWidthMixin],
 
 	getInitialState() {
@@ -310,5 +309,3 @@ let Brush = React.createClass({
 		return scale.rangeExtent ? scale.rangeExtent() : this._d3_scaleExtent(scale.range());
 	}
 });
-
-module.exports = Brush;

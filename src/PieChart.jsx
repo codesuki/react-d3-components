@@ -1,18 +1,28 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let AccessorMixin = require('./AccessorMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import AccessorMixin from './AccessorMixin';
+import TooltipMixin from './TooltipMixin';
+import TransitionMixin from "./TransitionMixin";
 
 let Wedge = React.createClass({
+	mixins: [TransitionMixin],
+
 	propTypes: {
 		d: React.PropTypes.string.isRequired,
 		fill: React.PropTypes.string.isRequired
+	},
+
+	getInitialState() {
+		return {
+			d: this.props.d,
+			fill: this.props.fill
+		};
 	},
 
 	render() {
@@ -20,11 +30,10 @@ let Wedge = React.createClass({
 
 		return (
 				<path
-			fill={fill}
-			d={d}
+					fill={this.state.fill}
+					d={this.state.d}
 			onMouseMove={ evt => { onMouseEnter(evt, data); } }
-			onMouseLeave={  evt => { onMouseLeave(evt); } }
-				/>
+					onMouseLeave={ evt => { onMouseLeave(evt); } }/>
 		);
 	}
 });
@@ -65,7 +74,8 @@ let DataSet = React.createClass({
 			 x,
 			 y,
 			 onMouseEnter,
-			 onMouseLeave} = this.props;
+			 onMouseLeave,
+			 transition} = this.props;
 
 		let wedges = pie.map((e, index) => {
 			function midAngle(d){
@@ -90,15 +100,16 @@ let DataSet = React.createClass({
 				d={d}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
-					/>
+							transition={transition}
+							arc={arc}
+							e={e}/>
 
 					<polyline
 				opacity={opacity}
 				strokeWidth={strokeWidth}
 				stroke={stroke}
 				fill={fill}
-				points={[arc.centroid(e), outerArc.centroid(e), linePos]}
-					/>
+							points={[arc.centroid(e), outerArc.centroid(e), linePos]}/>
 
 					<text
 				dy=".35em"
@@ -117,7 +128,7 @@ let DataSet = React.createClass({
 	}
 });
 
-let PieChart = React.createClass({
+export default React.createClass({
 	mixins: [DefaultPropsMixin,
 			 HeightWidthMixin,
 			 AccessorMixin,
@@ -163,7 +174,8 @@ let PieChart = React.createClass({
 			 sort,
 			 x,
 			 y,
-			 values} = this.props;
+			 values,
+			 transition} = this.props;
 
 		let [innerWidth,
 			 innerHeight] = [this._innerWidth,
@@ -218,7 +230,7 @@ let PieChart = React.createClass({
 			y={y}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
-				/>
+							transition={transition}/>
 				</g>
 				{ this.props.children }
 				</Chart>
@@ -228,5 +240,3 @@ let PieChart = React.createClass({
 		);
 	}
 });
-
-module.exports = PieChart;

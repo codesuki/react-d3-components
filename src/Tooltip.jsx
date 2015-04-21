@@ -1,7 +1,7 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Tooltip = React.createClass({
+export default React.createClass({
     propTypes: {
         top: React.PropTypes.number.isRequired,
         left: React.PropTypes.number.isRequired,
@@ -35,5 +35,3 @@ let Tooltip = React.createClass({
         );
     }
 });
-
-module.exports = Tooltip;

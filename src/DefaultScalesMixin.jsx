@@ -1,7 +1,7 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let DefaultScalesMixin = {
+export default {
     propTypes: {
         barPadding: React.PropTypes.number
     },
@@ -149,5 +149,3 @@ let DefaultScalesMixin = {
         return [scale, yIntercept];
     }
 };
-
-module.exports = DefaultScalesMixin;

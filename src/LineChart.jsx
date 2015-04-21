@@ -24,6 +24,8 @@ let DataSet = React.createClass({
         let {width,
              height,
              data,
+             xScale,
+             yScale,
              line,
              strokeWidth,
              strokeLinecap,
@@ -32,7 +34,8 @@ let DataSet = React.createClass({
              values,
              label,
              onMouseEnter,
-             onMouseLeave} = this.props;
+             onMouseLeave,
+             transition} = this.props;
 
         let sizeId = width + 'x' + height;
 
@@ -50,6 +53,9 @@ let DataSet = React.createClass({
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 style={{clipPath: `url(#lineClip_${sizeId})`}}
+                transition={transition}
+                xScale={xScale}
+                yScale={yScale}
                     />
             );
         });
@@ -58,15 +64,20 @@ let DataSet = React.createClass({
          The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
          Not sure if this should be used.
          */
-        let rect = React.renderToString(<rect width={width} height={height}/>);
+        //style={{clipPath: `url(#lineClip${this._reactInternalInstance._rootNodeID})`}}
+        //<g dangerouslySetInnerHTML={{__html: `<defs><clipPath id="lineClip${this._reactInternalInstance._rootNodeID}">${rect}`}}/>
+        //let rect = React.renderToString(<rect width={width} height={height}/>);
         return (
-                <g>
-                <g dangerouslySetInnerHTML={{__html: `<defs><clipPath id="lineClip_${sizeId}">${rect}`}}/>
+                <g clipPath={`url(#lineClip${this._reactInternalInstance._rootNodeID})`}>
+                <defs>
+                    <clipPath id={`lineClip${this._reactInternalInstance._rootNodeID}`}>
+                        <rect width={width} height={height}/>
+                    </clipPath>
+                </defs>
                 {lines}
                 <rect width={width} height={height} fill={'none'} stroke={'none'} style={{pointerEvents: 'all'}}
             onMouseMove={ evt => { onMouseEnter(evt, data); } }
-            onMouseLeave={  evt => { onMouseLeave(evt); } }
-                />
+                    onMouseLeave={  evt => { onMouseLeave(evt); } }/>
             </g>
         );
     }
@@ -206,7 +217,8 @@ let LineChart = React.createClass({
              xAxis,
              yAxis,
              shape,
-             shapeColor} = this.props;
+             shapeColor,
+             transition} = this.props;
 
         let [data,
              innerWidth,
@@ -259,6 +271,9 @@ let LineChart = React.createClass({
             label={label}
             onMouseEnter={this.onMouseEnter}
             onMouseLeave={this.onMouseLeave}
+            xScale={xScale}
+            yScale={yScale}
+            transition={transition}
             {...stroke}
                 />
 

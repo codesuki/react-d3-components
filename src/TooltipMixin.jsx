@@ -1,7 +1,7 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let TooltipMixin = {
+export default {
     propTypes: {
         tooltipHtml: React.PropTypes.func,
         tooltipMode: React.PropTypes.oneOf(['mouse', 'element', 'fixed']),
@@ -110,5 +110,3 @@ let TooltipMixin = {
         });
     }
 };
-
-module.exports = TooltipMixin;

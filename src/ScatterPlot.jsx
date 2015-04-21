@@ -1,16 +1,16 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let AccessorMixin = require('./AccessorMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import AccessorMixin from './AccessorMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
 let DataSet = React.createClass({
 	propTypes: {
@@ -61,7 +61,7 @@ let DataSet = React.createClass({
 	}
 });
 
-let ScatterPlot = React.createClass({
+export default React.createClass({
 	mixins: [DefaultPropsMixin,
 			 HeightWidthMixin,
 			 ArrayifyMixin,
@@ -170,5 +170,3 @@ let ScatterPlot = React.createClass({
 		);
 	}
 });
-
-module.exports = ScatterPlot;

@@ -1,15 +1,7 @@
-let BarChart = require('./BarChart');
-let PieChart = require('./PieChart');
-let ScatterPlot = require('./ScatterPlot');
-let LineChart = require('./LineChart');
-let AreaChart = require('./AreaChart');
-let Brush = require('./Brush');
-
-module.exports = {
-    BarChart: BarChart,
-    PieChart: PieChart,
-    ScatterPlot: ScatterPlot,
-    LineChart: LineChart,
-    AreaChart: AreaChart,
-    Brush: Brush
-};
+export { default as BarChart } from './BarChart';
+export { default as PieChart } from './PieChart';
+export { default as ScatterPlot } from './ScatterPlot';
+export { default as LineChart } from './LineChart';
+export { default as AreaChart } from './AreaChart';
+export { default as Brush } from './Brush';
+export { default as Transition } from './Transition';

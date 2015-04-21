@@ -1,18 +1,18 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Bar = require('./Bar');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Bar from './Bar';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let StackAccessorMixin = require('./StackAccessorMixin');
-let StackDataMixin = require('./StackDataMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import StackAccessorMixin from './StackAccessorMixin';
+import StackDataMixin from './StackDataMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
 let DataSet = React.createClass({
     propTypes: {
@@ -39,7 +39,8 @@ let DataSet = React.createClass({
              y0,
              onMouseEnter,
              onMouseLeave,
-             groupedBars} = this.props;
+             groupedBars,
+             transition} = this.props;
 
         let bars;
         if (groupedBars) {
@@ -74,6 +75,9 @@ let DataSet = React.createClass({
                             data={e}
                             onMouseEnter={onMouseEnter}
                             onMouseLeave={onMouseLeave}
+                    transition={transition}
+                    xScale={xScale}
+                    yScale={yScale}
                             />
                     );
                 });
@@ -137,7 +141,8 @@ let BarChart = React.createClass({
              x,
              xAxis,
              yAxis,
-             groupedBars} = this.props;
+             groupedBars,
+             transition} = this.props;
 
         let [data,
              innerWidth,
@@ -165,6 +170,7 @@ let BarChart = React.createClass({
             onMouseEnter={this.onMouseEnter}
             onMouseLeave={this.onMouseLeave}
             groupedBars={groupedBars}
+            transition={transition}
                 />
 
                 <Axis

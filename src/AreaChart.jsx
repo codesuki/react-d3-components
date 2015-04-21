@@ -1,18 +1,18 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Path = require('./Path');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Path from './Path';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let StackAccessorMixin = require('./StackAccessorMixin');
-let StackDataMixin = require('./StackDataMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import StackAccessorMixin from './StackAccessorMixin';
+import StackDataMixin from './StackDataMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
 let DataSet = React.createClass({
     propTypes: {
@@ -67,7 +67,7 @@ let DataSet = React.createClass({
     }
 });
 
-let AreaChart = React.createClass({
+export default React.createClass({
     mixins: [DefaultPropsMixin,
              HeightWidthMixin,
              ArrayifyMixin,
@@ -209,5 +209,3 @@ let AreaChart = React.createClass({
         );
     }
 });
-
-module.exports = AreaChart;

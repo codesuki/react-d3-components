@@ -3,14 +3,15 @@
   <meta charset="utf-8">
   <title>React D3 Components Examples</title>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="//fb.me/react-with-addons-0.13.1.js"></script>
-  <script src="//fb.me/JSXTransformer-0.13.1.js"></script>
+    <script src="react-with-addons.js"></script>
+    <script src="JSXTransformer.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
   <script src="react-d3-components.js"></script>
 </head>
 <body>
   <div id="brush" class="brush"></div>
   <div id="barchart"></div>
+    <div id="animatedlinechart"></div>
   <div id="barchart2"></div>
   <div id="stackedbarchart"></div>
   <div id="groupedbarchart"></div>
@@ -73,7 +74,6 @@ var SomeComponent = React.createClass({
     },
 
     render: function() {
-
         return (
                 <div>
                 <LineChart
@@ -131,6 +131,15 @@ var SomeComponent = React.createClass({
     values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
     }];
 
+    var transition = new ReactD3.Transition();
+    transition.duration(2500)
+        .attr('opacity', 1, 0)
+        .attr('fill', '#c99')
+        .attr('height', function(d, x, y) { return y(d.y0) - y(d.y0 + d.y); }, 0)
+        .attr('y',
+            function(d, x, y) { return y(d.y0 + d.y); },
+            function(d, x, y) { return y(0); });
+
     React.render(
     <BarChart
        data={data}
@@ -138,9 +147,91 @@ var SomeComponent = React.createClass({
        height={400}
        margin={{top: 10, bottom: 50, left: 50, right: 10}}
        tooltipHtml={tooltip}
+            transition={transition}
        />,
     document.getElementById('barchart')
     );
+
+    var AnimatedComponent = React.createClass({
+        getInitialState: function() {
+            return {
+                data: {label: '', values: [
+                    {x: 1, y: 1},
+                    {x: 2, y: 2},
+                    {x: 3, y: 0},
+                    {x: 4, y: 1},
+                    {x: 5, y: 2},
+                    {x: 6, y: 0},
+                    {x: 7, y: 1},
+                    {x: 8, y: 2},
+                    {x: 9, y: 0},
+                    {x: 10, y: 1},
+                    {x: 11, y: 2},
+                    {x: 12, y: 0},
+                    {x: 13, y: 1},
+                    {x: 14, y: 2},
+                    {x: 15, y: 0},
+                    {x: 16, y: 1},
+                    {x: 17, y: 2},
+                    {x: 18, y: 0},
+                    {x: 19, y: 1},
+                    {x: 20, y: 2}
+                ]}
+            };
+        },
+
+        componentDidMount: function() {
+            this._update();
+        },
+
+        _update: function() {
+            var data = this.state.data;
+            data.values.push({x: data.values[data.values.length - 1].x + 1, y: Math.random() - 0.5});
+
+            this.setState({data: data});
+
+            data.values.shift();
+
+            setTimeout(this._update, 1000);
+        },
+
+        render: function() {
+
+            var start = this.state.data.values[0].x;
+
+            var transition = new ReactD3.Transition();
+            transition
+                .duration(1000)
+                .attr('transform', function(d, x, y) {
+                    return "translate(" + x(start - 1) + ",0)";
+                }, "translate(0, 0)");
+
+            var scale =	d3.scale.linear()
+                .domain([this.state.data.values[0].x, this.state.data.values[this.state.data.values.length - 2].x])
+                .range([0, 400 - 70]);
+
+                return (
+                    <div>
+                        <LineChart
+                            data={this.state.data}
+                            width={400}
+                            height={400}
+                            margin={{top: 10, bottom: 50, left: 50, right: 20}}
+                            tooltipHtml={tooltipLine}
+                            xScale={scale}
+                            yScale={d3.scale.linear().domain([-1, 1]).range([0, 400 - 70])}
+                            transition={transition}
+                            />
+                    </div>
+                );
+        },
+    });
+
+    React.render(
+        <AnimatedComponent/>,
+        document.getElementById('animatedlinechart')
+    );
+
 /*
     data = [{
     customLabel: 'somethingA',
@@ -223,6 +314,17 @@ var SomeComponent = React.createClass({
     values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 2}, {x: 'SomethingC', y: 3}]
     };
 
+    var pieTransition = new ReactD3.Transition()
+        .duration(2000)
+        .ease("bounce")
+        .attrTween("d", tweenPie);
+
+    function tweenPie(b, arc) {
+        b.innerRadius = 0;
+        var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+        return function(t) { return arc(i(t)); };
+    }
+
     React.render(<PieChart
                     data={data}
                     width={600}
@@ -232,6 +334,7 @@ var SomeComponent = React.createClass({
                     tooltipHtml={tooltipPie}
                     tooltipMode={'fixed'}
                     sort={null}
+                     transition={pieTransition}
                     />,
     document.getElementById('piechart')
     );

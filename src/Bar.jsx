@@ -1,7 +1,11 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Bar = React.createClass({
+import TransitionMixin from "./TransitionMixin";
+
+export default React.createClass({
+	mixins: [TransitionMixin],
+
     propTypes: {
         width: React.PropTypes.number.isRequired,
         height: React.PropTypes.number.isRequired,
@@ -16,6 +20,17 @@ let Bar = React.createClass({
         onMouseLeave: React.PropTypes.func
     },
 
+	getInitialState() {
+		return {
+			x: this.props.x,
+			y: this.props.y,
+			width: this.props.width,
+			height: this.props.height,
+			fill: this.props.fill,
+			opacity: 1
+		};
+	},
+
     render() {
         let {x,
              y,
@@ -29,16 +44,15 @@ let Bar = React.createClass({
         return (
                 <rect
             className="bar"
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            fill={fill}
+			x={this.state.x}
+			y={this.state.y}
+			width={this.state.width}
+			height={this.state.height}
+			fill={this.state.fill}
+			opacity={this.state.opacity}
             onMouseMove={ e => { onMouseEnter(e, data); } }
             onMouseLeave={ e => { onMouseLeave(e); } }
                 />
         );
     }
 });
-
-module.exports = Bar;
