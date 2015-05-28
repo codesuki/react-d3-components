@@ -79,12 +79,14 @@ let LineChart = React.createClass({
 			 TooltipMixin],
 
 	propTypes: {
-		interpolate: React.PropTypes.string
+		interpolate: React.PropTypes.string,
+		defined: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {
 			interpolate: 'linear',
+			defined: () => true,
 			shape: 'circle',
 			shapeColor: null
 		};
@@ -188,6 +190,7 @@ let LineChart = React.createClass({
 			 margin,
 			 colorScale,
 			 interpolate,
+			 defined,
 			 stroke,
 			 values,
 			 label,
@@ -215,7 +218,8 @@ let LineChart = React.createClass({
 		let line = d3.svg.line()
 				.x(function(e) { return xScale(x(e)); })
 				.y(function(e) { return yScale(y(e)); })
-				.interpolate(interpolate);
+				.interpolate(interpolate)
+				.defined(defined);
 
 		let tooltipSymbol;
 		if (!this.state.tooltip.hidden) {
