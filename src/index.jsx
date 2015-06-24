@@ -5,3 +5,5 @@ export { default as LineChart } from './LineChart';
 export { default as AreaChart } from './AreaChart';
 export { default as Brush } from './Brush';
 export { default as Transition } from './Transition';
+export { default as Chart } from './Chart';
+export { default as Axis } from './Axis';

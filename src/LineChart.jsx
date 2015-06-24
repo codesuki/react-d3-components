@@ -218,21 +218,12 @@ let LineChart = React.createClass({
              yAxis,
              shape,
              shapeColor,
-             transition} = this.props;
-
-        let [data,
-             innerWidth,
-             innerHeight,
+             transition,
+             data,
              xScale,
              yScale,
              xIntercept,
-             yIntercept] = [this._data,
-                            this._innerWidth,
-                            this._innerHeight,
-                            this._xScale,
-                            this._yScale,
-                            this._xIntercept,
-                            this._yIntercept];
+             yIntercept} = this.props;
 
         let line = d3.svg.line()
                 .x(function(e) { return xScale(x(e)); })
@@ -258,12 +249,10 @@ let LineChart = React.createClass({
         }
 
         return (
-                <div>
-                <Chart height={height} width={width} margin={margin}>
-
+                <g>
                 <DataSet
-            height={innerHeight}
-            width={innerWidth}
+            height={height}
+            width={width}
             data={data}
             line={line}
             colorScale={colorScale}
@@ -274,35 +263,9 @@ let LineChart = React.createClass({
             xScale={xScale}
             yScale={yScale}
             transition={transition}
-            {...stroke}
-                />
-
-                <Axis
-            className={'x axis'}
-            orientation={'bottom'}
-            scale={xScale}
-            height={innerHeight}
-            width={innerWidth}
-            zero={yIntercept}
-            {...xAxis}
-                />
-
-                <Axis
-            className={'y axis'}
-            orientation={'left'}
-            scale={yScale}
-            height={innerHeight}
-            width={innerWidth}
-            zero={xIntercept}
-            {...yAxis}
-                />
+            {...stroke}/>
                 { this.props.children }
-                {tooltipSymbol}
-
-                </Chart>
-
-                <Tooltip {...this.state.tooltip}/>
-            </div>
+            </g>
         );
     }
 });

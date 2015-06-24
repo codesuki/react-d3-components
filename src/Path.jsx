@@ -1,7 +1,7 @@
 import React from 'react';
 import d3 from 'd3';
 
-import {TransitionMixin} from "./TransitionMixin";
+import TransitionMixin from "./TransitionMixin";
 
 export default React.createClass({
 	mixins: [TransitionMixin],
