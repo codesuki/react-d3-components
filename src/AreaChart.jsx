@@ -119,7 +119,7 @@ let AreaChart = React.createClass({
 		let yValue = y(values(d[yIndex])[xIndex]);
 		let yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
 
-		return this.props.tooltipHtml(yValue, yValueCumulative);
+		return this.props.tooltipHtml(yValue, yValueCumulative, xIndex);
 	},
 
 	render() {
