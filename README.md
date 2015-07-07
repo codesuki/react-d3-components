@@ -426,7 +426,7 @@ var data = {
 		values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 };
 
-var sort = null; // d3.ascending(), d3.descending(), func(a,b) { return a - b; }, etc...
+var sort = null; // d3.ascending, d3.descending, func(a,b) { return a - b; }, etc...
 
 React.render(<PieChart
 				data={data}
