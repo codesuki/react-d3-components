@@ -135,6 +135,7 @@ let Brush = React.createClass({
 			width={this._innerWidth}
 			{...this.props.xAxis}
 				/>
+					{ this.props.children }
 				</Chart>
 				</div>
 		);
