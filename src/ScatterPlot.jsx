@@ -155,6 +155,7 @@ let ScatterPlot = React.createClass({
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
 				/>
+				{ this.props.children }
 				</Chart>
 
 				<Tooltip

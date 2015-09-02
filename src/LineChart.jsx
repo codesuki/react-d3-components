@@ -274,7 +274,7 @@ let LineChart = React.createClass({
 			zero={xIntercept}
 			{...yAxis}
 				/>
-
+				{ this.props.children }
 				{tooltipSymbol}
 
 				</Chart>
