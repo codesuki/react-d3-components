@@ -21,9 +21,11 @@
 	"url": "https://github.com/codesuki/react-d3-components/issues"
   },
   "homepage": "https://github.com/codesuki/react-d3-components",
+  "peerDependencies": {    
+  "react": "^0.13.1"
+  },
   "dependencies": {
-	"d3": "^3.5.3",
-	"react": "^0.13.1"
+	"d3": "^3.5.3"
   },
   "devDependencies": {
 	"babel": "^4.6.4",
