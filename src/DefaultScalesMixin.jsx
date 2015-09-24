@@ -104,13 +104,17 @@ let DefaultScalesMixin = {
 	},
 
 	_makeLinearYScale() {
-		let {y, y0, values} = this.props;
+		let {y, y0, values, groupedBars} = this.props;
 		let [data, innerHeight] = [this._data, this._innerHeight];
 
 		let extents = d3.extent(Array.prototype.concat.apply([],
 															 data.map(stack => {
 																 return values(stack).map(e => {
-																	 return y0(e) + y(e);
+																	 if (groupedBars) {
+																		 return y(e);
+																	 } else {
+																		 return y0(e) + y(e);
+																	 }
 																 });
 															 })));
 

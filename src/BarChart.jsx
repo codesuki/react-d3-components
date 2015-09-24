@@ -38,25 +38,47 @@ let DataSet = React.createClass({
 			 y,
 			 y0,
 			 onMouseEnter,
-			 onMouseLeave} = this.props;
+			 onMouseLeave,
+			 groupedBars} = this.props;
 
-		let bars = data.map(stack => {
-			return values(stack).map((e, index) => {
-				return (
+		let bars;
+		if (groupedBars) {
+			bars = data.map((stack, serieIndex) => {
+				return values(stack).map((e, index) => {
+					return (
 						<Bar
-					key={`${label(stack)}.${index}`}
-					width={xScale.rangeBand()}
-					height={yScale(yScale.domain()[0]) - yScale(y(e))}
-					x={xScale(x(e))}
-					y={yScale(y0(e) + y(e))}
-					fill={colorScale(label(stack))}
-					data={e}
-					onMouseEnter={onMouseEnter}
-					onMouseLeave={onMouseLeave}
-						/>
-				);
+							key={`${label(stack)}.${index}`}
+							width={xScale.rangeBand() / data.length}
+							height={yScale(yScale.domain()[0]) - yScale(y(e))}
+							x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
+							y={yScale(y(e))}
+							fill={colorScale(label(stack))}
+							data={e}
+							onMouseEnter={onMouseEnter}
+							onMouseLeave={onMouseLeave}
+							/>
+					);
+				});
 			});
-		});
+		} else {
+			bars = data.map(stack => {
+				return values(stack).map((e, index) => {
+					return (
+						<Bar
+							key={`${label(stack)}.${index}`}
+							width={xScale.rangeBand()}
+							height={yScale(yScale.domain()[0]) - yScale(y(e))}
+							x={xScale(x(e))}
+							y={yScale(y0(e) + y(e))}
+							fill={colorScale(label(stack))}
+							data={e}
+							onMouseEnter={onMouseEnter}
+							onMouseLeave={onMouseLeave}
+							/>
+					);
+				});
+			});
+		}
 
 		return (
 				<g>{bars}</g>
@@ -92,7 +114,8 @@ let BarChart = React.createClass({
 			 y0,
 			 x,
 			 xAxis,
-			 yAxis} = this.props;
+			 yAxis,
+			 groupedBars} = this.props;
 
 		let [data,
 			 innerWidth,
@@ -119,6 +142,7 @@ let BarChart = React.createClass({
 			x={x}
 			onMouseEnter={this.onMouseEnter}
 			onMouseLeave={this.onMouseLeave}
+			groupedBars={groupedBars}
 				/>
 
 				<Axis
