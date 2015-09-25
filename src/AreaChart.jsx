@@ -15,197 +15,198 @@ let DefaultScalesMixin = require('./DefaultScalesMixin');
 let TooltipMixin = require('./TooltipMixin');
 
 let DataSet = React.createClass({
-	propTypes: {
-		data: React.PropTypes.array.isRequired,
-		area: React.PropTypes.func.isRequired,
-		line: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired,
-		stroke: React.PropTypes.func.isRequired
-	},
+    propTypes: {
+        data: React.PropTypes.array.isRequired,
+        area: React.PropTypes.func.isRequired,
+        line: React.PropTypes.func.isRequired,
+        colorScale: React.PropTypes.func.isRequired,
+        stroke: React.PropTypes.func.isRequired
+    },
 
-	render() {
-		let {data,
-			 area,
-			 line,
-			 colorScale,
-			 stroke,
-			 values,
-			 label,
-			 onMouseEnter,
-			 onMouseLeave} = this.props;
+    render() {
+        let {data,
+             area,
+             line,
+             colorScale,
+             stroke,
+             values,
+             label,
+             onMouseEnter,
+             onMouseLeave} = this.props;
 
-		let areas = data.map((stack, index) => {
-			return (
-					<Path
-				key={`${label(stack)}.${index}`}
-				className="area"
-				stroke="none"
-				fill={colorScale(label(stack))}
-				d={area(values(stack))}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				data={data}
-					/>
-			);
-		});
+        let areas = data.map((stack, index) => {
+            return (
+                    <Path
+                key={`${label(stack)}.${index}`}
+                className="area"
+                stroke="none"
+                fill={colorScale(label(stack))}
+                d={area(values(stack))}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                data={data}
+                    />
+            );
+        });
 
-		let lines = data.map(stack => {
-			return (
-					<Path
-				className="line"
-				d={line(values(stack))}
-				stroke={stroke(label(stack))}
-					/>
-			);
-		});
+        let lines = data.map(stack => {
+            return (
+                    <Path
+                className="line"
+                d={line(values(stack))}
+                stroke={stroke(label(stack))}
+                    />
+            );
+        });
 
-		return (
-				<g>
-				{areas}
-			</g>
-		);
-	}
+        return (
+                <g>
+                {areas}
+            </g>
+        );
+    }
 });
 
 let AreaChart = React.createClass({
-	mixins: [DefaultPropsMixin,
-			 HeightWidthMixin,
-			 ArrayifyMixin,
-			 StackAccessorMixin,
-			 StackDataMixin,
-			 DefaultScalesMixin,
-			 TooltipMixin],
+    mixins: [DefaultPropsMixin,
+             HeightWidthMixin,
+             ArrayifyMixin,
+             StackAccessorMixin,
+             StackDataMixin,
+             DefaultScalesMixin,
+             TooltipMixin],
 
-	propTypes: {
-		interpolate: React.PropTypes.string,
-		stroke: React.PropTypes.func
-	},
+    propTypes: {
+        interpolate: React.PropTypes.string,
+        stroke: React.PropTypes.func
+    },
 
-	getDefaultProps() {
-		return {
-			interpolate: 'linear',
-			stroke: d3.scale.category20()
-		};
-	},
+    getDefaultProps() {
+        return {
+            interpolate: 'linear',
+            stroke: d3.scale.category20()
+        };
+    },
 
-	_tooltipHtml(d, position) {
-		let {x, y0, y, values, label} = this.props;
-		let [xScale, yScale] = [this._xScale, this._yScale];
+    _tooltipHtml(d, position) {
+        let {x, y0, y, values, label} = this.props;
+        let [xScale, yScale] = [this._xScale, this._yScale];
 
-		let xValueCursor = xScale.invert(position[0]);
+        let xValueCursor = xScale.invert(position[0]);
 
-		let xBisector = d3.bisector(e => { return x(e); }).right;
-		let xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
-		xIndex = (xIndex == values(d[0]).length) ? xIndex - 1: xIndex;
+        let xBisector = d3.bisector(e => { return x(e); }).right;
+        let xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
+        xIndex = (xIndex == values(d[0]).length) ? xIndex - 1: xIndex;
 
-		let xIndexRight = xIndex == values(d[0]).length ? xIndex - 1: xIndex;
-		let xValueRight = x(values(d[0])[xIndexRight]);
+        let xIndexRight = xIndex == values(d[0]).length ? xIndex - 1: xIndex;
+        let xValueRight = x(values(d[0])[xIndexRight]);
 
-		let xIndexLeft = xIndex == 0 ? xIndex : xIndex - 1;
-		let xValueLeft = x(values(d[0])[xIndexLeft]);
+        let xIndexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+        let xValueLeft = x(values(d[0])[xIndexLeft]);
 
-		if (Math.abs(xValueCursor - xValueRight) < Math.abs(xValueCursor - xValueLeft)) {
-			xIndex = xIndexRight;
-		} else {
-			xIndex = xIndexLeft;
-		}
+        if (Math.abs(xValueCursor - xValueRight) < Math.abs(xValueCursor - xValueLeft)) {
+            xIndex = xIndexRight;
+        } else {
+            xIndex = xIndexLeft;
+        }
 
-		let yValueCursor = yScale.invert(position[1]);
+        let yValueCursor = yScale.invert(position[1]);
 
-		let yBisector = d3.bisector(e => { return y0(values(e)[xIndex]) + y(values(e)[xIndex]); }).left;
-		let yIndex = yBisector(d, yValueCursor);
-		yIndex = (yIndex == d.length) ? yIndex - 1: yIndex;
+        let yBisector = d3.bisector(e => { return y0(values(e)[xIndex]) + y(values(e)[xIndex]); }).left;
+        let yIndex = yBisector(d, yValueCursor);
+        yIndex = (yIndex == d.length) ? yIndex - 1: yIndex;
 
-		let yValue = y(values(d[yIndex])[xIndex]);
-		let yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
+        let yValue = y(values(d[yIndex])[xIndex]);
+        let yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
 
-		return this.props.tooltipHtml(yValue, yValueCumulative);
-	},
+        let xValue = x(values(d[yIndex])[xIndex]);
 
-	render() {
-		let {height,
-			 width,
-			 margin,
-			 colorScale,
-			 interpolate,
-			 stroke,
-			 offset,
-			 values,
-			 label,
-			 x,
-			 y,
-			 y0,
-			 xAxis,
-			 yAxis} = this.props;
+        let xPos = xScale(xValue);
+        let yPos = yScale(y0(values(d[yIndex])[xIndex]) + yValue);
 
-		let [data,
-			 innerWidth,
-			 innerHeight,
-			 xScale,
-			 yScale,
-			 xIntercept,
-			 yIntercept] = [this._data,
-							this._innerWidth,
-							this._innerHeight,
-							this._xScale,
-							this._yScale,
-							this._xIntercept,
-							this._yIntercept];
+        return [this.props.tooltipHtml(yValue, yValueCumulative), xPos, yPos];
+    },
 
-		let line = d3.svg.line()
-				.x(function(e) { return xScale(x(e)); })
-				.y(function(e) { return yScale(y0(e) + y(e)); })
-				.interpolate(interpolate);
+    render() {
+        let {height,
+             width,
+             margin,
+             colorScale,
+             interpolate,
+             stroke,
+             offset,
+             values,
+             label,
+             x,
+             y,
+             y0,
+             xAxis,
+             yAxis} = this.props;
 
-		let area = d3.svg.area()
-				.x(function(e) { return xScale(x(e)); })
-				.y0(function(e) { return yScale(yScale.domain()[0] + y0(e)); })
-				.y1(function(e) { return yScale(y0(e) + y(e)); })
-				.interpolate(interpolate);
+        let [data,
+             innerWidth,
+             innerHeight,
+             xScale,
+             yScale,
+             xIntercept,
+             yIntercept] = [this._data,
+                            this._innerWidth,
+                            this._innerHeight,
+                            this._xScale,
+                            this._yScale,
+                            this._xIntercept,
+                            this._yIntercept];
 
-		return (
-			<div>
-				<Chart height={height} width={width} margin={margin}>
+        let line = d3.svg.line()
+                .x(function(e) { return xScale(x(e)); })
+                .y(function(e) { return yScale(y0(e) + y(e)); })
+                .interpolate(interpolate);
 
-				<DataSet
-			data={data}
-			line={line}
-			area={area}
-			colorScale={colorScale}
-			stroke={stroke}
-			label={label}
-			values={values}
-			onMouseEnter={this.onMouseEnter}
-			onMouseLeave={this.onMouseLeave}
-				/>
+        let area = d3.svg.area()
+                .x(function(e) { return xScale(x(e)); })
+                .y0(function(e) { return yScale(yScale.domain()[0] + y0(e)); })
+                .y1(function(e) { return yScale(y0(e) + y(e)); })
+                .interpolate(interpolate);
 
-				<Axis
-			className={"x axis"}
-			orientation={"bottom"}
-			scale={xScale}
-			height={innerHeight}
-			width={innerWidth}
-			{...xAxis}
-				/>
+        return (
+                <div>
+                <Chart height={height} width={width} margin={margin}>
 
-				<Axis
-			className={"y axis"}
-			orientation={"left"}
-			scale={yScale}
-			height={innerHeight}
-			width={innerWidth}
-			{...yAxis}
-				/>
-				</Chart>
+                <DataSet
+            data={data}
+            line={line}
+            area={area}
+            colorScale={colorScale}
+            stroke={stroke}
+            label={label}
+            values={values}
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+                />
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
-				</div>
-		);
-	}
+                <Axis
+            className={"x axis"}
+            orientation={"bottom"}
+            scale={xScale}
+            height={innerHeight}
+            width={innerWidth}
+            {...xAxis}
+                />
+
+                <Axis
+            className={"y axis"}
+            orientation={"left"}
+            scale={yScale}
+            height={innerHeight}
+            width={innerWidth}
+            {...yAxis}
+                />
+                </Chart>
+
+                <Tooltip {...this.state.tooltip}/>
+                </div>
+        );
+    }
 });
 
 module.exports = AreaChart;

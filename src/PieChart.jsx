@@ -10,224 +10,222 @@ let AccessorMixin = require('./AccessorMixin');
 let TooltipMixin = require('./TooltipMixin');
 
 let Wedge = React.createClass({
-	propTypes: {
-		d: React.PropTypes.string.isRequired,
-		fill: React.PropTypes.string.isRequired
-	},
+    propTypes: {
+        d: React.PropTypes.string.isRequired,
+        fill: React.PropTypes.string.isRequired
+    },
 
-	render() {
-		let {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
+    render() {
+        let {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
 
-		return (
-				<path
-			fill={fill}
-			d={d}
-			onMouseMove={ evt => { onMouseEnter(evt, data); } }
-			onMouseLeave={  evt => { onMouseLeave(evt); } }
-				/>
-		);
-	}
+        return (
+                <path
+            fill={fill}
+            d={d}
+            onMouseMove={ evt => { onMouseEnter(evt, data); } }
+            onMouseLeave={  evt => { onMouseLeave(evt); } }
+                />
+        );
+    }
 });
 
 let DataSet = React.createClass({
-	propTypes: {
-		pie: React.PropTypes.array.isRequired,
-		arc: React.PropTypes.func.isRequired,
-		outerArc: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired,
-		radius: React.PropTypes.number.isRequired,
-		strokeWidth: React.PropTypes.number,
-		stroke: React.PropTypes.string,
-		fill: React.PropTypes.string,
-		opacity: React.PropTypes.number,
-		x: React.PropTypes.func.isRequired
-	},
+    propTypes: {
+        pie: React.PropTypes.array.isRequired,
+        arc: React.PropTypes.func.isRequired,
+        outerArc: React.PropTypes.func.isRequired,
+        colorScale: React.PropTypes.func.isRequired,
+        radius: React.PropTypes.number.isRequired,
+        strokeWidth: React.PropTypes.number,
+        stroke: React.PropTypes.string,
+        fill: React.PropTypes.string,
+        opacity: React.PropTypes.number,
+        x: React.PropTypes.func.isRequired
+    },
 
-	getDefaultProps() {
-		return {
-			strokeWidth: 2,
-			stroke: '#000',
-			fill: 'none',
-			opacity: 0.3
-		};
-	},
+    getDefaultProps() {
+        return {
+            strokeWidth: 2,
+            stroke: '#000',
+            fill: 'none',
+            opacity: 0.3
+        };
+    },
 
-	render() {
-		let {pie,
-			 arc,
-			 outerArc,
-			 colorScale,
-			 radius,
-			 strokeWidth,
-			 stroke,
-			 fill,
-			 opacity,
-			 x,
-			 y,
-			 onMouseEnter,
-			 onMouseLeave} = this.props;
+    render() {
+        let {pie,
+             arc,
+             outerArc,
+             colorScale,
+             radius,
+             strokeWidth,
+             stroke,
+             fill,
+             opacity,
+             x,
+             y,
+             onMouseEnter,
+             onMouseLeave} = this.props;
 
-		let wedges = pie.map((e, index) => {
-			function midAngle(d){
-				return d.startAngle + (d.endAngle - d.startAngle)/2;
-			}
+        let wedges = pie.map((e, index) => {
+            function midAngle(d){
+                return d.startAngle + (d.endAngle - d.startAngle)/2;
+            }
 
-			let d = arc(e);
+            let d = arc(e);
 
-			let labelPos = outerArc.centroid(e);
-			labelPos[0] = radius * (midAngle(e) < Math.PI ? 1 : -1);
+            let labelPos = outerArc.centroid(e);
+            labelPos[0] = radius * (midAngle(e) < Math.PI ? 1 : -1);
 
-			let textAnchor = midAngle(e) < Math.PI ? "start" : "end";
+            let textAnchor = midAngle(e) < Math.PI ? 'start' : 'end';
 
-			let linePos = outerArc.centroid(e);
-			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
+            let linePos = outerArc.centroid(e);
+            linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
 
-			return (
-					<g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
-					<Wedge
-				data={e.data}
-				fill={colorScale(x(e.data))}
-				d={d}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-					/>
+            return (
+                    <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
+                    <Wedge
+                data={e.data}
+                fill={colorScale(x(e.data))}
+                d={d}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                    />
 
-					<polyline
-				opacity={opacity}
-				strokeWidth={strokeWidth}
-				stroke={stroke}
-				fill={fill}
-				points={[arc.centroid(e), outerArc.centroid(e), linePos]}
-					/>
+                    <polyline
+                opacity={opacity}
+                strokeWidth={strokeWidth}
+                stroke={stroke}
+                fill={fill}
+                points={[arc.centroid(e), outerArc.centroid(e), linePos]}
+                    />
 
-					<text
-				dy=".35em"
-				x={labelPos[0]}
-				y={labelPos[1]}
-				textAnchor={textAnchor}>{x(e.data)}</text>
-					</g>
-			);
-		});
+                    <text
+                dy=".35em"
+                x={labelPos[0]}
+                y={labelPos[1]}
+                textAnchor={textAnchor}>{x(e.data)}</text>
+                    </g>
+            );
+        });
 
-		return (
-				<g>
-				{wedges}
-			</g>
-		);
-	}
+        return (
+                <g>
+                {wedges}
+            </g>
+        );
+    }
 });
 
 let PieChart = React.createClass({
-	mixins: [DefaultPropsMixin,
-			 HeightWidthMixin,
-			 AccessorMixin,
-			 TooltipMixin],
+    mixins: [DefaultPropsMixin,
+             HeightWidthMixin,
+             AccessorMixin,
+             TooltipMixin],
 
-	propTypes: {
-		innerRadius: React.PropTypes.number,
-		outerRadius: React.PropTypes.number,
-		labelRadius: React.PropTypes.number,
-		padRadius: React.PropTypes.string,
-		cornerRadius: React.PropTypes.number,
-		sort: React.PropTypes.any
-	},
+    propTypes: {
+        innerRadius: React.PropTypes.number,
+        outerRadius: React.PropTypes.number,
+        labelRadius: React.PropTypes.number,
+        padRadius: React.PropTypes.string,
+        cornerRadius: React.PropTypes.number,
+        sort: React.PropTypes.any
+    },
 
-	getDefaultProps() {
-		return {
-			innerRadius: null,
-			outerRadius: null,
-			labelRadius: null,
-			padRadius: "auto",
-			cornerRadius: 0,
-			sort: undefined
-		};
-	},
+    getDefaultProps() {
+        return {
+            innerRadius: null,
+            outerRadius: null,
+            labelRadius: null,
+            padRadius: 'auto',
+            cornerRadius: 0,
+            sort: undefined
+        };
+    },
 
-	_tooltipHtml(d, position) {
-		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
-	},
+    _tooltipHtml(d, position) {
+        let html = this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 
-	render() {
-		let {data,
-			 width,
-			 height,
-			 margin,
-			 colorScale,
-			 innerRadius,
-			 outerRadius,
-			 labelRadius,
-			 padRadius,
-			 cornerRadius,
-			 sort,
-			 x,
-			 y,
-			 values} = this.props;
+        return [html, 0, 0];
+    },
 
-		let [innerWidth,
-			 innerHeight] = [this._innerWidth,
-							 this._innerHeight];
+    render() {
+        let {data,
+             width,
+             height,
+             margin,
+             colorScale,
+             innerRadius,
+             outerRadius,
+             labelRadius,
+             padRadius,
+             cornerRadius,
+             sort,
+             x,
+             y,
+             values} = this.props;
 
-		let pie = d3.layout.pie()
-				.value(e => { return y(e); });
+        let [innerWidth,
+             innerHeight] = [this._innerWidth,
+                             this._innerHeight];
 
-		if (typeof sort !== 'undefined') {
-			pie = pie.sort(sort);
-		}
+        let pie = d3.layout.pie()
+                .value(e => { return y(e); });
 
-		let radius = Math.min(innerWidth, innerHeight) / 2;
-		if (!innerRadius) {
-			innerRadius = radius * 0.8;
-		}
+        if (typeof sort !== 'undefined') {
+            pie = pie.sort(sort);
+        }
 
-		if (!outerRadius) {
-			outerRadius = radius * 0.4;
-		}
+        let radius = Math.min(innerWidth, innerHeight) / 2;
+        if (!innerRadius) {
+            innerRadius = radius * 0.8;
+        }
 
-		if (!labelRadius) {
-			labelRadius = radius * 0.9;
-		}
+        if (!outerRadius) {
+            outerRadius = radius * 0.4;
+        }
 
-		let arc = d3.svg.arc()
-				.innerRadius(innerRadius)
-				.outerRadius(outerRadius)
-				.padRadius(padRadius)
-				.cornerRadius(cornerRadius);
+        if (!labelRadius) {
+            labelRadius = radius * 0.9;
+        }
 
-		let outerArc = d3.svg.arc()
-				.innerRadius(labelRadius)
-				.outerRadius(labelRadius);
+        let arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius)
+                .padRadius(padRadius)
+                .cornerRadius(cornerRadius);
 
-		let pieData = pie(values(data));
+        let outerArc = d3.svg.arc()
+                .innerRadius(labelRadius)
+                .outerRadius(labelRadius);
 
-		let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
-		return (
-			<div>
-				<Chart height={height} width={width} margin={margin}>
-				<g transform={translation}>
-				<DataSet
-			width={innerWidth}
-			height={innerHeight}
-			colorScale={colorScale}
-			pie={pieData}
-			arc={arc}
-			outerArc={outerArc}
-			radius={radius}
-			x={x}
-			y={y}
-			onMouseEnter={this.onMouseEnter}
-			onMouseLeave={this.onMouseLeave}
-				/>
-				</g>
-				</Chart>
+        let pieData = pie(values(data));
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
-				</div>
-		);
-	}
+        let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
+        return (
+            <div>
+                <Chart height={height} width={width} margin={margin}>
+                <g transform={translation}>
+                <DataSet
+            width={innerWidth}
+            height={innerHeight}
+            colorScale={colorScale}
+            pie={pieData}
+            arc={arc}
+            outerArc={outerArc}
+            radius={radius}
+            x={x}
+            y={y}
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+                />
+                </g>
+                </Chart>
+
+                <Tooltip {...this.state.tooltip}/>
+                </div>
+        );
+    }
 });
 
 module.exports = PieChart;
