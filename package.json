@@ -1,40 +1,40 @@
 {
-  "name": "react-d3-components",
-  "version": "0.4.8",
-  "description": "D3 components for React",
-  "main": "lib/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/codesuki/react-d3-components.git"
-  },
-  "keywords": [
-    "d3",
-    "react",
-    "graph",
-    "visualization",
-    "chart",
-    "react-component"
-  ],
-  "author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/codesuki/react-d3-components/issues"
-  },
-  "homepage": "https://github.com/codesuki/react-d3-components",
-  "dependencies": {
-    "d3": "^3.5.3",
-    "react": "^0.13.1"
-  },
-  "devDependencies": {
-    "babel": "^4.6.4",
-    "babel-core": "^4.7.16",
-    "babel-loader": "^4.2.0",
-    "eslint-plugin-react": "^3.4.2",
-    "webpack": "^1.7.3"
-  },
-  "scripts": {
-    "prepublish": "babel -c -d ./lib ./src/",
-    "postpublish": "rm -r ./lib",
-    "build:js": "webpack && webpack --config webpack.config.min.js"
-  }
+    "name": "react-d3-components",
+    "version": "0.4.8",
+    "description": "D3 components for React",
+    "main": "lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/codesuki/react-d3-components.git"
+    },
+    "keywords": [
+        "d3",
+        "react",
+        "graph",
+        "visualization",
+        "chart",
+        "react-component"
+    ],
+    "author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/codesuki/react-d3-components/issues"
+    },
+    "homepage": "https://github.com/codesuki/react-d3-components",
+    "dependencies": {
+        "d3": "^3.5.3",
+        "react": "^0.13.1"
+    },
+    "devDependencies": {
+        "babel": "^4.6.4",
+        "babel-core": "^4.7.16",
+        "babel-loader": "^4.2.0",
+        "eslint-plugin-react": "^3.4.2",
+        "webpack": "^1.7.3"
+    },
+    "scripts": {
+        "prepublish": "babel -c -d ./lib ./src/",
+        "postpublish": "rm -r ./lib",
+        "build:js": "webpack && webpack --config webpack.config.min.js"
+    }
 }
