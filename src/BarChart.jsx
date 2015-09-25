@@ -100,7 +100,29 @@ let BarChart = React.createClass({
 	},
 
 	_tooltipHtml(d, position) {
-		return this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d));
+        let [xScale, yScale] = [this._xScale, this._yScale];
+
+        let html = this.props.tooltipHtml(this.props.x(d),
+                                          this.props.y0(d),
+                                          this.props.y(d));
+
+        let midPoint = xScale.rangeBand() / 2;
+        let xPos = midPoint + xScale(this.props.x(d));
+
+        let topStack = this._data[this._data.length - 1].values;
+        let topElement = null;
+
+        // TODO: this might not scale if dataset is huge.
+        // consider pre-computing yPos for each X
+        for (let i = 0; i < topStack.length; i++) {
+            if (this.props.x(topStack[i]) === this.props.x(d)) {
+                topElement = topStack[i];
+                break;
+            }
+        }
+        let yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+
+        return [html, xPos, yPos];
 	},
 
 	render() {
@@ -165,11 +187,7 @@ let BarChart = React.createClass({
 				{ this.props.children }
 				</Chart>
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
+                <Tooltip {...this.state.tooltip}/>
 				</div>
 		);
 	}

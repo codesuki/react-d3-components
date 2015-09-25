@@ -6,10 +6,10 @@ let AreaChart = require('./AreaChart');
 let Brush = require('./Brush');
 
 module.exports = {
-	BarChart: BarChart,
-	PieChart: PieChart,
-	ScatterPlot: ScatterPlot,
-	LineChart: LineChart,
-	AreaChart: AreaChart,
-	Brush: Brush
+    BarChart: BarChart,
+    PieChart: PieChart,
+    ScatterPlot: ScatterPlot,
+    LineChart: LineChart,
+    AreaChart: AreaChart,
+    Brush: Brush
 };

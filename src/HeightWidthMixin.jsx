@@ -1,18 +1,18 @@
 let HeightWidthMixin = {
-	componentWillMount() {
-		this._calculateInner(this.props);
-	},
+    componentWillMount() {
+        this._calculateInner(this.props);
+    },
 
-	componentWillReceiveProps(nextProps) {
-		this._calculateInner(nextProps);
-	},
+    componentWillReceiveProps(nextProps) {
+        this._calculateInner(nextProps);
+    },
 
-	_calculateInner(props) {
-		let {height, width, margin} = props;
+    _calculateInner(props) {
+        let {height, width, margin} = props;
 
-		this._innerHeight = height - margin.top - margin.bottom;
-		this._innerWidth = width - margin.left - margin.right;
-	}
+        this._innerHeight = height - margin.top - margin.bottom;
+        this._innerWidth = width - margin.left - margin.right;
+    }
 };
 
 module.exports = HeightWidthMixin;

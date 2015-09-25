@@ -77,7 +77,7 @@ let DataSet = React.createClass({
 			let labelPos = outerArc.centroid(e);
 			labelPos[0] = radius * (midAngle(e) < Math.PI ? 1 : -1);
 
-			let textAnchor = midAngle(e) < Math.PI ? "start" : "end";
+            let textAnchor = midAngle(e) < Math.PI ? 'start' : 'end';
 
 			let linePos = outerArc.centroid(e);
 			linePos[0] = radius * 0.95 * (midAngle(e) < Math.PI ? 1 : -1);
@@ -137,14 +137,16 @@ let PieChart = React.createClass({
 			innerRadius: null,
 			outerRadius: null,
 			labelRadius: null,
-			padRadius: "auto",
+            padRadius: 'auto',
 			cornerRadius: 0,
 			sort: undefined
 		};
 	},
 
 	_tooltipHtml(d, position) {
-		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
+        let html = this.props.tooltipHtml(this.props.x(d), this.props.y(d));
+
+        return [html, 0, 0];
 	},
 
 	render() {
@@ -221,11 +223,7 @@ let PieChart = React.createClass({
 				{ this.props.children }
 				</Chart>
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
+                <Tooltip {...this.state.tooltip}/>
 				</div>
 		);
 	}

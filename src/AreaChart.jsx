@@ -119,7 +119,12 @@ let AreaChart = React.createClass({
 		let yValue = y(values(d[yIndex])[xIndex]);
 		let yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
 
-		return this.props.tooltipHtml(yValue, yValueCumulative);
+        let xValue = x(values(d[yIndex])[xIndex]);
+
+        let xPos = xScale(xValue);
+        let yPos = yScale(y0(values(d[yIndex])[xIndex]) + yValue);
+
+        return [this.props.tooltipHtml(yValue, yValueCumulative), xPos, yPos];
 	},
 
 	render() {
@@ -199,11 +204,7 @@ let AreaChart = React.createClass({
 				{ this.props.children }
 				</Chart>
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
+                <Tooltip {...this.state.tooltip}/>
 				</div>
 		);
 	}

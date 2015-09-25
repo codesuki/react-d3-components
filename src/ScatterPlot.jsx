@@ -82,7 +82,14 @@ let ScatterPlot = React.createClass({
 	},
 
 	_tooltipHtml(d, position) {
-		return this.props.tooltipHtml(this.props.x(d), this.props.y(d));
+        let [xScale, yScale] = [this._xScale, this._yScale];
+
+        let html = this.props.tooltipHtml(this.props.x(d), this.props.y(d));
+
+        let xPos = xScale(this.props.x(d));
+        let yPos = yScale(this.props.y(d));
+
+        return [html, xPos, yPos];
 	},
 
 	render() {
@@ -158,11 +165,7 @@ let ScatterPlot = React.createClass({
 				{ this.props.children }
 				</Chart>
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}/>
+                <Tooltip {...this.state.tooltip}/>
 				</div>
 		);
 	}

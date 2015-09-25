@@ -31,6 +31,7 @@
 	"babel": "^4.6.4",
 	"babel-core": "^4.7.16",
 	"babel-loader": "^4.2.0",
+        "eslint-plugin-react": "^3.4.2",
 	"webpack": "^1.7.3"
   },
   "scripts": {

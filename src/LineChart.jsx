@@ -146,7 +146,12 @@ let LineChart = React.createClass({
 
 		this._tooltipData = valuesAtX[index];
 
-		return this.props.tooltipHtml(valuesAtX[index].label, valuesAtX[index].value);
+        let html = this.props.tooltipHtml(valuesAtX[index].label,
+                                          valuesAtX[index].value);
+
+        let xPos = xScale(valuesAtX[index].value.x);
+        let yPos = yScale(valuesAtX[index].value.y);
+        return [html, xPos, yPos];
 	},
 
 	/*
@@ -281,13 +286,7 @@ let LineChart = React.createClass({
 
 				</Chart>
 
-				<Tooltip
-			hidden={this.state.tooltip.hidden}
-			top={this.state.tooltip.top}
-			left={this.state.tooltip.left}
-			html={this.state.tooltip.html}
-				/>
-
+                <Tooltip {...this.state.tooltip}/>
 			</div>
 		);
 	}
