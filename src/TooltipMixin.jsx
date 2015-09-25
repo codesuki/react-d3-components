@@ -38,7 +38,6 @@ let TooltipMixin = {
         e.preventDefault();
 
         let {margin,
-             tooltipHtml,
              tooltipMode,
              tooltipOffset,
              tooltipContained} = this.props;
