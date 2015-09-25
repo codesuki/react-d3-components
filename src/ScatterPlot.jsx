@@ -164,11 +164,7 @@ let ScatterPlot = React.createClass({
                 />
                 </Chart>
 
-                <Tooltip
-            hidden={this.state.tooltip.hidden}
-            top={this.state.tooltip.top}
-            left={this.state.tooltip.left}
-            html={this.state.tooltip.html}/>
+                <Tooltip {...this.state.tooltip}/>
                 </div>
         );
     }
