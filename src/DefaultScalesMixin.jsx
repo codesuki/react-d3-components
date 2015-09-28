@@ -87,8 +87,12 @@ let DefaultScalesMixin = {
         let {x, values, barPadding} = props;
         let [data, innerWidth] = [this._data, this._innerWidth];
 
+        let minDate = d3.min(values(data[0]), x);
+
+        let maxDate = d3.max(values(data[0]), x);
+
         let scale = d3.time.scale()
-                .domain(values(data[0]).map(e => { return x(e); }))
+                .domain([minDate, maxDate])
                 .range([0, innerWidth]);
 
         return [scale, 0];

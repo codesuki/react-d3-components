@@ -62,6 +62,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.5.2: Fix default scale for dates
 * 0.5.1: Fix new props not being used by DefaultScalesMixin
 * 0.5.0:
     * Improved tooltip. (see example below)
