@@ -21,6 +21,7 @@ Let React have complete control over the DOM even when using D3. This way we can
   * [Custom accessors](#custom-accessors)
   * [Customization](#overriding-default-parameters)
   * [Stacked Bar Chart](#stackedbarchart)
+  * [Grouped Bar Chart](#groupedbarchart)
   * [Scatter, Line and Area Charts](#other-charts)
   * [Pie Chart](#piechart)
 
@@ -61,9 +62,20 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.5.0:
+    * Improved tooltip. (see example below)
+        * Tooltip now has different modes.
+        * AreaChart tooltip now contains x-value argument.
+    * Support for grouped bar charts. (see example below)
+    * Support to include child elements inside charts.
+    * Several bug fixes including recent pull requests.
+        * React is now a peer dependency
 * 0.4.8: Fixed bug were graphs don't resize correctly.
 * 0.4.7: Moved to React 0.13.1
-* 0.4.6: Added sort property to PieChart, same usage as d3.Pie.sort(). Added support for strokeWidth, strokeDasharray, strokeLinecap to LineChart, can be string or function. Small bug fixes.
+* 0.4.6:
+    * Added sort property to PieChart, same usage as d3.Pie.sort().
+    * Added support for strokeWidth, strokeDasharray, strokeLinecap to LineChart, can be string or function.
+    * Small bug fixes.
 * 0.4.5: Fixed tooltip not showing when mouse is over tooltip symbol. Tooltip will soon be revamped to allow custom components.
 * 0.4.4: Fixed tooltip position inside relative layout containers. Moved to webpack.
 * 0.4.3: Fixed tooltip not showing in Safari.
@@ -86,17 +98,17 @@ Check out example/index.html found [here](http://codesuki.github.io/react-d3-com
 var BarChart = ReactD3.BarChart;
 
 var data = [{
-	label: 'somethingA',
-	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+    label: 'somethingA',
+    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 }];
 
 React.render(
-	<BarChart
-		data={data}
-		width={400}
-		height={400}
-		margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-	document.getElementById('location')
+    <BarChart
+        data={data}
+        width={400}
+        height={400}
+        margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+    document.getElementById('location')
 );
 ```
 
@@ -119,70 +131,70 @@ Also there is no Brush support for the built-in default Scales.
 }
 ```
 ```javascript
-	var LineChart = ReactD3.LineChart;
-	var Brush = ReactD3.Brush;
+    var LineChart = ReactD3.LineChart;
+    var Brush = ReactD3.Brush;
 
 var SomeComponent = React.createClass({
-	getInitialState: function() {
-		return {
-			data: {label: '', values: [
-				{x: new Date(2015, 2, 5), y: 1},
-				{x: new Date(2015, 2, 6), y: 2},
-				{x: new Date(2015, 2, 7), y: 0},
-				{x: new Date(2015, 2, 8), y: 3},
-				{x: new Date(2015, 2, 9), y: 2},
-				{x: new Date(2015, 2, 10), y: 3},
-				{x: new Date(2015, 2, 11), y: 4},
-				{x: new Date(2015, 2, 12), y: 4},
-				{x: new Date(2015, 2, 13), y: 1},
-				{x: new Date(2015, 2, 14), y: 5},
-				{x: new Date(2015, 2, 15), y: 0},
-				{x: new Date(2015, 2, 16), y: 1},
-				{x: new Date(2015, 2, 16), y: 1},
-				{x: new Date(2015, 2, 18), y: 4},
-				{x: new Date(2015, 2, 19), y: 4},
-				{x: new Date(2015, 2, 20), y: 5},
-				{x: new Date(2015, 2, 21), y: 5},
-				{x: new Date(2015, 2, 22), y: 5},
-				{x: new Date(2015, 2, 23), y: 1},
-				{x: new Date(2015, 2, 24), y: 0},
-				{x: new Date(2015, 2, 25), y: 1},
-				{x: new Date(2015, 2, 26), y: 1}
-			]},
-			xScale: d3.time.scale().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70]),
-			xScaleBrush: d3.time.scale().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70])
-		};
-	},
+    getInitialState: function() {
+        return {
+            data: {label: '', values: [
+                {x: new Date(2015, 2, 5), y: 1},
+                {x: new Date(2015, 2, 6), y: 2},
+                {x: new Date(2015, 2, 7), y: 0},
+                {x: new Date(2015, 2, 8), y: 3},
+                {x: new Date(2015, 2, 9), y: 2},
+                {x: new Date(2015, 2, 10), y: 3},
+                {x: new Date(2015, 2, 11), y: 4},
+                {x: new Date(2015, 2, 12), y: 4},
+                {x: new Date(2015, 2, 13), y: 1},
+                {x: new Date(2015, 2, 14), y: 5},
+                {x: new Date(2015, 2, 15), y: 0},
+                {x: new Date(2015, 2, 16), y: 1},
+                {x: new Date(2015, 2, 16), y: 1},
+                {x: new Date(2015, 2, 18), y: 4},
+                {x: new Date(2015, 2, 19), y: 4},
+                {x: new Date(2015, 2, 20), y: 5},
+                {x: new Date(2015, 2, 21), y: 5},
+                {x: new Date(2015, 2, 22), y: 5},
+                {x: new Date(2015, 2, 23), y: 1},
+                {x: new Date(2015, 2, 24), y: 0},
+                {x: new Date(2015, 2, 25), y: 1},
+                {x: new Date(2015, 2, 26), y: 1}
+            ]},
+            xScale: d3.time.scale().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70]),
+            xScaleBrush: d3.time.scale().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70])
+        };
+    },
 
-	render: function() {
-		return (
-				<div>
-				<LineChart
-				   data={this.state.data}
-				   width={400}
-				   height={400}
-				   margin={{top: 10, bottom: 50, left: 50, right: 20}}
-				   xScale={this.state.xScale}
-				   xAxis={{tickValues: this.state.xScale.ticks(d3.time.day, 2), tickFormat: d3.time.format("%m/%d")}}
-				/>
-				<div className="brush" style={{float: 'none'}}>
-				<Brush
-				   width={400}
-				   height={50}
-				   margin={{top: 0, bottom: 30, left: 50, right: 20}}
-				   xScale={this.state.xScaleBrush}
-				   extent={[new Date(2015, 2, 10), new Date(2015, 2, 12)]}
-				   onChange={this._onChange}
-				   xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.day, 2), tickFormat: d3.time.format("%m/%d")}}
-				/>
-				</div>
-				</div>
-		);
-	},
+    render: function() {
+        return (
+                <div>
+                <LineChart
+                   data={this.state.data}
+                   width={400}
+                   height={400}
+                   margin={{top: 10, bottom: 50, left: 50, right: 20}}
+                   xScale={this.state.xScale}
+                   xAxis={{tickValues: this.state.xScale.ticks(d3.time.day, 2), tickFormat: d3.time.format("%m/%d")}}
+                />
+                <div className="brush" style={{float: 'none'}}>
+                <Brush
+                   width={400}
+                   height={50}
+                   margin={{top: 0, bottom: 30, left: 50, right: 20}}
+                   xScale={this.state.xScaleBrush}
+                   extent={[new Date(2015, 2, 10), new Date(2015, 2, 12)]}
+                   onChange={this._onChange}
+                   xAxis={{tickValues: this.state.xScaleBrush.ticks(d3.time.day, 2), tickFormat: d3.time.format("%m/%d")}}
+                />
+                </div>
+                </div>
+        );
+    },
 
-	_onChange: function(extent) {
-		this.setState({xScale: d3.time.scale().domain([extent[0], extent[1]]).range([0, 400 - 70])});
-	}
+    _onChange: function(extent) {
+        this.setState({xScale: d3.time.scale().domain([extent[0], extent[1]]).range([0, 400 - 70])});
+    }
 });
 ```
 ![brush](http://codesuki.github.io/react-d3-components/brush.png)
@@ -194,25 +206,35 @@ Depending on the type of chart the callback will receive different parameters th
 * Bar Chart: x, y0, y of the hovered bar and the total bar height in case of a stacked bar chart.
 * Scatter Plot: x, y of the hovered point.
 * Pie Chart: x, y, of the hovered wedge.
-* Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart.
+* Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart. x value is the third parameter.
 
 Example Scatter Plot:
 ```javascript
 var tooltipScatter = function(x, y) {
-	return "x: " + x + " y: " + y;
+    return "x: " + x + " y: " + y;
 };
 
 React.render(<ScatterPlot
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}
-				tooltipHtml={tooltipScatter}
-				xAxis={{label: "x-label"}}
-				yAxis={{label: "y-label"}}/>,
-			document.getElementById('scatterplot')
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}
+                tooltipHtml={tooltipScatter}
+                xAxis={{label: "x-label"}}
+                yAxis={{label: "y-label"}}/>,
+            document.getElementById('scatterplot')
 );
 ```
+
+Tooltip positioning is influenced by `tooltipOffset` `tooltipContained` and `tooltipMode`, which has 3 options `mouse`, `fixed`, `element`.
+
+* `mouse` is the default behavior and just follows the mouse
+* `fixed` uses `tooltipOffset` as an offset from the top left corner of the svg
+* `element` puts the tooltip on top of data points for line/area/scatter charts and on top of bars for the barchart
+
+`tooltipOffset` is an object with `top` and `left` keys i.e. `{top: 10, left: 10}`
+
+If `tooltipContained` is true the tooltip will try to stay inside the svg by using `css-transform`.
 
 ![tooltip](http://codesuki.github.io/react-d3-components/tooltip.png)
 
@@ -221,15 +243,15 @@ All D3 axis parameters can optionally be provided to the chart. For detailed exp
 ```javascript
 
 React.render(<LineChart
-					data={data}
-					width={400}
-					height={400}
-					margin={{top: 10, bottom: 50, left: 50, right: 10}}
-					tooltipHtml={tooltipLine}
+                    data={data}
+                    width={400}
+                    height={400}
+                    margin={{top: 10, bottom: 50, left: 50, right: 10}}
+                    tooltipHtml={tooltipLine}
 
-					xAxis={{innerTickSize: 10, label: "x-label"}}
-					yAxis={{label: "y-label"}}/>,
-			document.getElementById('linechart'));
+                    xAxis={{innerTickSize: 10, label: "x-label"}}
+                    yAxis={{label: "y-label"}}/>,
+            document.getElementById('linechart'));
 ```
 
 The following are the default values.
@@ -250,8 +272,8 @@ label: ""
 ### Custom Accessors
 ```javascript
 data = [{
-	customLabel: 'somethingA',
-	customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
+    customLabel: 'somethingA',
+    customValues: [[0, 3], [1.3, -4], [3, 7], [-3.5, 8], [4, 7], [4.5, 7],  [5, -7.8]]
 }];
 
 var labelAccessor = function(stack) { return stack.customLabel; };
@@ -260,16 +282,16 @@ var xAccessor = function(element) { return element[0]; };
 var yAccessor = function(element) { return element[1]; };
 
 React.render(<ScatterPlot
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}
 
-				label={labelAccessor}
-				x={xAccessor}
-				y={yAccessor}
-				values={valuesAccessor}/>,
-			document.getElementById('location'));
+                label={labelAccessor}
+                x={xAccessor}
+                y={yAccessor}
+                values={valuesAccessor}/>,
+            document.getElementById('location'));
 ```
 
 ### Overriding default parameters
@@ -286,56 +308,56 @@ var yScale = d3.scale.linear();
 var colorScale = d3.scale.category20();
 
 <BarChart xScale={xScale}
-	  yScale={yScale}
-	  colorScale={colorScale}
-	  barPadding={0.3}
-	  data={data}
-	  width={400}
-	  height={400}
-	  margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
+      yScale={yScale}
+      colorScale={colorScale}
+      barPadding={0.3}
+      data={data}
+      width={400}
+      height={400}
+      margin={{top: 10, bottom: 50, left: 50, right: 10}}/>
 ```
 
 #### LineChart stroke style
 You can customize the line style of LineCharts with CSS or if you want to have more control over how each line in your dataset gets rendered you can use the stroke property of LineChart as follows. Note that you do not have to set all the properties in the object.
 
 ```javascript
-	var dashFunc = function(label) {
-		if (label == "somethingA") {
-			return "4 4 4";
-		}
-		if (label == "somethingB") {
-			return "3 4 3";
-		}
-	}
+    var dashFunc = function(label) {
+        if (label == "somethingA") {
+            return "4 4 4";
+        }
+        if (label == "somethingB") {
+            return "3 4 3";
+        }
+    }
 
-	var widthFunc = function(label) {
-		if (label == "somethingA") {
-			return "4";
-		}
-		if (label == "somethingB") {
-			return "2";
-		}
-	}
+    var widthFunc = function(label) {
+        if (label == "somethingA") {
+            return "4";
+        }
+        if (label == "somethingB") {
+            return "2";
+        }
+    }
 
-	var linecapFunc = function(label) {
-		if (label == "somethingA") {
-			return "round";
-		}
-	}
+    var linecapFunc = function(label) {
+        if (label == "somethingA") {
+            return "round";
+        }
+    }
 
-	React.render(<LineChart
-					data={data}
-					width={400}
-					height={400}
-					margin={{top: 10, bottom: 50, left: 50, right: 10}}
-					tooltipHtml={tooltipLine}
-					xAxis={{innerTickSize: 6, label: "x-label"}}
-					yAxis={{label: "y-label"}}
-					shapeColor={"red"}
-					stroke={{strokeDasharray: dashFunc, strokeWidth: widthFunc, strokeLinecap: linecapFunc}}
-					/>,
-	document.getElementById('linechart')
-	);
+    React.render(<LineChart
+                    data={data}
+                    width={400}
+                    height={400}
+                    margin={{top: 10, bottom: 50, left: 50, right: 10}}
+                    tooltipHtml={tooltipLine}
+                    xAxis={{innerTickSize: 6, label: "x-label"}}
+                    yAxis={{label: "y-label"}}
+                    shapeColor={"red"}
+                    stroke={{strokeDasharray: dashFunc, strokeWidth: widthFunc, strokeLinecap: linecapFunc}}
+                    />,
+    document.getElementById('linechart')
+    );
 ```
 ![strokestyle](http://codesuki.github.io/react-d3-components/strokestyle.png)
 
@@ -344,29 +366,59 @@ You can customize the line style of LineCharts with CSS or if you want to have m
 var BarChart = ReactD3.BarChart;
 
 data = [
-	{
-	label: 'somethingA',
-	values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
-	},
-	{
-	label: 'somethingB',
-	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-	},
-	{
-	label: 'somethingC',
-	values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
-	}
+    {
+    label: 'somethingA',
+    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+    },
+    {
+    label: 'somethingB',
+    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+    },
+    {
+    label: 'somethingC',
+    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+    }
 ];
 
 React.render(<BarChart
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-			document.getElementById('location'));
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+            document.getElementById('location'));
 ```
 
 ![stackedbarchart](http://codesuki.github.io/react-d3-components/stackedbarchart.png)
+
+### Grouped Bar Chart
+```javascript
+var BarChart = ReactD3.BarChart;
+
+data = [
+    {
+    label: 'somethingA',
+    values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+    },
+    {
+    label: 'somethingB',
+    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+    },
+    {
+    label: 'somethingC',
+    values: [{x: 'SomethingA', y: 6}, {x: 'SomethingB', y: 8}, {x: 'SomethingC', y: 5}]
+    }
+];
+
+React.render(<BarChart
+                groupedBars
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+            document.getElementById('location'));
+```
+
+![stackedbarchart](http://codesuki.github.io/react-d3-components/groupedbarchart.png)
 
 ### Other Charts
 ```javascript
@@ -375,37 +427,37 @@ var LineChart = ReactD3.LineChart;
 var AreaChart = ReactD3.AreaChart;
 
 data = [
-	{
-	label: 'somethingA',
-	values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
-	},
-	{
-	label: 'somethingB',
-	values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
-	}
+    {
+    label: 'somethingA',
+    values: [{x: 0, y: 2}, {x: 1.3, y: 5}, {x: 3, y: 6}, {x: 3.5, y: 6.5}, {x: 4, y: 6}, {x: 4.5, y: 6}, {x: 5, y: 7}, {x: 5.5, y: 8}]
+    },
+    {
+    label: 'somethingB',
+    values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
+    }
 ];
 
 React.render(<ScatterPlot
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-			document.getElementById('location'));
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+            document.getElementById('location'));
 
 React.render(<LineChart
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-			document.getElementById('location')
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+            document.getElementById('location')
 );
 
 React.render(<AreaChart
-				data={data}
-				width={400}
-				height={400}
-				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
-			document.getElementById('location')
+                data={data}
+                width={400}
+                height={400}
+                margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
+            document.getElementById('location')
 );
 ```
 
@@ -422,20 +474,20 @@ By default d3 sorts the PieChart but you can use the sort property to pass a cus
 var PieChart = ReactD3.PieChart;
 
 var data = {
-		label: 'somethingA',
-		values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
+        label: 'somethingA',
+        values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}]
 };
 
 var sort = null; // d3.ascending, d3.descending, func(a,b) { return a - b; }, etc...
 
 React.render(<PieChart
-				data={data}
-				width={600}
-				height={400}
-				margin={{top: 10, bottom: 10, left: 100, right: 100}}
-				sort={sort}
-				/>,
-			document.getElementById('location')
+                data={data}
+                width={600}
+                height={400}
+                margin={{top: 10, bottom: 10, left: 100, right: 100}}
+                sort={sort}
+                />,
+            document.getElementById('location')
 );
 ```
 
