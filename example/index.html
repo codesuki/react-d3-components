@@ -12,6 +12,7 @@
   <div id="brush" class="brush"></div>
   <div id="barchart"></div>
   <div id="barchart2"></div>
+  <div id="horizontalbarchart"></div>
   <div id="stackedbarchart"></div>
   <div id="scatterplot"></div>
   <div id="scatterplot2"></div>
@@ -26,6 +27,7 @@
 
   <script type="text/jsx;harmony=true">
 	var BarChart = ReactD3.BarChart;
+	var HorizontalBarChart = ReactD3.HorizontalBarChart;
 	var PieChart = ReactD3.PieChart;
 	var AreaChart = ReactD3.AreaChart;
 	var ScatterPlot = ReactD3.ScatterPlot;
@@ -136,6 +138,17 @@ var SomeComponent = React.createClass({
 	   tooltipHtml={tooltip}
 	   />,
 	document.getElementById('barchart')
+	);
+
+	React.render(
+	<HorizontalBarChart
+	   data={data}
+	   width={480}
+	   height={400}
+	   margin={{top: 20, bottom: 0, left: 75, right: 25}}
+	   tooltipHtml={tooltip}
+	   />,
+	document.getElementById('horizontalbarchart')
 	);
 /*
 	data = [{
