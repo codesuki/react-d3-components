@@ -62,6 +62,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.5.1: Fix new props not being used by DefaultScalesMixin
 * 0.5.0:
     * Improved tooltip. (see example below)
         * Tooltip now has different modes.
@@ -418,7 +419,7 @@ React.render(<BarChart
             document.getElementById('location'));
 ```
 
-![stackedbarchart](http://codesuki.github.io/react-d3-components/groupedbarchart.png)
+![groupedbarchart](http://codesuki.github.io/react-d3-components/groupedbarchart.png)
 
 ### Other Charts
 ```javascript
