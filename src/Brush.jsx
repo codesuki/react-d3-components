@@ -169,7 +169,7 @@ let Brush = React.createClass({
 		range[1] -= size;
 
 		let min = Math.max(range[0], Math.min(range[1], point[0]));
-		this.setState({xExtent: [min, min + size]});
+		this.setState({xExtent: [min, min + size], xExtentDomain: null});
 	},
 
 	// TODO: use constants instead of strings
