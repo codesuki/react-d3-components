@@ -11,12 +11,16 @@ export default {
 				interpolator = attr.tween(this.props.e, this.props.arc);
 			} else {
 				let startVal = typeof attr.start === 'function' ?
-						attr.start.call(this, this.props.data, this.props.xScale, this.props.yScale) :
-						attr.start;
+						attr.start.call(this,
+										this.props.data,
+										this.props.xScale,
+										this.props.yScale) : attr.start;
 
 				let endVal = typeof attr.end === 'function' ?
-						attr.end.call(this, this.props.data, this.props.xScale, this.props.yScale) :
-						attr.end;
+						attr.end.call(this,
+									  this.props.data,
+									  this.props.xScale,
+									  this.props.yScale) : attr.end;
 
 				interpolator = d3.interpolate(startVal !== undefined ? startVal : this.state[key], endVal);
 			}
