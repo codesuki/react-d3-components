@@ -40,17 +40,13 @@ let DataSet = React.createClass({
              onMouseEnter,
              onMouseLeave} = this.props;
         let bars;
+        let height = yScale(yScale.domain()[0]);
         bars = data.map((stack, serieIndex) => {
             return values(stack).map((e, index) => {
-                let height = yScale(yScale.domain()[0]);
-                console.log(height);
                 // maps the range [0,1] to the range [0, yDomain]
                 let yValue = height * y(e); 
-                console.log(yValue);
                 // center vertically to have upper and lower part of the waveform
                 let vy = height/2 - (yValue/2);
-                console.log(vy);
-                console.log('---')
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
@@ -137,9 +133,8 @@ let Waveform = React.createClass({
 
         let colors = d3.scale.linear()
                     .domain([0, 350])
-                    .range(["#eb1680", "#ff7a15"]);
+                    .range(["#58ABF4", "#4D599B"]);
 
-        console.log("version "+0.2);
         return React.createElement(
             "div",
             null,
