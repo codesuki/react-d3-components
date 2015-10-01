@@ -138,35 +138,12 @@ var SomeComponent = React.createClass({
     React.render(
     <BarChart
        data={data}
-       width={400}
+       width={800}
        height={400}
        margin={{top: 10, bottom: 50, left: 50, right: 10}}
        tooltipHtml={tooltip}
        />,
     document.getElementById('barchart')
-    );
-
-
-    var data = [{
-      label: 'somethingA',
-      values: []
-    }];
-    /* Absolute values of a sin waveform. We do expect only values within [0,1] */
-    for(var i = 0; i<350; i++){
-      data[0].values.push({x: ''+i, y: Math.abs(Math.sin(i/20))});
-    }
-
-
-    React.render(
-    <Waveform
-       data={data}
-       width={800}
-       height={200}
-       colorScale={ d3.scale.linear()
-                    .domain([0,data[0].values.length])
-                    .range(['#fc0','#00f'])}
-       />,
-    document.getElementById('waveformchart')
     );
  
 /*
@@ -458,7 +435,30 @@ var SomeComponent = React.createClass({
                     tooltipHtml={tooltipLine}/>,
     document.getElementById('linechart2')
     );
-    */
+
+
+    var data = [{
+      label: 'somethingA',
+      values: []
+    }];
+    /* Absolute values of a sin waveform. We do expect only values within [0,1] */
+    for(var i = 0; i<799; i++){
+      data[0].values.push({x: ''+i, y: Math.abs(Math.sin(i/20))});
+    }
+
+
+    React.render(
+    <Waveform
+       data={data}
+       width={1200}
+       height={200}
+       colorScale={ d3.scale.linear()
+                    .domain([0,data[0].values.length])
+                    .range(['#fc0','#00f'])}
+       />,
+    document.getElementById('waveformchart')
+    );
+ 
   </script>
 </body>
 </html>
