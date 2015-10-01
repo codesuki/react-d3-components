@@ -50,7 +50,7 @@ let DataSet = React.createClass({
                         height={yScale(yScale.domain()[0]) - yScale(y(e))}
                         x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
                         y={yScale(y(e))}
-                        fill={colorScale(label(stack))}
+                        fill={colorScale(index)}
                         data={e}
                         onMouseEnter={onMouseEnter}
                         onMouseLeave={onMouseLeave}
@@ -127,30 +127,32 @@ let Waveform = React.createClass({
                         this._xScale,
                         this._yScale];
 
-        return (
-                <div>
-                <Chart height={height} width={width} margin={margin}>
-                <DataSet
-            data={data}
-            xScale={xScale}
-            yScale={yScale}
-            colorScale={colorScale}
-            values={values}
-            label={label}
-            y={y}
-            y0={y0}
-            x={x}
-            onMouseEnter={this.onMouseEnter}
-            onMouseLeave={this.onMouseLeave}
-                />
+        let colors = d3.scale.linear()
+                    .domain([0, 350])
+                    .range(["#eb1680", "#ff7a15"]);
 
-              
-
-             
-                { this.props.children }
-                </Chart>
-
-                </div>
+        console.log("version "+0.1);
+        return React.createElement(
+            "div",
+            null,
+            React.createElement(
+                Chart,
+                { height: height, width: width, margin: margin },
+                React.createElement(DataSet, {
+                    data: data,
+                    xScale: xScale,
+                    yScale: yScale,
+                    colorScale: colors,
+                    label: label,
+                    values: values,
+                    x: x,
+                    y: y,
+                    y0: y0,
+                    onMouseEnter: this.onMouseEnter,
+                    onMouseLeave: this.onMouseLeave
+                }),
+                this.props.children
+            )
         );
     }
 });
