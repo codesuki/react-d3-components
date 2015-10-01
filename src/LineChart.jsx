@@ -1,17 +1,17 @@
-let React = require('react');
-let d3 = require('d3');
+import React from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Path = require('./Path');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Path from './Path';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let AccessorMixin = require('./AccessorMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import AccessorMixin from './AccessorMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
 let DataSet = React.createClass({
     propTypes: {
@@ -84,12 +84,12 @@ let DataSet = React.createClass({
 });
 
 let LineChart = React.createClass({
-    mixins: [DefaultPropsMixin,
-             HeightWidthMixin,
+    displayName: 'LineChart',
+
+    mixins: [HeightWidthMixin,
              ArrayifyMixin,
              AccessorMixin,
-             DefaultScalesMixin,
-             TooltipMixin],
+             DefaultScalesMixin],
 
     propTypes: {
         interpolate: React.PropTypes.string,
@@ -106,9 +106,9 @@ let LineChart = React.createClass({
     },
 
     /*
-     The code below supports finding the data values for the line closest to the mouse cursor.
-     Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
-     For now I don't want to use this method.
+     The code below supports finding the data values for the line closest
+     to the mouse cursor. Since it gets all events from the Rect overlaying
+     the Chart the tooltip gets shown everywhere.
      */
     _tooltipHtml(data, position) {
         let {x, y0, y, values, label} = this.props;
@@ -219,18 +219,21 @@ let LineChart = React.createClass({
              shape,
              shapeColor,
              transition,
-             data,
              xScale,
              yScale,
              xIntercept,
              yIntercept} = this.props;
+
+        let [data,
+             innerHeight,
+             innerWidth] = [this._data, this._innerHeight, this._innerWidth];
 
         let line = d3.svg.line()
                 .x(function(e) { return xScale(x(e)); })
                 .y(function(e) { return yScale(y(e)); })
                 .interpolate(interpolate)
                 .defined(defined);
-
+/*
         let tooltipSymbol;
         if (!this.state.tooltip.hidden) {
             let symbol = d3.svg.symbol().type(shape);
@@ -247,12 +250,12 @@ let LineChart = React.createClass({
             onMouseLeave={evt => { this.onMouseLeave(evt); }}
                 />;
         }
-
+*/
         return (
                 <g>
                 <DataSet
-            height={height}
-            width={width}
+            height={innerHeight}
+            width={innerWidth}
             data={data}
             line={line}
             colorScale={colorScale}

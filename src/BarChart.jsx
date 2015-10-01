@@ -47,16 +47,19 @@ let DataSet = React.createClass({
             bars = data.map((stack, serieIndex) => {
                 return values(stack).map((e, index) => {
                     return (
-                        <Bar
-                            key={`${label(stack)}.${index}`}
-                            width={xScale.rangeBand() / data.length}
-                            height={yScale(yScale.domain()[0]) - yScale(y(e))}
-                            x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
-                            y={yScale(y(e))}
-                            fill={colorScale(label(stack))}
-                            data={e}
-                            onMouseEnter={onMouseEnter}
-                            onMouseLeave={onMouseLeave}
+                            <Bar
+                        key={`${label(stack)}.${index}`}
+                        width={xScale.rangeBand() / data.length}
+                        height={yScale(yScale.domain()[0]) - yScale(y(e))}
+                        x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
+                        y={yScale(y(e))}
+                        fill={colorScale(label(stack))}
+                        data={e}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                        transition={transition}
+                        xScale={xScale}
+                        yScale={yScale}
                             />
                     );
                 });
@@ -65,19 +68,19 @@ let DataSet = React.createClass({
             bars = data.map(stack => {
                 return values(stack).map((e, index) => {
                     return (
-                        <Bar
-                            key={`${label(stack)}.${index}`}
-                            width={xScale.rangeBand()}
-                            height={yScale(yScale.domain()[0]) - yScale(y(e))}
-                            x={xScale(x(e))}
-                            y={yScale(y0(e) + y(e))}
-                            fill={colorScale(label(stack))}
-                            data={e}
-                            onMouseEnter={onMouseEnter}
-                            onMouseLeave={onMouseLeave}
-                    transition={transition}
-                    xScale={xScale}
-                    yScale={yScale}
+                            <Bar
+                        key={`${label(stack)}.${index}`}
+                        width={xScale.rangeBand()}
+                        height={yScale(yScale.domain()[0]) - yScale(y(e))}
+                        x={xScale(x(e))}
+                        y={yScale(y0(e) + y(e))}
+                        fill={colorScale(label(stack))}
+                        data={e}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                        transition={transition}
+                        xScale={xScale}
+                        yScale={yScale}
                             />
                     );
                 });
@@ -91,19 +94,20 @@ let DataSet = React.createClass({
 });
 
 let BarChart = React.createClass({
-    mixins: [DefaultPropsMixin,
-             HeightWidthMixin,
+    displayName: 'BarChart',
+
+    mixins: [HeightWidthMixin,
              ArrayifyMixin,
              StackAccessorMixin,
              StackDataMixin,
-             DefaultScalesMixin,
-             TooltipMixin],
+             DefaultScalesMixin],
 
     getDefaultProps() {
         return {};
     },
 
     _tooltipHtml(d, position) {
+        let values = this.props.values;
         let [xScale, yScale] = [this._xScale, this._yScale];
 
         let html = this.props.tooltipHtml(this.props.x(d),
@@ -113,7 +117,7 @@ let BarChart = React.createClass({
         let midPoint = xScale.rangeBand() / 2;
         let xPos = midPoint + xScale(this.props.x(d));
 
-        let topStack = this._data[this._data.length - 1].values;
+        let topStack = values(this._data[this._data.length - 1]);
         let topElement = null;
 
         // TODO: this might not scale if dataset is huge.
@@ -145,18 +149,11 @@ let BarChart = React.createClass({
              transition} = this.props;
 
         let [data,
-             innerWidth,
-             innerHeight,
              xScale,
-             yScale] = [this._data,
-                        this._innerWidth,
-                        this._innerHeight,
-                        this._xScale,
-                        this._yScale];
+             yScale] = [this._data, this._xScale, this._yScale];
 
         return (
-                <div>
-                <Chart height={height} width={width} margin={margin}>
+                <g>
                 <DataSet
             data={data}
             xScale={xScale}
@@ -172,29 +169,8 @@ let BarChart = React.createClass({
             groupedBars={groupedBars}
             transition={transition}
                 />
+                </g>
 
-                <Axis
-            className={"x axis"}
-            orientation={"bottom"}
-            scale={xScale}
-            height={innerHeight}
-            width={innerWidth}
-            {...xAxis}
-                />
-
-                <Axis
-            className={"y axis"}
-            orientation={"left"}
-            scale={yScale}
-            height={innerHeight}
-            width={innerWidth}
-            {...yAxis}
-                />
-                { this.props.children }
-                </Chart>
-
-                <Tooltip {...this.state.tooltip}/>
-                </div>
         );
     }
 });

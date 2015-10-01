@@ -4,7 +4,7 @@ import d3 from 'd3';
 import TransitionMixin from "./TransitionMixin";
 
 export default React.createClass({
-	mixins: [TransitionMixin],
+    mixins: [TransitionMixin],
 
     propTypes: {
         width: React.PropTypes.number.isRequired,
@@ -20,16 +20,16 @@ export default React.createClass({
         onMouseLeave: React.PropTypes.func
     },
 
-	getInitialState() {
-		return {
-			x: this.props.x,
-			y: this.props.y,
-			width: this.props.width,
-			height: this.props.height,
-			fill: this.props.fill,
-			opacity: 1
-		};
-	},
+    getInitialState() {
+        return {
+            x: this.props.x,
+            y: this.props.y,
+            width: this.props.width,
+            height: this.props.height,
+            fill: this.props.fill,
+            opacity: 1
+        };
+    },
 
     render() {
         let {x,
@@ -44,12 +44,12 @@ export default React.createClass({
         return (
                 <rect
             className="bar"
-			x={this.state.x}
-			y={this.state.y}
-			width={this.state.width}
-			height={this.state.height}
-			fill={this.state.fill}
-			opacity={this.state.opacity}
+            x={this.state.x}
+            y={this.state.y}
+            width={this.state.width}
+            height={this.state.height}
+            fill={this.state.fill}
+            opacity={this.state.opacity}
             onMouseMove={ e => { onMouseEnter(e, data); } }
             onMouseLeave={ e => { onMouseLeave(e); } }
                 />
