@@ -147,12 +147,21 @@ var SomeComponent = React.createClass({
     );
 
 
+    var data = [{
+      label: 'somethingA',
+      values: []
+    }];
+    for(var i = 0; i<150; i++){
+      data[0].values.push({x: ''+i, y: (Math.sin(Math.tan(i/10))*40)});
+    }
+
+
     React.render(
-    <BarChart
+    <Waveform
        data={data}
-       width={400}
+       width={800}
        height={400}
-       margin={{top: 10, bottom: 50, left: 50, right: 10}}
+       margin={{top: 0, bottom: 0, left: 0, right: 0}}
        tooltipHtml={tooltip}
        />,
     document.getElementById('waveformchart')

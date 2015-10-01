@@ -38,50 +38,28 @@ let DataSet = React.createClass({
              y,
              y0,
              onMouseEnter,
-             onMouseLeave,
-             groupedBars} = this.props;
+             onMouseLeave} = this.props;
 
         let bars;
-        if (groupedBars) {
-            bars = data.map((stack, serieIndex) => {
-                return values(stack).map((e, index) => {
-                    return (
-                        <Bar
-                            key={`${label(stack)}.${index}`}
-                            width={xScale.rangeBand() / data.length}
-                            height={yScale(yScale.domain()[0]) - yScale(y(e))}
-                            x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
-                            y={yScale(y(e))}
-                            fill={colorScale(label(stack))}
-                            data={e}
-                            onMouseEnter={onMouseEnter}
-                            onMouseLeave={onMouseLeave}
-                            />
-                    );
-                });
+        bars = data.map((stack, serieIndex) => {
+            return values(stack).map((e, index) => {
+                return (
+                    <Bar
+                        key={`${label(stack)}.${index}`}
+                        width={xScale.rangeBand() / data.length}
+                        height={yScale(yScale.domain()[0]) - yScale(y(e))}
+                        x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
+                        y={yScale(y(e))}
+                        fill={colorScale(label(stack))}
+                        data={e}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                    />
+                );
             });
-        } else {
-            bars = data.map(stack => {
-                return values(stack).map((e, index) => {
-                    return (
-                        <Bar
-                            key={`${label(stack)}.${index}`}
-                            width={xScale.rangeBand()}
-                            height={yScale(yScale.domain()[0]) - yScale(y(e))}
-                            x={xScale(x(e))}
-                            y={yScale(y0(e) + y(e))}
-                            fill={colorScale(label(stack))}
-                            data={e}
-                            onMouseEnter={onMouseEnter}
-                            onMouseLeave={onMouseLeave}
-                            />
-                    );
-                });
-            });
-        }
-
+        });
         return (
-                <g>{bars}</g>
+            <g>{bars}</g>
         );
     }
 });
@@ -164,30 +142,14 @@ let Waveform = React.createClass({
             x={x}
             onMouseEnter={this.onMouseEnter}
             onMouseLeave={this.onMouseLeave}
-            groupedBars={groupedBars}
                 />
 
-                <Axis
-            className={"x axis"}
-            orientation={"bottom"}
-            scale={xScale}
-            height={innerHeight}
-            width={innerWidth}
-            {...xAxis}
-                />
+              
 
-                <Axis
-            className={"y axis"}
-            orientation={"left"}
-            scale={yScale}
-            height={innerHeight}
-            width={innerWidth}
-            {...yAxis}
-                />
+             
                 { this.props.children }
                 </Chart>
 
-                <Tooltip {...this.state.tooltip}/>
                 </div>
         );
     }
