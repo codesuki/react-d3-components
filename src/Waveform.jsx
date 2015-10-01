@@ -131,10 +131,6 @@ let Waveform = React.createClass({
                         this._xScale,
                         this._yScale];
 
-        let colors = d3.scale.linear()
-                    .domain([0, 350])
-                    .range(["#58ABF4", "#4D599B"]);
-
         return React.createElement(
             "div",
             null,
@@ -145,7 +141,7 @@ let Waveform = React.createClass({
                     data: data,
                     xScale: xScale,
                     yScale: yScale,
-                    colorScale: colors,
+                    colorScale: colorScale,
                     label: label,
                     values: values,
                     x: x,

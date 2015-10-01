@@ -165,6 +165,9 @@ var SomeComponent = React.createClass({
        width={800}
        height={400}
        margin={{top: 0, bottom: 0, left: 0, right: 0}}
+       colorScale={ d3.scale.linear()
+                    .domain([0,200])
+                    .range(['#fc0','#00f'])}
        />,
     document.getElementById('waveformchart')
     );
