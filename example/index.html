@@ -29,7 +29,7 @@
 
   <script type="text/jsx;harmony=true">
     var Waveform = ReactD3.Waveform; 
-    var BarChart = ReactD3.BarChart; 
+    var BarChart = ReactD3.BarChart;              
     var PieChart = ReactD3.PieChart;
     var AreaChart = ReactD3.AreaChart;
     var ScatterPlot = ReactD3.ScatterPlot;
@@ -161,10 +161,9 @@ var SomeComponent = React.createClass({
     <Waveform
        data={data}
        width={800}
-       height={400}
-       margin={{top: 0, bottom: 0, left: 0, right: 0}}
+       height={200}
        colorScale={ d3.scale.linear()
-                    .domain([0,200])
+                    .domain([0,data[0].values.length])
                     .range(['#fc0','#00f'])}
        />,
     document.getElementById('waveformchart')
