@@ -14,6 +14,24 @@ let StackDataMixin = require('./StackDataMixin');
 let DefaultScalesMixin = require('./DefaultScalesMixin');
 let TooltipMixin = require('./TooltipMixin');
 
+
+ // receive array and return a subsampled array of size n
+    //
+    // a= the array;
+    // n= number of sample you want output
+let subSample = function(a, n) {
+      var returnArray = [];
+      var m = a.length;
+      var samplingRatio = m / n;
+
+      //just round down for now in case of comma separated
+      for (var i = 0; i < m;) {
+        returnArray.push(a[Math.floor(i)]);
+        i += samplingRatio;
+      }
+      return returnArray;
+    }
+
 let DataSet = React.createClass({
     propTypes: {
         data: React.PropTypes.array.isRequired,
@@ -37,6 +55,7 @@ let DataSet = React.createClass({
              x,
              y,
              y0,
+             x0,
              onMouseEnter,
              onMouseLeave} = this.props;
         let bars;
@@ -47,14 +66,17 @@ let DataSet = React.createClass({
                 let yValue = height * y(e); 
                 // center vertically to have upper and lower part of the waveform
                 let vy = height/2 - (yValue/2);
+                //position x(e) * width * 2 because we want equal sapce.
+                let vx = 2*x0*index;
+                console.log(vx, index);
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
-                        width={xScale.rangeBand() / data.length}
+                        width={x0}
                         height={yValue}
-                        x={xScale(x(e)*2) + ((xScale.rangeBand() * serieIndex) / (data.length*2))}
+                        x={vx}
                         y={vy}
-                        fill={colorScale(index)}
+                        fill={colorScale(Math.floor(vx))}
                         data={e}
                         onMouseEnter={onMouseEnter}
                         onMouseLeave={onMouseLeave}
@@ -131,6 +153,18 @@ let Waveform = React.createClass({
                         this._xScale,
                         this._yScale];
 
+        // there are two options, if the samples are less than the space available
+        // we'll stretch the width of bar and inbetween spaces.
+        // Otherwise we just subSample the dataArray.
+        let barWidth;
+        if(data[0].values.length > innerWidth/2){
+            data[0].values = subSample(data[0].values,innerWidth/2); 
+            barWidth = 1;
+        } else {
+            barWidth = (innerWidth/2)/data[0].values.length;
+        }
+
+        console.log(innerWidth,data[0].values.length, barWidth);
         return React.createElement(
             "div",
             null,
@@ -147,6 +181,7 @@ let Waveform = React.createClass({
                     x: x,
                     y: y,
                     y0: y0,
+                    x0: barWidth,
                     onMouseEnter: this.onMouseEnter,
                     onMouseLeave: this.onMouseLeave
                 }),
@@ -155,5 +190,6 @@ let Waveform = React.createClass({
         );
     }
 });
+
 
 module.exports = Waveform;

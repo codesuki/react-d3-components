@@ -11,7 +11,6 @@
 <body>
 
   <div id="brush" class="brush"></div>
-  <div id="waveformchart"></div>
   <div id="barchart"></div>
   <div id="barchart2"></div>
   <div id="stackedbarchart"></div>
@@ -26,6 +25,7 @@
   <div id="areachart2"></div>
   <div id="stackedareachart"></div>
   <div id="piechart"></div>
+  <div id="waveformchart"></div>
 
   <script type="text/jsx;harmony=true">
     var Waveform = ReactD3.Waveform; 
@@ -144,6 +144,29 @@ var SomeComponent = React.createClass({
        tooltipHtml={tooltip}
        />,
     document.getElementById('barchart')
+    );
+
+
+    var data = [{
+      label: 'somethingA',
+      values: []
+    }];
+    /* Absolute values of a sin waveform. We do expect only values within [0,1] */
+    for(var i = 0; i<200; i++){
+      data[0].values.push({x: ''+i, y: Math.abs(Math.sin(i/20))});
+    }
+
+
+    React.render(
+    <Waveform
+       data={data}
+       width={1400}
+       height={200}
+       colorScale={ d3.scale.linear()
+                    .domain([0,1400])
+                    .range(['#eb1785','#ff7b16'])}
+       />,
+    document.getElementById('waveformchart')
     );
  
 /*
@@ -435,30 +458,7 @@ var SomeComponent = React.createClass({
                     tooltipHtml={tooltipLine}/>,
     document.getElementById('linechart2')
     );
-
-
-    var data = [{
-      label: 'somethingA',
-      values: []
-    }];
-    /* Absolute values of a sin waveform. We do expect only values within [0,1] */
-    for(var i = 0; i<799; i++){
-      data[0].values.push({x: ''+i, y: Math.abs(Math.sin(i/20))});
-    }
-
-
-    React.render(
-    <Waveform
-       data={data}
-       width={1200}
-       height={200}
-       colorScale={ d3.scale.linear()
-                    .domain([0,data[0].values.length])
-                    .range(['#fc0','#00f'])}
-       />,
-    document.getElementById('waveformchart')
-    );
- 
+    */
   </script>
 </body>
 </html>

@@ -27,8 +27,8 @@ div {
 	stroke: #ccc;
 }
 
-.bar:hover {
-	fill: #E55;
+.bar:hover { 
+	width: 8px;
 }
 
 .dot:hover {
