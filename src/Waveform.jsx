@@ -153,6 +153,9 @@ let Waveform = React.createClass({
                         this._xScale,
                         this._yScale];
 
+        let preserveAspectRatio = "none";
+        let viewBox = "0 0 "+width+" "+height;
+
         // there are two options, if the samples are less than the space available
         // we'll stretch the width of bar and inbetween spaces.
         // Otherwise we just subSample the dataArray.
@@ -170,7 +173,7 @@ let Waveform = React.createClass({
             null,
             React.createElement(
                 Chart,
-                { height: height, width: width, margin: margin },
+                { height: height, width: width, margin: margin, viewBox: viewBox, preserveAspectRatio: preserveAspectRatio},
                 React.createElement(DataSet, {
                     data: data,
                     xScale: xScale,
