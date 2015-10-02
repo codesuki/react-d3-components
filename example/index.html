@@ -11,7 +11,6 @@
 <body>
 
   <div id="brush" class="brush"></div>
-  <div id="waveformchart"></div>
   <div id="barchart"></div>
   <div id="barchart2"></div>
   <div id="stackedbarchart"></div>
@@ -26,12 +25,11 @@
   <div id="areachart2"></div>
   <div id="stackedareachart"></div>
   <div id="piechart"></div>
+  <div id="waveformchart"></div>
 
   <script type="text/jsx;harmony=true">
-    var Waveform = ReactD3.Waveform;
-    console.log(Waveform);
-    var BarChart = ReactD3.BarChart;
-    console.log(BarChart);
+    var Waveform = ReactD3.Waveform; 
+    var BarChart = ReactD3.BarChart;              
     var PieChart = ReactD3.PieChart;
     var AreaChart = ReactD3.AreaChart;
     var ScatterPlot = ReactD3.ScatterPlot;
@@ -140,7 +138,7 @@ var SomeComponent = React.createClass({
     React.render(
     <BarChart
        data={data}
-       width={400}
+       width={800}
        height={400}
        margin={{top: 10, bottom: 50, left: 50, right: 10}}
        tooltipHtml={tooltip}
@@ -154,7 +152,7 @@ var SomeComponent = React.createClass({
       values: []
     }];
     /* Absolute values of a sin waveform. We do expect only values within [0,1] */
-    for(var i = 0; i<350; i++){
+    for(var i = 0; i<320; i++){
       data[0].values.push({x: ''+i, y: Math.abs(Math.sin(i/20))});
     }
 
@@ -162,9 +160,11 @@ var SomeComponent = React.createClass({
     React.render(
     <Waveform
        data={data}
-       width={800}
-       height={400}
-       margin={{top: 0, bottom: 0, left: 0, right: 0}}
+       width={1400}
+       height={200}
+       colorScale={ d3.scale.linear()
+                    .domain([0,1400])
+                    .range(['#eb1785','#ff7b16'])}
        />,
     document.getElementById('waveformchart')
     );
