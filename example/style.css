@@ -5,7 +5,18 @@ body {
 div {
 	float: left;
 }
-
+#waveformchart svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#waveformchart { 
+	width: 100%;
+	height: 140px;
+	background-color: #333;
+	position: relative;
+	margin-bottom: 20px;
+}
 .axis {
 	fill: none;
 	stroke: #000;
@@ -26,8 +37,23 @@ div {
 .axis path {
 	stroke: #ccc;
 }
+#waveformchart .bar{ 
+	-ms-transform: scale(1,1); /* IE 9 */
+    -webkit-transform: scale(1,1); /* Safari */
+    transform: scale(1,1);
+}
 
-.bar:hover {
+#waveformchart .bar:hover { 
+	height: 100%;
+	-ms-transform: scale(2,100); /* IE 9 */
+    -webkit-transform: scale(2,100); /* Safari */
+    transform: scale(2,100);
+    -ms-transform-origin: 50% 50%; /* IE 9 */
+    -webkit-transform-origin: 50% 50%; /* Chrome, Safari, Opera */
+    transform-origin: 50% 50%;
+}
+
+.bar:hover {    
 	fill: #E55;
 }
 

@@ -13,10 +13,10 @@ let Chart = React.createClass({
     },
 
     render() {
-        let {width, height, margin, children} = this.props;
+        let {width, height, margin, viewBox, preserveAspectRatio, children} = this.props;
 
         return (
-                <svg ref="svg" width={width} height={height}>
+                <svg ref="svg" width={width} height={height} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio} >
                 <g transform={`translate(${margin.left}, ${margin.top})`}>{children}</g>
                 </svg>
         );
