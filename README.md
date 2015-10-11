@@ -8,6 +8,7 @@ Let React have complete control over the DOM even when using D3. This way we can
 
 ## Table of Contents
 * [Installation](#installation)
+* [Development](#development)
 * [Description](#description)
 * [Documentation](#documentation)
 * [Features](#features)
@@ -24,11 +25,27 @@ Let React have complete control over the DOM even when using D3. This way we can
   * [Grouped Bar Chart](#groupedbarchart)
   * [Scatter, Line and Area Charts](#other-charts)
   * [Pie Chart](#piechart)
+  * [Waveform](#waveform)
 
 ## Installation
 ```
 npm install react-d3-components
 ```
+
+## Development
+In order to compile the code, from the repository folder, type in your terminal
+```
+npm install & npm run build:js
+```
+This will install the dependencies required and run the build:js. At the end of the process the compiled .js and min.js will be available in the dist folder.
+Examples are available in the folder example.
+From the root folder type 
+```
+python -m SimpleHTTPServer 8000
+```
+to start a webserver, and navigate to http://localhost:8000/example in order to visualize the new example page.
+Note that the example page directly points to the dist folder.
+
 
 ## Description
 Ideally the library should be usable with minimum configuration. Just put the data in and see the charts.
@@ -494,6 +511,31 @@ React.render(<PieChart
 ```
 
 ![piechart](http://codesuki.github.io/react-d3-components/piechart.png)
+
+### Waveform
+The waveform chart displays a sequence of values as they were part of an audio waveform.
+The values are centered on the horizontale axis and reflected along the horizontal origin.
+As it is now, we do expect only values in the range [0,1].
+
+The graph can accept a colorScale parameter, that is an array of value in the range [0,width], where width is the width of the graph.
+Following an example of gradient from white to black for a waveform of width = 200.
+
+```javascript
+colorScale={ d3.scale.linear()
+                    .domain([0,200])
+                    .range(['#fff','#000'])}
+```
+The graph is responsive and adopt a viewBox strategy to resize the graph maintaining the proportions.
+We also adopt subSampling in order to maintain the graph rapresentation of the waveform.
+As it is now each bar needs to have a minimum width of 1px, as well as 1px space between to adjacent bars.
+In order to allow this, we subsample the data in input in order to have exactly  a maximum of width/2 elements.
+
+Is therefore a good strategy select the width of the graph to be twice the length of the dataset. the viewBox responsiveness will then resize the graph to the width of the container.
+If otherwise the samples are less than the half of the space available we just display them with a width > 1px. Space between bars are increased in width as well.
+
+
+
+
 
 ## Credits
 This library uses parts of [D3.js](https://github.com/mbostock/d3).
