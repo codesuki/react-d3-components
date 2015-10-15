@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/codesuki/react-d3-components",
 	"peerDependencies": {
-		"react": "^0.13.1"
+		"react": "^0.14.0"
 	},
 	"dependencies": {
 		"d3": "^3.5.3"
