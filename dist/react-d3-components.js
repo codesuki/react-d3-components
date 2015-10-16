@@ -1,12 +1,12 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"), require("d3"));
+		module.exports = factory(require("react"), require("d3"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React", "d3"], factory);
+		define(["react", "d3"], factory);
 	else if(typeof exports === 'object')
-		exports["ReactD3"] = factory(require("React"), require("d3"));
+		exports["ReactD3"] = factory(require("react"), require("d3"));
 	else
-		root["ReactD3"] = factory(root["React"], root["d3"]);
+		root["ReactD3"] = factory(root["react"], root["d3"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -66,7 +66,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports) {
 
-	eval("module.exports = __WEBPACK_EXTERNAL_MODULE_2__;\n\n/*****************\n ** WEBPACK FOOTER\n ** external \"React\"\n ** module id = 2\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///external_%22React%22?");
+	eval("module.exports = __WEBPACK_EXTERNAL_MODULE_2__;\n\n/*****************\n ** WEBPACK FOOTER\n ** external \"react\"\n ** module id = 2\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///external_%22react%22?");
 
 /***/ },
 /* 3 */
