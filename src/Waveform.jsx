@@ -68,7 +68,6 @@ let DataSet = React.createClass({
                 let vy = height/2 - (yValue/2);
                 //position x(e) * width * 2 because we want equal sapce.
                 let vx = 2*x0*index;
-                console.log(vx, index);
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
@@ -167,7 +166,6 @@ let Waveform = React.createClass({
             barWidth = (innerWidth/2)/data[0].values.length;
         }
 
-        console.log(innerWidth,data[0].values.length, barWidth);
         return React.createElement(
             "div",
             null,
