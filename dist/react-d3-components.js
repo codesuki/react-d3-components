@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("\"use strict\";\n\nvar BarChart = __webpack_require__(1);\nvar Waveform = __webpack_require__(15);\nvar PieChart = __webpack_require__(16);\nvar ScatterPlot = __webpack_require__(18);\nvar LineChart = __webpack_require__(19);\nvar AreaChart = __webpack_require__(21);\nvar Brush = __webpack_require__(22);\n\nmodule.exports = {\n    BarChart: BarChart,\n    PieChart: PieChart,\n    ScatterPlot: ScatterPlot,\n    LineChart: LineChart,\n    AreaChart: AreaChart,\n    Waveform: Waveform,\n    Brush: Brush\n};\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/index.jsx\n ** module id = 0\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/index.jsx?");
+	eval("\"use strict\";\n\nvar BarChart = __webpack_require__(1);\nvar Waveform = __webpack_require__(15);\nvar PieChart = __webpack_require__(16);\nvar ScatterPlot = __webpack_require__(18);\nvar LineChart = __webpack_require__(19);\nvar AreaChart = __webpack_require__(21);\nvar Brush = __webpack_require__(22);\nvar d3 = __webpack_require__(3);\n\nmodule.exports = {\n    BarChart: BarChart,\n    PieChart: PieChart,\n    ScatterPlot: ScatterPlot,\n    LineChart: LineChart,\n    AreaChart: AreaChart,\n    Waveform: Waveform,\n    Brush: Brush,\n    d3: d3\n};\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/index.jsx\n ** module id = 0\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/index.jsx?");
 
 /***/ },
 /* 1 */
