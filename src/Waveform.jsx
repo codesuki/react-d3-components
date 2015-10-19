@@ -63,12 +63,12 @@ let DataSet = React.createClass({
         bars = data.map((stack, serieIndex) => {
             return values(stack).map((e, index) => {
                 // maps the range [0,1] to the range [0, yDomain]
-                let yValue = height * y(e); 
+                let yValue = height * y(e);
                 // center vertically to have upper and lower part of the waveform
                 let vy = height/2 - (yValue/2);
                 //position x(e) * width * 2 because we want equal sapce.
                 let vx = 2*x0*index;
-                console.log(vx, index);
+
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
@@ -161,13 +161,12 @@ let Waveform = React.createClass({
         // Otherwise we just subSample the dataArray.
         let barWidth;
         if(data[0].values.length > innerWidth/2){
-            data[0].values = subSample(data[0].values,innerWidth/2); 
+            data[0].values = subSample(data[0].values,innerWidth/2);
             barWidth = 1;
         } else {
             barWidth = (innerWidth/2)/data[0].values.length;
         }
 
-        console.log(innerWidth,data[0].values.length, barWidth);
         return React.createElement(
             "div",
             null,

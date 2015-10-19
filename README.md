@@ -39,7 +39,7 @@ npm install & npm run build:js
 ```
 This will install the dependencies required and run the build:js. At the end of the process the compiled .js and min.js will be available in the dist folder.
 Examples are available in the folder example.
-From the root folder type 
+From the root folder type
 ```
 python -m SimpleHTTPServer 8000
 ```
@@ -79,8 +79,9 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
-* 0.5.2: Fix default scale for dates
-* 0.5.1: Fix new props not being used by DefaultScalesMixin
+* 0.6.0: Added [Waveform Chart](#waveform). Moved to React 0.14.
+* 0.5.2: Fixed default scale for dates
+* 0.5.1: Fixed new props not being used by DefaultScalesMixin
 * 0.5.0:
     * Improved tooltip. (see example below)
         * Tooltip now has different modes.
@@ -533,7 +534,7 @@ In order to allow this, we subsample the data in input in order to have exactly 
 Is therefore a good strategy select the width of the graph to be twice the length of the dataset. the viewBox responsiveness will then resize the graph to the width of the container.
 If otherwise the samples are less than the half of the space available we just display them with a width > 1px. Space between bars are increased in width as well.
 
-
+![waveform](http://codesuki.github.io/react-d3-components/waveform.png)
 
 
 
