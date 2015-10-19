@@ -519,7 +519,7 @@ The values are centered on the horizontal axis and reflected along the horizonta
 For now only values in the range [0,1] are supported.
 
 The graph can accept a colorScale parameter, that is an array of values in the range [0,width], where width is the width of the graph.
-Following an example of gradient from white to black for a waveform of width = 200.
+Following an example of gradient from white to black for a waveform of width 200.
 
 ```javascript
 colorScale={ d3.scale.linear()
@@ -531,8 +531,8 @@ We also adopt subSampling in order to maintain the graph rapresentation of the w
 As it is now each bar needs to have a minimum width of 1px, as well as 1px space between to adjacent bars.
 In order to allow this, we subsample the input data in order to have exactly a maximum of width/2 elements.
 
-It is therefore a good strategy to select the width of the graph to be twice the length of the dataset.The viewBox responsiveness will then resize the graph to the width of the container.
-If the samples are less than half of the space available we just display them with a width > 1px. Space between bars are increased in width as well.
+It is therefore a good strategy to select the width of the graph to be twice the length of the dataset. The viewBox responsiveness will then resize the graph to the width of the container.
+If the samples are less than half of the space available we just display them with a width >1px. Space between bars is increased in width as well.
 
 ![waveform](http://codesuki.github.io/react-d3-components/waveform.png)
 
