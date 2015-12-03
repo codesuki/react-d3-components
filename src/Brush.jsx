@@ -1,4 +1,5 @@
 let React = require('react');
+let ReactDOM = require('react-dom');
 let d3 = require('d3');
 
 let Chart = require('./Chart');
@@ -143,7 +144,7 @@ let Brush = React.createClass({
 
 	// TODO: Code duplicated in TooltipMixin.jsx, move outside.
 	_getMousePosition(e) {
-		let svg = this.getDOMNode().getElementsByTagName("svg")[0];
+		let svg = ReactDOM.findDOMNode(this).getElementsByTagName("svg")[0];
 		let position;
 		if (svg.createSVGPoint) {
 			var point = svg.createSVGPoint();
