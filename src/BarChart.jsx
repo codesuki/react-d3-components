@@ -99,28 +99,48 @@ let BarChart = React.createClass({
         return {};
     },
 
-    _tooltipHtml(d, position) {
-        let [xScale, yScale] = [this._xScale, this._yScale];
+    _tooltipHtml: function _tooltipHtml(d, position) {
+        var xScale = this._xScale;
+        var yScale = this._yScale;
 
-        let html = this.props.tooltipHtml(this.props.x(d),
-                                          this.props.y0(d),
-                                          this.props.y(d));
+        var x = this.props.x(d);
+        var y0 = this.props.y0(d);
 
-        let midPoint = xScale.rangeBand() / 2;
-        let xPos = midPoint + xScale(this.props.x(d));
+        var i, j;
+        var midPoint = xScale.rangeBand() / 2;
+        var xPos = midPoint + xScale(x);
 
-        let topStack = this._data[this._data.length - 1].values;
-        let topElement = null;
+        var topStack = this._data[this._data.length - 1].values;
+        var topElement = null;
 
         // TODO: this might not scale if dataset is huge.
         // consider pre-computing yPos for each X
-        for (let i = 0; i < topStack.length; i++) {
-            if (this.props.x(topStack[i]) === this.props.x(d)) {
+        for (i = 0; i < topStack.length; i++) {
+            if (this.props.x(topStack[i]) === x) {
                 topElement = topStack[i];
                 break;
             }
         }
-        let yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+        var yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+
+        var datum, value, valuesLen, dataLabel;
+        var dataLen = this._data.length;
+        for(i=0; i<dataLen; ++i){
+          datum = this._data[i];
+          valuesLen = datum.values.length;
+          for(j=0; j<valuesLen; ++j){
+            value = datum.values[j];
+            if (value.x === x && value.y0 === y0){
+              dataLabel = datum.label;
+              break;
+            }
+          }
+          if (dataLabel){
+            break;
+          }
+        }
+
+        var html = this.props.tooltipHtml(this.props.x(d), this.props.y0(d), this.props.y(d), dataLabel);
 
         return [html, xPos, yPos];
     },
