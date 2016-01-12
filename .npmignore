@@ -1,3 +1,9 @@
 example
 src
 .jshintrc
+.eslintrc
+.editorconfig
+.npmignore
+webpack.config.min.js
+webpack.config.js
+

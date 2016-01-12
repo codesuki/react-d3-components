@@ -79,6 +79,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.6.1: Fixed 'BarChart.getDOMNode(...) is deprecated.'
 * 0.6.0: Added [Waveform Chart](#waveform). Moved to React 0.14.
 * 0.5.2: Fixed default scale for dates
 * 0.5.1: Fixed new props not being used by DefaultScalesMixin
