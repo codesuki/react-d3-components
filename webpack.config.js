@@ -22,7 +22,8 @@ module.exports = {
 	},
 	externals: {
 		d3: true,
-		react: 'react'
+		react: 'React',
+		'react-dom': 'ReactDOM'
 	},
 	devtool: 'eval'
 };
