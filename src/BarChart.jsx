@@ -142,7 +142,8 @@ let BarChart = React.createClass({
 			 xAxis,
 			 yAxis,
 			 groupedBars,
-			 colorByLabel} = this.props;
+			 colorByLabel,
+			 tickFormat} = this.props;
 
 		let [data,
 			 innerWidth,
@@ -179,6 +180,7 @@ let BarChart = React.createClass({
 			scale={xScale}
 			height={innerHeight}
 			width={innerWidth}
+			tickFormat={tickFormat}
 			{...xAxis}
 				/>
 
@@ -188,6 +190,7 @@ let BarChart = React.createClass({
 			scale={yScale}
 			height={innerHeight}
 			width={innerWidth}
+			tickFormat={tickFormat}
 			{...yAxis}
 				/>
 				{ this.props.children }
