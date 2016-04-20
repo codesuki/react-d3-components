@@ -79,6 +79,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.6.3: Changed react dependency version to >=0.14.0 to allow react 0.15.
 * 0.6.2: Fixed build system. Added colorByLabel property to BarChart.
 * 0.6.1: Fixed 'BarChart.getDOMNode(...) is deprecated.'
 * 0.6.0: Added [Waveform Chart](#waveform). Moved to React 0.14.

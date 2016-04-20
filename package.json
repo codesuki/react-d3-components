@@ -1,6 +1,6 @@
 {
 	"name": "react-d3-components",
-	"version": "0.6.2",
+	"version": "0.6.3",
 	"description": "D3 components for React",
 	"main": "lib/index.js",
 	"repository": {
@@ -22,8 +22,8 @@
 	},
 	"homepage": "https://github.com/codesuki/react-d3-components",
 	"peerDependencies": {
-		"react": "^0.14.0",
-		"react-dom": "^0.14.0"
+		"react": ">=0.14.0",
+		"react-dom": ">=0.14.0"
 	},
 	"dependencies": {
 		"d3": "^3.5.3"
