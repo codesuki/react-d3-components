@@ -107,7 +107,7 @@ let Axis = React.createClass({
             textAnchor = sign < 0 ? "end" : "start";
             d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
 
-            labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={".75em"} transform={"rotate(-90)"}>{label}</text>;
+            labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={orientation === "left" ? ".75em" : "-.75em"} transform={"rotate(-90)"}>{label}</text>;
         }
 
         let tickElements = ticks.map((tick, index) => {
