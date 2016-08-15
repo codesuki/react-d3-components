@@ -112,7 +112,7 @@ let DataSet = React.createClass({
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
                 />
-                {!hideLabels && this.renderLabel(e)}
+                {!hideLabels && !!e.value && this.renderLabel(e)}
             </g>
         );
 
