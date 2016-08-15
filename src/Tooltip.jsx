@@ -21,7 +21,7 @@ let Tooltip = React.createClass({
     render() {
         let {top, left, hidden, html, translate} = this.props;
 
-        let style = {
+        let style = this.props.style || {
             display: hidden ? 'none' : 'block',
             position: 'fixed',
             top: top,
@@ -31,7 +31,7 @@ let Tooltip = React.createClass({
         };
 
         return (
-                <div className="tooltip" style={style}>{html}</div>
+                <div className="d3-tooltip" style={style}>{html}</div>
         );
     }
 });
