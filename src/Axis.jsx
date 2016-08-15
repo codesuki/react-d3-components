@@ -6,6 +6,7 @@ let Axis = React.createClass({
         tickArguments: React.PropTypes.array,
         tickValues: React.PropTypes.array,
         tickFormat: React.PropTypes.func,
+        tickDirection: React.PropTypes.oneOf(['horizontal', 'vertical', 'diagonal']),
         innerTickSize: React.PropTypes.number,
         tickPadding: React.PropTypes.number,
         outerTickSize: React.PropTypes.number,
@@ -21,6 +22,7 @@ let Axis = React.createClass({
             tickArguments: [10],
             tickValues: null,
             tickFormat: null,
+            tickDirection: 'horizontal',
             innerTickSize: 6,
             tickPadding: 3,
             outerTickSize: 6,
@@ -52,6 +54,7 @@ let Axis = React.createClass({
              tickArguments,
              tickValues,
              tickFormat,
+             tickDirection,
              innerTickSize,
              tickPadding,
              outerTickSize,
@@ -85,7 +88,7 @@ let Axis = React.createClass({
 
         let activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
 
-        let transform, x, y, x2, y2, dy, textAnchor, d, labelElement;
+        let transform, x, y, x2, y2, dy, textAnchor, d, labelElement, tickRotation = 0;
         if (orientation === "bottom" || orientation === "top") {
             transform = `translate({}, 0)`;
             x = 0;
@@ -95,6 +98,17 @@ let Axis = React.createClass({
             dy = sign < 0 ? "0em" : ".71em";
             textAnchor = "middle";
             d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
+            if (tickDirection === 'vertical') {
+              tickRotation = -90;
+              x = -tickSpacing;
+              y = -innerTickSize;
+              textAnchor = 'end';
+            } else if (tickDirection === 'diagonal') {
+              tickRotation = -60;
+              x = -tickSpacing;
+              y = 0;
+              textAnchor = 'end';
+            }
 
             labelElement = <text className={`${className} label`} textAnchor={"end"} x={width} y={-6}>{label}</text>;
         } else {
@@ -106,6 +120,17 @@ let Axis = React.createClass({
             dy = ".32em";
             textAnchor = sign < 0 ? "end" : "start";
             d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
+            if (tickDirection === 'vertical') {
+              tickRotation = -90;
+              x -= sign * tickSpacing;
+              y = -(tickSpacing + innerTickSize);
+              textAnchor = 'middle';
+            } else if (tickDirection === 'diagonal') {
+              tickRotation = -60;
+              x -= sign * tickSpacing;
+              y = -(tickSpacing + innerTickSize);
+              textAnchor = 'middle';
+            }
 
             labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={".75em"} transform={"rotate(-90)"}>{label}</text>;
         }
@@ -116,7 +141,7 @@ let Axis = React.createClass({
             return (
                     <g key={`${tick}.${index}`} className="tick" transform={translate}>
                     <line x2={x2} y2={y2} stroke="#aaa"/>
-                    <text x={x} y={y} dy={dy} textAnchor={textAnchor}>
+                    <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
                     {tickFormat(tick)}</text>
                     </g>
             );
