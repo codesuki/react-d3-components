@@ -20,6 +20,7 @@ let Tooltip = React.createClass({
 
     render() {
         let {top, left, hidden, html, translate} = this.props;
+        const hasHtmlObj = (typeof html === 'object' && !!html.__html);
 
         let style = {
             display: hidden ? 'none' : 'block',
@@ -30,9 +31,15 @@ let Tooltip = React.createClass({
             pointerEvents: 'none'
         };
 
-        return (
-                <div className="tooltip" style={style}>{html}</div>
-        );
+        return (!hasHtmlObj ? (
+          <div className="tooltip" style={style}>{html}</div>
+        ) : (
+          <div
+            className="tooltip"
+            style={style}
+            dangerouslySetInnerHTML={html}
+          />
+        ));
     }
 });
 
