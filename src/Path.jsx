@@ -1,16 +1,17 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
 
-let Path = React.createClass({
+const { string, array } = PropTypes;
+
+const Path = React.createClass({
     propTypes: {
-        className: React.PropTypes.string,
-        stroke: React.PropTypes.string.isRequired,
-        strokeLinecap: React.PropTypes.string,
-        strokeWidth: React.PropTypes.string,
-        strokeDasharray: React.PropTypes.string,
-        fill: React.PropTypes.string,
-        d: React.PropTypes.string.isRequired,
-        data: React.PropTypes.array.isRequired
+        className: string,
+        stroke: string.isRequired,
+        strokeLinecap: string,
+        strokeWidth: string,
+        strokeDasharray: string,
+        fill: string,
+        d: string.isRequired,
+        data: array.isRequired
     },
 
     getDefaultProps() {
@@ -24,33 +25,35 @@ let Path = React.createClass({
     },
 
     render() {
-        let {className,
-             stroke,
-             strokeWidth,
-             strokeLinecap,
-             strokeDasharray,
-             fill,
-             d,
-             style,
-             data,
-             onMouseEnter,
-             onMouseLeave} = this.props;
+        const {
+            className,
+            stroke,
+            strokeWidth,
+            strokeLinecap,
+            strokeDasharray,
+            fill,
+            d,
+            style,
+            data,
+            onMouseEnter,
+            onMouseLeave
+        } = this.props;
 
         return (
-                <path
-            className={className}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            strokeLinecap={strokeLinecap}
-            strokeDasharray={strokeDasharray}
-            fill={fill}
-            d={d}
-            onMouseMove={ evt => { onMouseEnter(evt, data); } }
-            onMouseLeave={  evt => { onMouseLeave(evt); } }
-            style={style}
-                />
+            <path
+                className={className}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeLinecap={strokeLinecap}
+                strokeDasharray={strokeDasharray}
+                fill={fill}
+                d={d}
+                onMouseMove={evt => onMouseEnter(evt, data)}
+                onMouseLeave={evt => onMouseLeave(evt)}
+                style={style}
+            />
         );
     }
 });
 
-module.exports = Path;
+export default Path;

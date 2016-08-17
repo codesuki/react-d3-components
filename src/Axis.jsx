@@ -1,20 +1,21 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
 
-let Axis = React.createClass({
+const { array, func, oneOf, number, string } = PropTypes;
+
+const Axis = React.createClass({
     propTypes: {
-        tickArguments: React.PropTypes.array,
-        tickValues: React.PropTypes.array,
-        tickFormat: React.PropTypes.func,
-        tickDirection: React.PropTypes.oneOf(['horizontal', 'vertical', 'diagonal']),
-        innerTickSize: React.PropTypes.number,
-        tickPadding: React.PropTypes.number,
-        outerTickSize: React.PropTypes.number,
-        scale: React.PropTypes.func.isRequired,
-        className: React.PropTypes.string,
-        zero: React.PropTypes.number,
-        orientation: React.PropTypes.oneOf(['top', 'bottom', 'left', 'right']).isRequired,
-        label: React.PropTypes.string
+        tickArguments: array,
+        tickValues: array,
+        tickFormat: func,
+        tickDirection: oneOf(['horizontal', 'vertical', 'diagonal']),
+        innerTickSize: number,
+        tickPadding: number,
+        outerTickSize: number,
+        scale: func.isRequired,
+        className: string,
+        zero: number,
+        orientation: oneOf(['top', 'bottom', 'left', 'right']).isRequired,
+        label: string
     },
 
     getDefaultProps() {
@@ -26,130 +27,137 @@ let Axis = React.createClass({
             innerTickSize: 6,
             tickPadding: 3,
             outerTickSize: 6,
-            className: "axis",
+            className: 'axis',
             zero: 0,
-            label: ""
+            label: ''
         };
     },
 
     _getTranslateString() {
-        let {orientation, height, width, zero} = this.props;
+        const {orientation, height, width, zero} = this.props;
 
-        if (orientation === "top") {
+        if (orientation === 'top') {
             return `translate(0, ${zero})`;
-        } else if (orientation === "bottom") {
+        } else if (orientation === 'bottom') {
             return `translate(0, ${zero == 0 ? height : zero})`;
-        } else if (orientation === "left") {
+        } else if (orientation === 'left') {
             return `translate(${zero}, 0)`;
-        } else if (orientation === "right") {
+        } else if (orientation === 'right') {
             return `translate(${zero == 0 ? width : zero}, 0)`;
         } else {
-            return "";
+            return '';
         }
     },
 
     render() {
-        let {height,
-             width,
-             tickArguments,
-             tickValues,
-             tickFormat,
-             tickDirection,
-             innerTickSize,
-             tickPadding,
-             outerTickSize,
-             scale,
-             orientation,
-             className,
-             zero,
-             label} = this.props;
+        const {
+            height,
+            tickArguments,
+            tickValues,
+            tickDirection,
+            innerTickSize,
+            tickPadding,
+            outerTickSize,
+            scale,
+            orientation,
+            zero,
+        } = this.props;
 
-        let ticks = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
+        let {
+            width,
+            tickFormat,
+            className,
+            label
+        } = this.props;
+
+        let ticks = tickValues == null
+            ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()
+            : tickValues;
 
         if (!tickFormat)
         {
             if (scale.tickFormat) {
                 tickFormat = scale.tickFormat.apply(scale, tickArguments);
             } else {
-                tickFormat = x => { return x; };
+                tickFormat = x => x;
             }
         }
 
         // TODO: is there a cleaner way? removes the 0 tick if axes are crossing
         if (zero != height && zero != width && zero != 0) {
-            ticks = ticks.filter((element, index, array) => { return element == 0 ? false : true;});
+            ticks = ticks.filter(element => element != 0);
         }
 
-        let tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
+        const tickSpacing = Math.max(innerTickSize, 0) + tickPadding;
 
-        let sign = orientation === "top" || orientation === "left" ? -1 : 1;
+        const sign = orientation === 'top' || orientation === 'left' ? -1 : 1;
 
-        let range = this._d3_scaleRange(scale);
+        const range = this._d3ScaleRange(scale);
 
-        let activeScale = scale.rangeBand ? e => { return scale(e) + scale.rangeBand() / 2; } : scale;
+        const activeScale = scale.rangeBand ? e => scale(e) + scale.rangeBand() / 2 : scale;
 
         let transform, x, y, x2, y2, dy, textAnchor, d, labelElement, tickRotation = 0;
-        if (orientation === "bottom" || orientation === "top") {
-            transform = `translate({}, 0)`;
+        if (orientation === 'bottom' || orientation === 'top') {
+            transform = 'translate({}, 0)';
             x = 0;
             y = sign * tickSpacing;
             x2 = 0;
             y2 = sign * innerTickSize;
-            dy = sign < 0 ? "0em" : ".71em";
-            textAnchor = "middle";
+            dy = sign < 0 ? '0em' : '.71em';
+            textAnchor = 'middle';
             d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
             if (tickDirection === 'vertical') {
-              tickRotation = -90;
-              x = -tickSpacing;
-              y = -innerTickSize;
-              textAnchor = 'end';
+                tickRotation = -90;
+                x = -tickSpacing;
+                y = -innerTickSize;
+                textAnchor = 'end';
             } else if (tickDirection === 'diagonal') {
-              tickRotation = -60;
-              x = -tickSpacing;
-              y = 0;
-              textAnchor = 'end';
+                tickRotation = -60;
+                x = -tickSpacing;
+                y = 0;
+                textAnchor = 'end';
             }
 
             labelElement = <text className={`${className} label`} textAnchor={"end"} x={width} y={-6}>{label}</text>;
         } else {
-            transform = `translate(0, {})`;
+            transform = 'translate(0, {})';
             x = sign * tickSpacing;
             y = 0;
             x2 = sign * innerTickSize;
             y2 = 0;
-            dy = ".32em";
-            textAnchor = sign < 0 ? "end" : "start";
+            dy = '.32em';
+            textAnchor = sign < 0 ? 'end' : 'start';
             d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
             if (tickDirection === 'vertical') {
-              tickRotation = -90;
-              x -= sign * tickSpacing;
-              y = -(tickSpacing + innerTickSize);
-              textAnchor = 'middle';
+                tickRotation = -90;
+                x -= sign * tickSpacing;
+                y = -(tickSpacing + innerTickSize);
+                textAnchor = 'middle';
             } else if (tickDirection === 'diagonal') {
-              tickRotation = -60;
-              x -= sign * tickSpacing;
-              y = -(tickSpacing + innerTickSize);
-              textAnchor = 'middle';
+                tickRotation = -60;
+                x -= sign * tickSpacing;
+                y = -(tickSpacing + innerTickSize);
+                textAnchor = 'middle';
             }
 
-            labelElement = <text className={`${className} label`} textAnchor={"end"} y={6} dy={orientation === "left" ? ".75em" : "-1.25em"} transform={"rotate(-90)"}>{label}</text>;
+            labelElement = <text className={`${className} label`} textAnchor="end" y={6} dy={orientation === 'left' ? '.75em' : '-1.25em'} transform="rotate(-90)">{label}</text>;
         }
 
         let tickElements = ticks.map((tick, index) => {
-            let position = activeScale(tick);
-            let translate = transform.replace("{}", position);
+            const position = activeScale(tick);
+            const translate = transform.replace('{}', position);
             return (
-                    <g key={`${tick}.${index}`} className="tick" transform={translate}>
+                <g key={`${tick}.${index}`} className="tick" transform={translate}>
                     <line x2={x2} y2={y2} stroke="#aaa"/>
                     <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
                     {tickFormat(tick)}</text>
-                    </g>
+                </g>
             );
         });
 
-        let pathElement = <path className="domain" d={d} fill="none" stroke="#aaa"/>;
-        
-        let axisBackground = <rect className="axis-background" fill="none"/>;
+        const pathElement = <path className="domain" d={d} fill="none" stroke="#aaa"/>;
+
+        const axisBackground = <rect className="axis-background" fill="none"/>;
 
         return (
             <g ref="axis" className={className} transform={this._getTranslateString()} style={{shapeRendering: 'crispEdges'}}>
@@ -161,14 +169,15 @@ let Axis = React.createClass({
         );
     },
 
-    _d3_scaleExtent(domain) {
-        let start = domain[0], stop = domain[domain.length - 1];
+    _d3ScaleExtent(domain) {
+        const start = domain[0];
+        const stop = domain[domain.length - 1];
         return start < stop ? [start, stop] : [stop, start];
     },
 
-    _d3_scaleRange(scale) {
-        return scale.rangeExtent ? scale.rangeExtent() : this._d3_scaleExtent(scale.range());
+    _d3ScaleRange(scale) {
+        return scale.rangeExtent ? scale.rangeExtent() : this._d3ScaleExtent(scale.range());
     }
 });
 
-module.exports = Axis;
+export default Axis;

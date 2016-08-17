@@ -1,4 +1,4 @@
-let HeightWidthMixin = {
+const HeightWidthMixin = {
     componentWillMount() {
         this._calculateInner(this.props);
     },
@@ -8,11 +8,11 @@ let HeightWidthMixin = {
     },
 
     _calculateInner(props) {
-        let {height, width, margin} = props;
+        const {height, width, margin} = props;
 
         this._innerHeight = height - margin.top - margin.bottom;
         this._innerWidth = width - margin.left - margin.right;
     }
 };
 
-module.exports = HeightWidthMixin;
+export default HeightWidthMixin;

@@ -1,44 +1,45 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
 
-let Bar = React.createClass({
+const { number, string, array, object, func, oneOfType } = PropTypes;
+
+const Bar = React.createClass({
     propTypes: {
-        width: React.PropTypes.number.isRequired,
-        height: React.PropTypes.number.isRequired,
-        x: React.PropTypes.number.isRequired,
-        y: React.PropTypes.number.isRequired,
-        fill: React.PropTypes.string.isRequired,
-        data: React.PropTypes.oneOfType([
-            React.PropTypes.array,
-            React.PropTypes.object
+        width: number.isRequired,
+        height: number.isRequired,
+        x: number.isRequired,
+        y: number.isRequired,
+        fill: string.isRequired,
+        data: oneOfType([
+            array,
+            object
         ]).isRequired,
-        onMouseEnter: React.PropTypes.func,
-        onMouseLeave: React.PropTypes.func
+        onMouseEnter: func,
+        onMouseLeave: func
     },
 
     render() {
-        let {x,
-             y,
-             width,
-             height,
-             fill,
-             data,
-             onMouseEnter,
-             onMouseLeave} = this.props;
+        const {
+            x,
+            y,
+            width,
+            height,
+            fill,
+            data,
+            onMouseEnter,
+            onMouseLeave
+        } = this.props;
 
-        return (
-                <rect
+        return <rect
             className="bar"
             x={x}
             y={y}
             width={width}
             height={height}
             fill={fill}
-            onMouseMove={ e => { onMouseEnter(e, data); } }
-            onMouseLeave={ e => { onMouseLeave(e); } }
-                />
-        );
+            onMouseMove={e => onMouseEnter(e, data)}
+            onMouseLeave={e => onMouseLeave(e)}
+        />;
     }
 });
 
-module.exports = Bar;
+export default Bar;

@@ -1,4 +1,4 @@
-let ArrayifyMixin = {
+const ArrayifyMixin = {
     componentWillMount() {
         this._arrayify(this.props);
     },
@@ -21,4 +21,4 @@ let ArrayifyMixin = {
     }
 };
 
-module.exports = ArrayifyMixin;
+export default ArrayifyMixin;

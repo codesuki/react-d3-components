@@ -1,23 +1,25 @@
-let React = require('react');
-let d3 = require('d3');
+import { PropTypes } from 'react';
+import d3 from 'd3';
 
-let DefaultPropsMixin = {
+const { oneOfType, object, array, shape, func, number } = PropTypes;
+
+const DefaultPropsMixin = {
     propTypes: {
-        data: React.PropTypes.oneOfType([
-            React.PropTypes.object,
-            React.PropTypes.array
+        data: oneOfType([
+            object,
+            array
         ]).isRequired,
-        height: React.PropTypes.number.isRequired,
-        width: React.PropTypes.number.isRequired,
-        margin: React.PropTypes.shape({
-            top: React.PropTypes.number,
-            bottom: React.PropTypes.number,
-            left: React.PropTypes.number,
-            right: React.PropTypes.number
+        height: number.isRequired,
+        width: number.isRequired,
+        margin: shape({
+            top: number,
+            bottom: number,
+            left: number,
+            right: number
         }),
-        xScale: React.PropTypes.func,
-        yScale: React.PropTypes.func,
-        colorScale: React.PropTypes.func
+        xScale: func,
+        yScale: func,
+        colorScale: func
     },
 
     getDefaultProps() {
@@ -31,4 +33,4 @@ let DefaultPropsMixin = {
     }
 };
 
-module.exports = DefaultPropsMixin;
+export default DefaultPropsMixin;

@@ -1,26 +1,35 @@
-let React = require('react');
+import React, { PropTypes } from 'react';
 
-let Chart = React.createClass({
+const { number, shape } = PropTypes;
+
+const Chart = React.createClass({
     propTypes: {
-        height: React.PropTypes.number.isRequired,
-        width: React.PropTypes.number.isRequired,
-        margin: React.PropTypes.shape({
-            top: React.PropTypes.number,
-            bottom: React.PropTypes.number,
-            left: React.PropTypes.number,
-            right: React.PropTypes.number
+        height: number.isRequired,
+        width: number.isRequired,
+        margin: shape({
+            top: number,
+            bottom: number,
+            left: number,
+            right: number
         }).isRequired
     },
 
     render() {
-        let {width, height, margin, viewBox, preserveAspectRatio, children} = this.props;
+        const {
+            width,
+            height,
+            margin,
+            viewBox,
+            preserveAspectRatio,
+            children
+        } = this.props;
 
         return (
-                <svg ref="svg" width={width} height={height} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio} >
+            <svg ref="svg" width={width} height={height} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio} >
                 <g transform={`translate(${margin.left}, ${margin.top})`}>{children}</g>
-                </svg>
+            </svg>
         );
     }
 });
 
-module.exports = Chart;
+export default Chart;

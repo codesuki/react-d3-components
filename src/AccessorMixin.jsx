@@ -1,23 +1,25 @@
-let React = require('react');
+import { PropTypes } from 'react';
 
-let AccessorMixin = {
+const { func } = PropTypes;
+
+const AccessorMixin = {
     propTypes: {
-        label: React.PropTypes.func,
-        values: React.PropTypes.func,
-        x: React.PropTypes.func,
-        y: React.PropTypes.func,
-        y0: React.PropTypes.func
+        label: func,
+        values: func,
+        x: func,
+        y: func,
+        y0: func
     },
 
     getDefaultProps() {
         return {
-            label: stack => { return stack.label; },
-            values: stack => { return stack.values; },
-            x: e => { return e.x; },
-            y: e => { return e.y; },
-            y0: e => { return 0; }
+            label: stack => stack.label,
+            values: stack => stack.values,
+            x: e => e.x,
+            y: e => e.y,
+            y0: () => 0
         };
     }
 };
 
-module.exports = AccessorMixin;
+export default AccessorMixin;
