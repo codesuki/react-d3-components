@@ -1,205 +1,203 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Bar = require('./Bar');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Bar from './Bar';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let StackAccessorMixin = require('./StackAccessorMixin');
-let StackDataMixin = require('./StackDataMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import StackAccessorMixin from './StackAccessorMixin';
+import StackDataMixin from './StackDataMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
-let DataSet = React.createClass({
-	propTypes: {
-		data: React.PropTypes.array.isRequired,
-		xScale: React.PropTypes.func.isRequired,
-		yScale: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired,
-		values: React.PropTypes.func.isRequired,
-		label: React.PropTypes.func.isRequired,
-		x: React.PropTypes.func.isRequired,
-		y: React.PropTypes.func.isRequired,
-		y0: React.PropTypes.func.isRequired
-	},
+const { array, func } = PropTypes;
 
-	render() {
-		let {data,
-			 xScale,
-			 yScale,
-			 colorScale,
-			 values,
-			 label,
-			 x,
-			 y,
-			 y0,
-			 onMouseEnter,
-			 onMouseLeave,
-			 groupedBars,
-			 colorByLabel} = this.props;
+const DataSet = React.createClass({
+    propTypes: {
+        data: array.isRequired,
+        xScale: func.isRequired,
+        yScale: func.isRequired,
+        colorScale: func.isRequired,
+        values: func.isRequired,
+        label: func.isRequired,
+        x: func.isRequired,
+        y: func.isRequired,
+        y0: func.isRequired
+    },
 
-		let bars;
-		if (groupedBars) {
-			bars = data.map((stack, serieIndex) => {
-				return values(stack).map((e, index) => {
-					return (
-						<Bar
-							key={`${label(stack)}.${index}`}
-							width={xScale.rangeBand() / data.length}
-							height={yScale(yScale.domain()[0]) - yScale(y(e))}
-							x={xScale(x(e)) + ((xScale.rangeBand() * serieIndex) / data.length)}
-							y={yScale(y(e))}
-							fill={colorScale(label(stack))}
-							data={e}
-							onMouseEnter={onMouseEnter}
-							onMouseLeave={onMouseLeave}
-							/>
-					);
-				});
-			});
-		} else {
-			bars = data.map(stack => {
-				return values(stack).map((e, index) => {
-					let color = colorByLabel ? colorScale(label(stack)) : colorScale(x(e));
-					return (
-						<Bar
-							key={`${label(stack)}.${index}`}
-							width={xScale.rangeBand()}
-							height={yScale(yScale.domain()[0]) - yScale(y(e))}
-							x={xScale(x(e))}
-							y={yScale(y0(e) + y(e))}
-							fill={color}
-							data={e}
-							onMouseEnter={onMouseEnter}
-							onMouseLeave={onMouseLeave}
-							/>
-					);
-				});
-			});
-		}
+    render() {
+        const {
+            data,
+            xScale,
+            yScale,
+            colorScale,
+            values,
+            label,
+            x,
+            y,
+            y0,
+            onMouseEnter,
+            onMouseLeave,
+            groupedBars,
+            colorByLabel
+        } = this.props;
 
-		return (
-				<g>{bars}</g>
-		);
-	}
+        let bars;
+        if (groupedBars) {
+            bars = data.map((stack, serieIndex) => values(stack).map((e, index) =>
+                <Bar
+                    key={`${label(stack)}.${index}`}
+                    width={xScale.rangeBand() / data.length}
+                    height={yScale(yScale.domain()[0]) - yScale(y(e))}
+                    x={xScale(x(e)) + xScale.rangeBand() * serieIndex / data.length}
+                    y={yScale(y(e))}
+                    fill={colorScale(label(stack))}
+                    data={e}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                />
+            ));
+        } else {
+            bars = data.map(stack => values(stack).map((e, index) => {
+                const color = colorByLabel ? colorScale(label(stack)) : colorScale(x(e));
+                return (
+                    <Bar
+                        key={`${label(stack)}.${index}`}
+                        width={xScale.rangeBand()}
+                        height={yScale(yScale.domain()[0]) - yScale(y(e))}
+                        x={xScale(x(e))}
+                        y={yScale(y0(e) + y(e))}
+                        fill={color}
+                        data={e}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                    />
+                );
+            }));
+        }
+
+        return <g>{bars}</g>;
+    }
 });
 
-let BarChart = React.createClass({
-	mixins: [DefaultPropsMixin,
-			 HeightWidthMixin,
-			 ArrayifyMixin,
-			 StackAccessorMixin,
-			 StackDataMixin,
-			 DefaultScalesMixin,
-			 TooltipMixin],
+const BarChart = React.createClass({
+    mixins: [
+        DefaultPropsMixin,
+        HeightWidthMixin,
+        ArrayifyMixin,
+        StackAccessorMixin,
+        StackDataMixin,
+        DefaultScalesMixin,
+        TooltipMixin
+    ],
 
-	getDefaultProps() {
-		return {
-			colorByLabel: true
-		};
-	},
+    getDefaultProps() {
+        return {
+            colorByLabel: true
+        };
+    },
 
-	_tooltipHtml(d, position) {
-		let [xScale, yScale] = [this._xScale, this._yScale];
+    _tooltipHtml(d) {
+        const xScale = this._xScale;
+        const yScale = this._yScale;
 
-		let html = this.props.tooltipHtml(this.props.x(d),
-										  this.props.y0(d),
-										  this.props.y(d));
+        const html = this.props.tooltipHtml(
+            this.props.x(d),
+            this.props.y0(d),
+            this.props.y(d)
+        );
 
-		let midPoint = xScale.rangeBand() / 2;
-		let xPos = midPoint + xScale(this.props.x(d));
+        const midPoint = xScale.rangeBand() / 2;
+        const xPos = midPoint + xScale(this.props.x(d));
 
-		let topStack = this._data[this._data.length - 1].values;
-		let topElement = null;
+        const topStack = this._data[this._data.length - 1].values;
+        let topElement = null;
 
-		// TODO: this might not scale if dataset is huge.
-		// consider pre-computing yPos for each X
-		for (let i = 0; i < topStack.length; i++) {
-			if (this.props.x(topStack[i]) === this.props.x(d)) {
-				topElement = topStack[i];
-				break;
-			}
-		}
-		let yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+        // TODO: this might not scale if dataset is huge.
+        // consider pre-computing yPos for each X
+        for (let i = 0; i < topStack.length; i++) {
+            if (this.props.x(topStack[i]) === this.props.x(d)) {
+                topElement = topStack[i];
+                break;
+            }
+        }
+        const yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
 
-		return [html, xPos, yPos];
-	},
+        return [html, xPos, yPos];
+    },
 
-	render() {
-		let {height,
-			 width,
-			 margin,
-			 colorScale,
-			 values,
-			 label,
-			 y,
-			 y0,
-			 x,
-			 xAxis,
-			 yAxis,
-			 groupedBars,
-			 colorByLabel,
-			 tickFormat} = this.props;
+    render() {
+        const {
+            xAxis,
+            yAxis
+        } = this.props;
 
-		let [data,
-			 innerWidth,
-			 innerHeight,
-			 xScale,
-			 yScale] = [this._data,
-						this._innerWidth,
-						this._innerHeight,
-						this._xScale,
-						this._yScale];
+        let {
+            height,
+            width,
+            margin,
+            colorScale,
+            values,
+            label,
+            y,
+            y0,
+            x,
+            groupedBars,
+            colorByLabel,
+            tickFormat
+        } = this.props;
 
-		return (
-				<div>
-				<Chart height={height} width={width} margin={margin}>
-				<DataSet
-			data={data}
-			xScale={xScale}
-			yScale={yScale}
-			colorScale={colorScale}
-			values={values}
-			label={label}
-			y={y}
-			y0={y0}
-			x={x}
-			onMouseEnter={this.onMouseEnter}
-			onMouseLeave={this.onMouseLeave}
-			groupedBars={groupedBars}
-			colorByLabel={colorByLabel}
-				/>
+        const data = this._data;
+        const innerWidth = this._innerWidth;
+        const innerHeight = this._innerHeight;
+        const xScale = this._xScale;
+        const yScale = this._yScale;
 
-				<Axis
-			className={"x axis"}
-			orientation={"bottom"}
-			scale={xScale}
-			height={innerHeight}
-			width={innerWidth}
-			tickFormat={tickFormat}
-			{...xAxis}
-				/>
-
-				<Axis
-			className={"y axis"}
-			orientation={"left"}
-			scale={yScale}
-			height={innerHeight}
-			width={innerWidth}
-			tickFormat={tickFormat}
-			{...yAxis}
-				/>
-				{ this.props.children }
-				</Chart>
-
-				<Tooltip {...this.state.tooltip}/>
-				</div>
-		);
-	}
+        return (
+            <div>
+                <Chart height={height} width={width} margin={margin}>
+                    <DataSet
+                        data={data}
+                        xScale={xScale}
+                        yScale={yScale}
+                        colorScale={colorScale}
+                        values={values}
+                        label={label}
+                        y={y}
+                        y0={y0}
+                        x={x}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        groupedBars={groupedBars}
+                        colorByLabel={colorByLabel}
+                    />
+                    <Axis
+                        className="x axis"
+                        orientation="bottom"
+                        scale={xScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        tickFormat={tickFormat}
+                        {...xAxis}
+                    />
+                    <Axis
+                        className="y axis"
+                        orientation="left"
+                        scale={yScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        tickFormat={tickFormat}
+                        {...yAxis}
+                    />
+                    {this.props.children}
+                </Chart>
+                <Tooltip {...this.state.tooltip}/>
+            </div>
+        );
+    }
 });
 
-module.exports = BarChart;
+export default BarChart;

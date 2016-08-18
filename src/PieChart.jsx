@@ -1,22 +1,24 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let AccessorMixin = require('./AccessorMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import AccessorMixin from './AccessorMixin';
+import TooltipMixin from './TooltipMixin';
 
-let Wedge = React.createClass({
+const { string, array, number, bool, func, any } = PropTypes;
+
+const Wedge = React.createClass({
     propTypes: {
-        d: React.PropTypes.string.isRequired,
-        fill: React.PropTypes.string.isRequired
+        d: string.isRequired,
+        fill: string.isRequired
     },
 
     render() {
-        let {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
+        const {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
 
         return (
             <path
@@ -29,19 +31,19 @@ let Wedge = React.createClass({
     }
 });
 
-let DataSet = React.createClass({
+const DataSet = React.createClass({
     propTypes: {
-        pie: React.PropTypes.array.isRequired,
-        arc: React.PropTypes.func.isRequired,
-        outerArc: React.PropTypes.func.isRequired,
-        colorScale: React.PropTypes.func.isRequired,
-        radius: React.PropTypes.number.isRequired,
-        strokeWidth: React.PropTypes.number,
-        stroke: React.PropTypes.string,
-        fill: React.PropTypes.string,
-        opacity: React.PropTypes.number,
-        x: React.PropTypes.func.isRequired,
-        hideLabels: React.PropTypes.bool
+        pie: array.isRequired,
+        arc: func.isRequired,
+        outerArc: func.isRequired,
+        colorScale: func.isRequired,
+        radius: number.isRequired,
+        strokeWidth: number,
+        stroke: string,
+        fill: string,
+        opacity: number,
+        x: func.isRequired,
+        hideLabels: bool
     },
 
     getDefaultProps() {
@@ -55,7 +57,7 @@ let DataSet = React.createClass({
     },
 
     renderLabel(wedge) {
-        let {
+        const {
             arc,
             outerArc,
             radius,
@@ -66,10 +68,10 @@ let DataSet = React.createClass({
             x
         } = this.props;
 
-        let labelPos = outerArc.centroid(wedge);
+        const labelPos = outerArc.centroid(wedge);
         labelPos[0] = radius * (this.midAngle(wedge) < Math.PI ? 1 : -1);
 
-        let linePos = outerArc.centroid(wedge);
+        const linePos = outerArc.centroid(wedge);
         linePos[0] = radius * 0.95 * (this.midAngle(wedge) < Math.PI ? 1 : -1);
 
         const textAnchor = this.midAngle(wedge) < Math.PI ? 'start' : 'end';
@@ -94,16 +96,18 @@ let DataSet = React.createClass({
     },
 
     render() {
-        let {pie,
-             arc,
-             colorScale,
-             x,
-             y,
-             onMouseEnter,
-             onMouseLeave,
-             hideLabels} = this.props;
+        const {
+            pie,
+            arc,
+            colorScale,
+            x,
+            y,
+            onMouseEnter,
+            onMouseLeave,
+            hideLabels
+        } = this.props;
 
-        let wedges = pie.map((e, index) =>
+        const wedges = pie.map((e, index) =>
             <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
                 <Wedge
                     data={e.data}
@@ -116,11 +120,7 @@ let DataSet = React.createClass({
             </g>
         );
 
-        return (
-            <g>
-                {wedges}
-            </g>
-        );
+        return <g>{wedges}</g>;
     },
 
     midAngle(d) {
@@ -128,20 +128,22 @@ let DataSet = React.createClass({
     }
 });
 
-let PieChart = React.createClass({
-    mixins: [DefaultPropsMixin,
-             HeightWidthMixin,
-             AccessorMixin,
-             TooltipMixin],
+const PieChart = React.createClass({
+    mixins: [
+        DefaultPropsMixin,
+        HeightWidthMixin,
+        AccessorMixin,
+        TooltipMixin
+    ],
 
     propTypes: {
-        innerRadius: React.PropTypes.number,
-        outerRadius: React.PropTypes.number,
-        labelRadius: React.PropTypes.number,
-        padRadius: React.PropTypes.string,
-        cornerRadius: React.PropTypes.number,
-        sort: React.PropTypes.any,
-        hideLabels: React.PropTypes.bool
+        innerRadius: number,
+        outerRadius: number,
+        labelRadius: number,
+        padRadius: string,
+        cornerRadius: number,
+        sort: any,
+        hideLabels: bool
     },
 
     getDefaultProps() {
@@ -157,34 +159,38 @@ let PieChart = React.createClass({
     },
 
     _tooltipHtml(d) {
-        let html = this.props.tooltipHtml(this.props.x(d), this.props.y(d));
+        const html = this.props.tooltipHtml(this.props.x(d), this.props.y(d));
 
         return [html, 0, 0];
     },
 
     render() {
-        let {data,
-             width,
-             height,
-             margin,
-             colorScale,
-             innerRadius,
-             outerRadius,
-             labelRadius,
-             padRadius,
-             cornerRadius,
-             sort,
-             x,
-             y,
-             values,
-             hideLabels} = this.props;
+        const {
+            data,
+            width,
+            height,
+            margin,
+            colorScale,
+            padRadius,
+            cornerRadius,
+            sort,
+            x,
+            y,
+            values,
+            hideLabels
+        } = this.props;
 
-        let [innerWidth,
-             innerHeight] = [this._innerWidth,
-                             this._innerHeight];
+        let {
+            innerRadius,
+            outerRadius,
+            labelRadius
+        } = this.props;
+
+        const innerWidth = this._innerWidth;
+        const innerHeight = this._innerHeight;
 
         let pie = d3.layout.pie()
-                .value(e => y(e));
+            .value(e => y(e));
 
         if (typeof sort !== 'undefined') {
             pie = pie.sort(sort);
@@ -203,19 +209,20 @@ let PieChart = React.createClass({
             labelRadius = radius * 0.9;
         }
 
-        let arc = d3.svg.arc()
-                .innerRadius(innerRadius)
-                .outerRadius(outerRadius)
-                .padRadius(padRadius)
-                .cornerRadius(cornerRadius);
+        const arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(outerRadius)
+            .padRadius(padRadius)
+            .cornerRadius(cornerRadius);
 
-        let outerArc = d3.svg.arc()
-                .innerRadius(labelRadius)
-                .outerRadius(labelRadius);
+        const outerArc = d3.svg.arc()
+            .innerRadius(labelRadius)
+            .outerRadius(labelRadius);
 
-        let pieData = pie(values(data));
+        const pieData = pie(values(data));
 
-        let translation = `translate(${innerWidth/2}, ${innerHeight/2})`;
+        const translation = `translate(${innerWidth / 2}, ${innerHeight / 2})`;
+
         return (
             <div>
                 <Chart height={height} width={width} margin={margin}>
@@ -235,7 +242,7 @@ let PieChart = React.createClass({
                             hideLabels={hideLabels}
                         />
                     </g>
-                    { this.props.children }
+                    {this.props.children}
                 </Chart>
                 <Tooltip {...this.state.tooltip} />
             </div>
@@ -243,4 +250,4 @@ let PieChart = React.createClass({
     }
 });
 
-module.exports = PieChart;
+export default PieChart;

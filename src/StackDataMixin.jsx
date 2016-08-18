@@ -1,9 +1,11 @@
-let React = require('react');
-let d3 = require('d3');
+import { PropTypes } from 'react';
+import d3 from 'd3';
 
-let StackDataMixin = {
+const { string } = PropTypes;
+
+const StackDataMixin = {
     propTypes: {
-        offset: React.PropTypes.string
+        offset: string
     },
 
     getDefaultProps() {
@@ -22,17 +24,17 @@ let StackDataMixin = {
     },
 
     _stackData(props) {
-        let {offset, order, x, y, values} = props;
+        const {offset, order, x, y, values} = props;
 
-        let stack = d3.layout.stack()
-                .offset(offset)
-                .order(order)
-                .x(x)
-                .y(y)
-                .values(values);
+        const stack = d3.layout.stack()
+            .offset(offset)
+            .order(order)
+            .x(x)
+            .y(y)
+            .values(values);
 
         this._data = stack(this._data);
     }
 };
 
-module.exports = StackDataMixin;
+export default StackDataMixin;

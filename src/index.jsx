@@ -1,19 +1,8 @@
-let BarChart = require('./BarChart');
-let Waveform = require('./Waveform');
-let PieChart = require('./PieChart');
-let ScatterPlot = require('./ScatterPlot');
-let LineChart = require('./LineChart');
-let AreaChart = require('./AreaChart');
-let Brush = require('./Brush');
-let d3 = require('d3');
-
-module.exports = {
-    BarChart: BarChart,
-    PieChart: PieChart,
-    ScatterPlot: ScatterPlot,
-    LineChart: LineChart,
-    AreaChart: AreaChart,
-    Waveform: Waveform,
-    Brush: Brush,
-    d3: d3
-};
+export { default as BarChart } from './BarChart';
+export { default as Waveform } from './Waveform';
+export { default as PieChart } from './PieChart';
+export { default as ScatterPlot } from './ScatterPlot';
+export { default as LineChart } from './LineChart';
+export { default as AreaChart } from './AreaChart';
+export { default as Brush } from './Brush';
+export d3 from 'd3';

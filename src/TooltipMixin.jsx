@@ -1,14 +1,14 @@
-let React = require('react');
-let ReactDOM = require('react-dom');
-let d3 = require('d3');
+import { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 
+const { func, oneOf, bool, objectOf, number } = PropTypes;
 
-let TooltipMixin = {
+const TooltipMixin = {
     propTypes: {
-        tooltipHtml: React.PropTypes.func,
-        tooltipMode: React.PropTypes.oneOf(['mouse', 'element', 'fixed']),
-        tooltipContained: React.PropTypes.bool,
-        tooltipOffset: React.PropTypes.objectOf(React.PropTypes.number)
+        tooltipHtml: func,
+        tooltipMode: oneOf(['mouse', 'element', 'fixed']),
+        tooltipContained: bool,
+        tooltipOffset: objectOf(number)
     },
 
     getInitialState() {
@@ -29,7 +29,7 @@ let TooltipMixin = {
     },
 
     componentDidMount() {
-        this._svg_node = ReactDOM.findDOMNode(this).getElementsByTagName("svg")[0];
+        this._svgNode = ReactDOM.findDOMNode(this).getElementsByTagName('svg')[0];
     },
 
     onMouseEnter(e, data) {
@@ -39,28 +39,30 @@ let TooltipMixin = {
 
         e.preventDefault();
 
-        let {margin,
-             tooltipMode,
-             tooltipOffset,
-             tooltipContained} = this.props;
+        const {
+            margin,
+            tooltipMode,
+            tooltipOffset,
+            tooltipContained
+        } = this.props;
 
-        let svg = this._svg_node;
+        const svg = this._svgNode;
         let position;
         if (svg.createSVGPoint) {
-            var point = svg.createSVGPoint();
+            let point = svg.createSVGPoint();
             point.x = e.clientX, point.y = e.clientY;
             point = point.matrixTransform(svg.getScreenCTM().inverse());
             position = [point.x - margin.left, point.y - margin.top];
         } else {
-            let rect = svg.getBoundingClientRect();
+            const rect = svg.getBoundingClientRect();
             position = [e.clientX - rect.left - svg.clientLeft - margin.left,
                         e.clientY - rect.top - svg.clientTop - margin.top];
         }
 
-        let [html, xPos, yPos] = this._tooltipHtml(data, position);
+        const [html, xPos, yPos] = this._tooltipHtml(data, position);
 
-        let svgTop = svg.getBoundingClientRect().top + margin.top;
-        let svgLeft = svg.getBoundingClientRect().left + margin.left;
+        const svgTop = svg.getBoundingClientRect().top + margin.top;
+        const svgLeft = svg.getBoundingClientRect().left + margin.left;
 
         let top = 0;
         let left = 0;
@@ -83,17 +85,17 @@ let TooltipMixin = {
         let translate = 50;
 
         if (tooltipContained) {
-            let t = position[0] / svg.getBoundingClientRect().width;
+            const t = position[0] / svg.getBoundingClientRect().width;
             translate = lerp(t, 0, 100);
         }
 
         this.setState({
             tooltip: {
-                top: top,
-                left: left,
+                top,
+                left,
                 hidden: false,
-                html: html,
-                translate: translate
+                html,
+                translate
             }
         });
     },
@@ -113,4 +115,4 @@ let TooltipMixin = {
     }
 };
 
-module.exports = TooltipMixin;
+export default TooltipMixin;

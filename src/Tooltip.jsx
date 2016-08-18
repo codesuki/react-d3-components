@@ -1,12 +1,13 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
 
-let Tooltip = React.createClass({
+const { number, node } = PropTypes;
+
+const Tooltip = React.createClass({
     propTypes: {
-        top: React.PropTypes.number.isRequired,
-        left: React.PropTypes.number.isRequired,
-        html: React.PropTypes.node,
-        translate: React.PropTypes.number
+        top: number.isRequired,
+        left: number.isRequired,
+        html: node,
+        translate: number
     },
 
     getDefaultProps() {
@@ -19,21 +20,19 @@ let Tooltip = React.createClass({
     },
 
     render() {
-        let {top, left, hidden, html, translate} = this.props;
+        const {top, left, hidden, html, translate} = this.props;
 
-        let style = {
+        const style = {
             display: hidden ? 'none' : 'block',
             position: 'fixed',
-            top: top,
-            left: left,
+            top,
+            left,
             transform: `translate(-${translate}%, 0)`,
             pointerEvents: 'none'
         };
 
-        return (
-                <div className="tooltip" style={style}>{html}</div>
-        );
+        return <div className="tooltip" style={style}>{html}</div>;
     }
 });
 
-module.exports = Tooltip;
+export default Tooltip;

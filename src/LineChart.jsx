@@ -1,298 +1,300 @@
-let React = require('react');
-let d3 = require('d3');
+import React, { PropTypes } from 'react';
+import d3 from 'd3';
 
-let Chart = require('./Chart');
-let Axis = require('./Axis');
-let Path = require('./Path');
-let Tooltip = require('./Tooltip');
+import Chart from './Chart';
+import Axis from './Axis';
+import Path from './Path';
+import Tooltip from './Tooltip';
 
-let DefaultPropsMixin = require('./DefaultPropsMixin');
-let HeightWidthMixin = require('./HeightWidthMixin');
-let ArrayifyMixin = require('./ArrayifyMixin');
-let AccessorMixin = require('./AccessorMixin');
-let DefaultScalesMixin = require('./DefaultScalesMixin');
-let TooltipMixin = require('./TooltipMixin');
+import DefaultPropsMixin from './DefaultPropsMixin';
+import HeightWidthMixin from './HeightWidthMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import AccessorMixin from './AccessorMixin';
+import DefaultScalesMixin from './DefaultScalesMixin';
+import TooltipMixin from './TooltipMixin';
 
-let DataSet = React.createClass({
-	propTypes: {
-		data: React.PropTypes.array.isRequired,
-		line: React.PropTypes.func.isRequired,
-		colorScale: React.PropTypes.func.isRequired
-	},
+const { array, func, string } = PropTypes;
 
-	render() {
-		let {width,
-			 height,
-			 data,
-			 line,
-			 strokeWidth,
-			 strokeLinecap,
-			 strokeDasharray,
-			 colorScale,
-			 values,
-			 label,
-			 onMouseEnter,
-			 onMouseLeave} = this.props;
+const DataSet = React.createClass({
+    propTypes: {
+        data: array.isRequired,
+        line: func.isRequired,
+        colorScale: func.isRequired
+    },
 
-		let sizeId = width + 'x' + height;
+    render() {
+        const {
+            width,
+            height,
+            data,
+            line,
+            strokeWidth,
+            strokeLinecap,
+            strokeDasharray,
+            colorScale,
+            values,
+            label,
+            onMouseEnter,
+            onMouseLeave
+        } = this.props;
 
-		let lines = data.map((stack, index) => {
-			return (
-					<Path
-				key={`${label(stack)}.${index}`}
-				className={'line'}
-				d={line(values(stack))}
-				stroke={colorScale(label(stack))}
-				strokeWidth={typeof strokeWidth === 'function' ? strokeWidth(label(stack)) : strokeWidth}
-				strokeLinecap={typeof strokeLinecap === 'function' ? strokeLinecap(label(stack)) : strokeLinecap}
-				strokeDasharray={typeof strokeDasharray === 'function' ? strokeDasharray(label(stack)) : strokeDasharray}
-				data={values(stack)}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				style={{clipPath: `url(#lineClip_${sizeId})`}}
-					/>
-			);
-		});
+        const sizeId = width + 'x' + height;
 
-		/*
-		 The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
-		 Not sure if this should be used.
-		 */
-		return (
-				<g>
-					  <defs>
-					<clipPath id={`lineClip_${sizeId}`}>
-						<rect width={width} height={height}/>
-					</clipPath>
-				</defs>
-				{lines}
-				<rect width={width} height={height} fill={'none'} stroke={'none'} style={{pointerEvents: 'all'}}
-			onMouseMove={ evt => { onMouseEnter(evt, data); } }
-			onMouseLeave={  evt => { onMouseLeave(evt); } }
-				/>
-			</g>
-		);
-	}
+        let lines = data.map((stack, index) => <Path
+            key={`${label(stack)}.${index}`}
+            className={'line'}
+            d={line(values(stack))}
+            stroke={colorScale(label(stack))}
+            strokeWidth={typeof strokeWidth === 'function' ? strokeWidth(label(stack)) : strokeWidth}
+            strokeLinecap={typeof strokeLinecap === 'function' ? strokeLinecap(label(stack)) : strokeLinecap}
+            strokeDasharray={typeof strokeDasharray === 'function' ? strokeDasharray(label(stack)) : strokeDasharray}
+            data={values(stack)}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            style={{clipPath: `url(#lineClip_${sizeId})`}}
+        />);
+
+        /*
+         The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
+         Not sure if this should be used.
+         */
+        return (
+            <g>
+                <defs>
+                    <clipPath id={`lineClip_${sizeId}`}>
+                        <rect width={width} height={height}/>
+                    </clipPath>
+                </defs>
+                {lines}
+                <rect
+                    width={width}
+                    height={height}
+                    fill={'none'}
+                    stroke={'none'}
+                    style={{pointerEvents: 'all'}}
+                    onMouseMove={evt => { onMouseEnter(evt, data); }}
+                    onMouseLeave={evt => { onMouseLeave(evt); }}
+                />
+            </g>
+        );
+    }
 });
 
-let LineChart = React.createClass({
-	mixins: [DefaultPropsMixin,
-			 HeightWidthMixin,
-			 ArrayifyMixin,
-			 AccessorMixin,
-			 DefaultScalesMixin,
-			 TooltipMixin],
+const LineChart = React.createClass({
+    mixins: [
+        DefaultPropsMixin,
+        HeightWidthMixin,
+        ArrayifyMixin,
+        AccessorMixin,
+        DefaultScalesMixin,
+        TooltipMixin
+    ],
 
-	propTypes: {
-		interpolate: React.PropTypes.string,
-		defined: React.PropTypes.func
-	},
+    propTypes: {
+        interpolate: string,
+        defined: func
+    },
 
-	getDefaultProps() {
-		return {
-			interpolate: 'linear',
-			defined: () => true,
-			shape: 'circle',
-			shapeColor: null
-		};
-	},
+    getDefaultProps() {
+        return {
+            interpolate: 'linear',
+            defined: () => true,
+            shape: 'circle',
+            shapeColor: null
+        };
+    },
 
-	/*
-	 The code below supports finding the data values for the line closest to the mouse cursor.
-	 Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
-	 For now I don't want to use this method.
-	 */
-	_tooltipHtml(data, position) {
-		let {x, y0, y, values, label} = this.props;
-		let [xScale, yScale] = [this._xScale, this._yScale];
+    /*
+     The code below supports finding the data values for the line closest to the mouse cursor.
+     Since it gets all events from the Rect overlaying the Chart the tooltip gets shown everywhere.
+     For now I don't want to use this method.
+     */
+    _tooltipHtml(data, position) {
+        const {x, y, values, label} = this.props;
+        const xScale = this._xScale;
+        const yScale = this._yScale;
 
-		let xValueCursor = xScale.invert(position[0]);
-		let yValueCursor = yScale.invert(position[1]);
+        const xValueCursor = xScale.invert(position[0]);
+        const yValueCursor = yScale.invert(position[1]);
 
-		let xBisector = d3.bisector(e => { return x(e); }).left;
-		let valuesAtX = data.map(stack => {
-			let idx = xBisector(values(stack), xValueCursor);
+        const xBisector = d3.bisector(e => x(e)).left;
+        const valuesAtX = data.map(stack => {
+            const idx = xBisector(values(stack), xValueCursor);
 
-			let indexRight = idx === values(stack).length ? idx - 1 : idx;
-			let valueRight = x(values(stack)[indexRight]);
+            const indexRight = idx === values(stack).length ? idx - 1 : idx;
+            const valueRight = x(values(stack)[indexRight]);
 
-			let indexLeft = idx === 0 ? idx : idx - 1;
-			let valueLeft = x(values(stack)[indexLeft]);
+            const indexLeft = idx === 0 ? idx : idx - 1;
+            const valueLeft = x(values(stack)[indexLeft]);
 
-			let index;
-			if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
-				index = indexRight;
-			} else {
-				index = indexLeft;
-			}
+            let index;
+            if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+                index = indexRight;
+            } else {
+                index = indexLeft;
+            }
 
-			return { label: label(stack), value: values(stack)[index] };
-		});
+            return { label: label(stack), value: values(stack)[index] };
+        });
 
-		valuesAtX.sort((a, b) => { return y(a.value) - y(b.value); });
+        valuesAtX.sort((a, b) => y(a.value) - y(b.value));
 
-		let yBisector = d3.bisector(e => { return y(e.value); }).left;
-		let yIndex = yBisector(valuesAtX, yValueCursor);
+        const yBisector = d3.bisector(e => y(e.value)).left;
+        const yIndex = yBisector(valuesAtX, yValueCursor);
 
-		let yIndexRight = yIndex === valuesAtX.length ? yIndex - 1 : yIndex;
-		let yIndexLeft = yIndex === 0 ? yIndex : yIndex - 1;
+        const yIndexRight = yIndex === valuesAtX.length ? yIndex - 1 : yIndex;
+        const yIndexLeft = yIndex === 0 ? yIndex : yIndex - 1;
 
-		let yValueRight = y(valuesAtX[yIndexRight].value);
-		let yValueLeft = y(valuesAtX[yIndexLeft].value);
+        const yValueRight = y(valuesAtX[yIndexRight].value);
+        const yValueLeft = y(valuesAtX[yIndexLeft].value);
 
-		let index;
-		if (Math.abs(yValueCursor - yValueRight) < Math.abs(yValueCursor - yValueLeft)) {
-			index = yIndexRight;
-		} else {
-			index = yIndexLeft;
-		}
+        let index;
+        if (Math.abs(yValueCursor - yValueRight) < Math.abs(yValueCursor - yValueLeft)) {
+            index = yIndexRight;
+        } else {
+            index = yIndexLeft;
+        }
 
-		this._tooltipData = valuesAtX[index];
+        this._tooltipData = valuesAtX[index];
 
-		let html = this.props.tooltipHtml(valuesAtX[index].label,
-										  valuesAtX[index].value);
+        const html = this.props.tooltipHtml(
+            valuesAtX[index].label,
+            valuesAtX[index].value
+        );
 
-		let xPos = xScale(valuesAtX[index].value.x);
-		let yPos = yScale(valuesAtX[index].value.y);
-		return [html, xPos, yPos];
-	},
+        const xPos = xScale(valuesAtX[index].value.x);
+        const yPos = yScale(valuesAtX[index].value.y);
 
-	/*
-	_tooltipHtml(data, position) {
-		let {x, y0, y, values, label} = this.props;
-		let [xScale, yScale] = [this._xScale, this._yScale];
+        return [html, xPos, yPos];
+    },
 
-		let xValueCursor = xScale.invert(position[0]);
-		let yValueCursor = yScale.invert(position[1]);
+    /*
+    _tooltipHtml(data, position) {
+        let {x, y0, y, values, label} = this.props;
+        let [xScale, yScale] = [this._xScale, this._yScale];
 
-		let xBisector = d3.bisector(e => { return x(e); }).left;
-		let xIndex = xBisector(data, xScale.invert(position[0]));
+        let xValueCursor = xScale.invert(position[0]);
+        let yValueCursor = yScale.invert(position[1]);
 
-		let indexRight = xIndex == data.length ? xIndex - 1 : xIndex;
-		let valueRight = x(data[indexRight]);
+        let xBisector = d3.bisector(e => { return x(e); }).left;
+        let xIndex = xBisector(data, xScale.invert(position[0]));
 
-		let indexLeft = xIndex == 0 ? xIndex : xIndex - 1;
-		let valueLeft = x(data[indexLeft]);
+        let indexRight = xIndex == data.length ? xIndex - 1 : xIndex;
+        let valueRight = x(data[indexRight]);
 
-		let index;
-		if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
-			index = indexRight;
-		} else {
-			index = indexLeft;
-		}
+        let indexLeft = xIndex == 0 ? xIndex : xIndex - 1;
+        let valueLeft = x(data[indexLeft]);
 
-		let yValue = y(data[index]);
-		let cursorValue = d3.round(yScale.invert(position[1]), 2);
+        let index;
+        if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+            index = indexRight;
+        } else {
+            index = indexLeft;
+        }
 
-		return this.props.tooltipHtml(yValue, cursorValue);
-	},
-	 */
+        let yValue = y(data[index]);
+        let cursorValue = d3.round(yScale.invert(position[1]), 2);
 
-	/*
-			 stroke,
-			 strokeWidth,
-			 strokeLinecap,
-			 strokeDasharray,
-	 */
-	render() {
-		let {height,
-			 width,
-			 margin,
-			 colorScale,
-			 interpolate,
-			 defined,
-			 stroke,
-			 values,
-			 label,
-			 x,
-			 y,
-			 xAxis,
-			 yAxis,
-			 shape,
-			 shapeColor} = this.props;
+        return this.props.tooltipHtml(yValue, cursorValue);
+    },
+     */
 
-		let [data,
-			 innerWidth,
-			 innerHeight,
-			 xScale,
-			 yScale,
-			 xIntercept,
-			 yIntercept] = [this._data,
-							this._innerWidth,
-							this._innerHeight,
-							this._xScale,
-							this._yScale,
-							this._xIntercept,
-							this._yIntercept];
+    /*
+             stroke,
+             strokeWidth,
+             strokeLinecap,
+             strokeDasharray,
+     */
+    render() {
+        const {
+            height,
+            width,
+            margin,
+            colorScale,
+            interpolate,
+            defined,
+            stroke,
+            values,
+            label,
+            x,
+            y,
+            xAxis,
+            yAxis,
+            shape,
+            shapeColor
+        } = this.props;
 
-		let line = d3.svg.line()
-				.x(function(e) { return xScale(x(e)); })
-				.y(function(e) { return yScale(y(e)); })
-				.interpolate(interpolate)
-				.defined(defined);
+        const data = this._data;
+        const innerWidth = this._innerWidth;
+        const innerHeight = this._innerHeight;
+        const xScale = this._xScale;
+        const yScale = this._yScale;
+        const xIntercept = this._xIntercept;
+        const yIntercept = this._yIntercept;
 
-		let tooltipSymbol;
-		if (!this.state.tooltip.hidden) {
-			let symbol = d3.svg.symbol().type(shape);
-			let symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
+        let line = d3.svg.line()
+            .x(e => xScale(x(e)))
+            .y(e => yScale(y(e)))
+            .interpolate(interpolate)
+            .defined(defined);
 
-			let translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : "";
-			tooltipSymbol = this.state.tooltip.hidden ? null :
-				<path
-			className="dot"
-			d={symbol()}
-			transform={translate}
-			fill={symbolColor}
-			onMouseEnter={evt => { this.onMouseEnter(evt, data); }}
-			onMouseLeave={evt => { this.onMouseLeave(evt); }}
-				/>;
-		}
+        let tooltipSymbol = null;
+        if (!this.state.tooltip.hidden) {
+            const symbol = d3.svg.symbol().type(shape);
+            let symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
 
-		return (
-				<div>
-				<Chart height={height} width={width} margin={margin}>
+            let translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : '';
+            tooltipSymbol = this.state.tooltip.hidden ? null :
+                <path
+                    className="dot"
+                    d={symbol()}
+                    transform={translate}
+                    fill={symbolColor}
+                    onMouseEnter={evt => this.onMouseEnter(evt, data)}
+                    onMouseLeave={evt => this.onMouseLeave(evt)}
+                />;
+        }
 
-				<DataSet
-			height={innerHeight}
-			width={innerWidth}
-			data={data}
-			line={line}
-			colorScale={colorScale}
-			values={values}
-			label={label}
-			onMouseEnter={this.onMouseEnter}
-			onMouseLeave={this.onMouseLeave}
-			{...stroke}
-				/>
-
-				<Axis
-			className={'x axis'}
-			orientation={'bottom'}
-			scale={xScale}
-			height={innerHeight}
-			width={innerWidth}
-			zero={yIntercept}
-			{...xAxis}
-				/>
-
-				<Axis
-			className={'y axis'}
-			orientation={'left'}
-			scale={yScale}
-			height={innerHeight}
-			width={innerWidth}
-			zero={xIntercept}
-			{...yAxis}
-				/>
-				{ this.props.children }
-				{tooltipSymbol}
-
-				</Chart>
-
-				<Tooltip {...this.state.tooltip}/>
-			</div>
-		);
-	}
+        return (
+            <div>
+                <Chart height={height} width={width} margin={margin}>
+                    <DataSet
+                        height={innerHeight}
+                        width={innerWidth}
+                        data={data}
+                        line={line}
+                        colorScale={colorScale}
+                        values={values}
+                        label={label}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        {...stroke}
+                    />
+                    <Axis
+                        className="'x axis'"
+                        orientation="bottom"
+                        scale={xScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        zero={yIntercept}
+                        {...xAxis}
+                    />
+                    <Axis
+                        className="y axis"
+                        orientation="left"
+                        scale={yScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        zero={xIntercept}
+                        {...yAxis}
+                    />
+                    {this.props.children}
+                    {tooltipSymbol}
+                </Chart>
+                <Tooltip {...this.state.tooltip} />
+            </div>
+        );
+    }
 });
 
-module.exports = LineChart;
+export default LineChart;
