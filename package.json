@@ -1,49 +1,49 @@
 {
-    "name": "react-d3-components",
-    "version": "0.6.4",
-    "description": "D3 components for React",
-    "main": "lib/index.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/codesuki/react-d3-components.git"
-    },
-    "keywords": [
-        "d3",
-        "react",
-        "graph",
-        "visualization",
-        "chart",
-        "react-component"
-    ],
-    "author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/codesuki/react-d3-components/issues"
-    },
-    "homepage": "https://github.com/codesuki/react-d3-components",
-    "peerDependencies": {
-        "react": "^0.14.0 || ^15.0.0",
-        "react-dom": "^0.14.0 || ^15.0.0"
-    },
-    "dependencies": {
-        "d3": "^3.5.3"
-    },
-    "devDependencies": {
-        "babel": "^6.5.2",
-        "babel-core": "^6.13.2",
-        "babel-eslint": "^6.1.2",
-        "babel-loader": "^6.2.4",
-        "babel-preset-es2015": "^6.13.2",
-        "babel-preset-react": "^6.11.1",
-        "babel-preset-stage-0": "^6.5.0",
-        "eslint": "^3.3.1",
-        "eslint-plugin-react": "^6.1.1",
-        "webpack": "^1.13.1"
-    },
-    "scripts": {
-        "prepublish": "babel -c -d ./lib ./src/",
-        "postpublish": "rm -r ./lib",
-        "build:js": "webpack && webpack --config webpack.config.min.js",
-        "lint": "node_modules/.bin/eslint src/**; exit 0"
-    }
+  "name": "react-d3-components",
+  "version": "0.6.4",
+  "description": "D3 components for React",
+  "main": "lib/index.js",
+  "repository": {
+	"type": "git",
+	"url": "https://github.com/codesuki/react-d3-components.git"
+  },
+  "keywords": [
+	"d3",
+	"react",
+	"graph",
+	"visualization",
+	"chart",
+	"react-component"
+  ],
+  "author": "Neri Marschik <marschik_neri@cyberagent.co.jp> (http://www.cyberagent.co.jp)",
+  "license": "MIT",
+  "bugs": {
+	"url": "https://github.com/codesuki/react-d3-components/issues"
+  },
+  "homepage": "https://github.com/codesuki/react-d3-components",
+  "peerDependencies": {
+	"react": "^0.14.0 || ^15.0.0",
+	"react-dom": "^0.14.0 || ^15.0.0"
+  },
+  "dependencies": {
+	"d3": "^3.5.3"
+  },
+  "devDependencies": {
+	"babel-cli": "^6.11.4",
+	"babel-core": "^6.13.2",
+	"babel-eslint": "^6.1.2",
+	"babel-loader": "^6.2.4",
+	"babel-preset-es2015": "^6.13.2",
+	"babel-preset-react": "^6.11.1",
+	"babel-preset-stage-0": "^6.5.0",
+	"eslint": "^3.3.1",
+	"eslint-plugin-react": "^6.1.1",
+	"webpack": "^1.13.1"
+  },
+  "scripts": {
+	"prepublish": "babel -c -d ./lib ./src/",
+	"postpublish": "rm -r ./lib",
+	"build:js": "webpack && webpack --config webpack.config.min.js",
+	"lint": "node_modules/.bin/eslint src/**; exit 0"
+  }
 }
