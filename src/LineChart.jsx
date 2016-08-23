@@ -258,18 +258,6 @@ const LineChart = React.createClass({
         return (
             <div>
                 <Chart height={height} width={width} margin={margin}>
-                    <DataSet
-                        height={innerHeight}
-                        width={innerWidth}
-                        data={data}
-                        line={line}
-                        colorScale={colorScale}
-                        values={values}
-                        label={label}
-                        onMouseEnter={this.onMouseEnter}
-                        onMouseLeave={this.onMouseLeave}
-                        {...stroke}
-                    />
                     <Axis
                         className="'x axis'"
                         orientation="bottom"
@@ -287,6 +275,18 @@ const LineChart = React.createClass({
                         width={innerWidth}
                         zero={xIntercept}
                         {...yAxis}
+                    />                
+                    <DataSet
+                        height={innerHeight}
+                        width={innerWidth}
+                        data={data}
+                        line={line}
+                        colorScale={colorScale}
+                        values={values}
+                        label={label}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        {...stroke}
                     />
                     {this.props.children}
                     {tooltipSymbol}
