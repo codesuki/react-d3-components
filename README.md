@@ -480,6 +480,7 @@ React.render(<AreaChart
 				data={data}
 				width={400}
 				height={400}
+				yOrientation='right' // if you do not provide right default left orientation for yAxis will be used
 				margin={{top: 10, bottom: 50, left: 50, right: 10}}/>,
 			document.getElementById('location')
 );

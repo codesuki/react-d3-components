@@ -128,7 +128,8 @@ const AreaChart = React.createClass({
             y,
             y0,
             xAxis,
-            yAxis
+            yAxis,
+            yOrientation
         } = this.props;
 
         const data = this._data;
@@ -172,7 +173,7 @@ const AreaChart = React.createClass({
                     />
                     <Axis
                         className="y axis"
-                        orientation="left"
+                        orientation={yOrientation ? yOrientation : 'left'}
                         scale={yScale}
                         height={innerHeight}
                         width={innerWidth}
