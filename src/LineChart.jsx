@@ -40,7 +40,7 @@ const DataSet = React.createClass({
 
         const sizeId = width + 'x' + height;
 
-        let lines = data.map((stack, index) => <Path
+        const lines = data.map((stack, index) => <Path
             key={`${label(stack)}.${index}`}
             className={'line'}
             d={line(values(stack))}
@@ -232,7 +232,7 @@ const LineChart = React.createClass({
         const xIntercept = this._xIntercept;
         const yIntercept = this._yIntercept;
 
-        let line = d3.svg.line()
+        const line = d3.svg.line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y(e)))
             .interpolate(interpolate)
@@ -241,9 +241,9 @@ const LineChart = React.createClass({
         let tooltipSymbol = null;
         if (!this.state.tooltip.hidden) {
             const symbol = d3.svg.symbol().type(shape);
-            let symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
+            const symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
 
-            let translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : '';
+            const translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : '';
             tooltipSymbol = this.state.tooltip.hidden ? null :
                 <path
                     className="dot"
@@ -275,7 +275,7 @@ const LineChart = React.createClass({
                         width={innerWidth}
                         zero={xIntercept}
                         {...yAxis}
-                    />                
+                    />
                     <DataSet
                         height={innerHeight}
                         width={innerWidth}

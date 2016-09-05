@@ -56,15 +56,14 @@ const DataSet = React.createClass({
             onMouseLeave
         } = this.props;
 
-        let bars;
         const height = yScale(yScale.domain()[0]);
-        bars = data.map(stack => values(stack).map((e, index) => {
+        const bars = data.map(stack => values(stack).map((e, index) => {
             // maps the range [0,1] to the range [0, yDomain]
-            let yValue = height * y(e);
+            const yValue = height * y(e);
             // center vertically to have upper and lower part of the waveform
-            let vy = height / 2 - yValue / 2;
+            const vy = height / 2 - yValue / 2;
             //position x(e) * width * 2 because we want equal sapce.
-            let vx = 2 * x0 * index;
+            const vx = 2 * x0 * index;
 
             return (
                 <Bar
@@ -146,8 +145,8 @@ const Waveform = React.createClass({
         const xScale = this._xScale;
         const yScale = this._yScale;
 
-        let preserveAspectRatio = 'none';
-        let viewBox = `0 0 ${width} ${height}`;
+        const preserveAspectRatio = 'none';
+        const viewBox = `0 0 ${width} ${height}`;
 
         // there are two options, if the samples are less than the space available
         // we'll stretch the width of bar and inbetween spaces.

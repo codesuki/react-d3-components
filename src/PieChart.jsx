@@ -196,7 +196,7 @@ const PieChart = React.createClass({
             pie = pie.sort(sort);
         }
 
-        let radius = Math.min(innerWidth, innerHeight) / 2;
+        const radius = Math.min(innerWidth, innerHeight) / 2;
         if (!innerRadius) {
             innerRadius = radius * 0.8;
         }

@@ -132,10 +132,7 @@ const BarChart = React.createClass({
     render() {
         const {
             xAxis,
-            yAxis
-        } = this.props;
-
-        let {
+            yAxis,
             height,
             width,
             margin,
