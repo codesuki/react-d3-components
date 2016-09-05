@@ -138,12 +138,12 @@ const AreaChart = React.createClass({
         const xScale = this._xScale;
         const yScale = this._yScale;
 
-        let line = d3.svg.line()
+        const line = d3.svg.line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y0(e) + y(e)))
             .interpolate(interpolate);
 
-        let area = d3.svg.area()
+        const area = d3.svg.area()
             .x(e => xScale(x(e)))
             .y0(e => yScale(yScale.domain()[0] + y0(e)))
             .y1(e => yScale(y0(e) + y(e)))

@@ -1,3 +1,4 @@
+
 import React, { PropTypes } from 'react';
 import d3 from 'd3';
 
@@ -41,7 +42,7 @@ const DataSet = React.createClass({
         } = this.props;
 
         const circles = data.map(stack => values(stack).map((e, index) => {
-            let translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
+            const translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
             return (
                 <path
                     key={`${label(stack)}.${index}`}

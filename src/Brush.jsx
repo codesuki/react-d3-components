@@ -72,7 +72,7 @@ const Brush = React.createClass({
         const xRange = this.props.xScale ? this._d3ScaleRange(this.props.xScale) : null;
         const yRange = this.props.yScale ? this._d3ScaleRange(this.props.yScale) : null;
 
-        let background = <rect
+        const background = <rect
             className="background"
             style={{ visibility: 'visible', cursor: 'crosshair' }}
             x={xRange ? xRange[0] : ''}
@@ -96,7 +96,7 @@ const Brush = React.createClass({
             />;
         }
 
-        let resizers = this.state.resizers.map(e => <g
+        const resizers = this.state.resizers.map(e => <g
             key={e}
             className={`resize ${e}`}
             style={{ cursor: _d3SvgBrushCursor[e] }}

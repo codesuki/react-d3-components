@@ -63,12 +63,12 @@ const Axis = React.createClass({
             zero,
         } = this.props;
 
-        let {
+        const {
             width,
-            tickFormat,
             className,
             label
         } = this.props;
+        let {tickFormat} = this.props;
 
         let ticks = tickValues == null
             ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()
@@ -143,7 +143,7 @@ const Axis = React.createClass({
             labelElement = <text className={`${className} label`} textAnchor="end" y={6} dy={orientation === 'left' ? '.75em' : '-1.25em'} transform="rotate(-90)">{label}</text>;
         }
 
-        let tickElements = ticks.map((tick, index) => {
+        const tickElements = ticks.map((tick, index) => {
             const position = activeScale(tick);
             const translate = transform.replace('{}', position);
             return (
