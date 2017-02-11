@@ -156,21 +156,6 @@ const BarChart = React.createClass({
         return (
             <div>
                 <Chart height={height} width={width} margin={margin}>
-                    <DataSet
-                        data={data}
-                        xScale={xScale}
-                        yScale={yScale}
-                        colorScale={colorScale}
-                        values={values}
-                        label={label}
-                        y={y}
-                        y0={y0}
-                        x={x}
-                        onMouseEnter={this.onMouseEnter}
-                        onMouseLeave={this.onMouseLeave}
-                        groupedBars={groupedBars}
-                        colorByLabel={colorByLabel}
-                    />
                     <Axis
                         className="x axis"
                         orientation="bottom"
@@ -188,6 +173,21 @@ const BarChart = React.createClass({
                         width={innerWidth}
                         tickFormat={tickFormat}
                         {...yAxis}
+                    />
+                    <DataSet
+                        data={data}
+                        xScale={xScale}
+                        yScale={yScale}
+                        colorScale={colorScale}
+                        values={values}
+                        label={label}
+                        y={y}
+                        y0={y0}
+                        x={x}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        groupedBars={groupedBars}
+                        colorByLabel={colorByLabel}
                     />
                     {this.props.children}
                 </Chart>
