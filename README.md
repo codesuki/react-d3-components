@@ -79,6 +79,7 @@ For quick testing the [examples](#examples) might be enough.
 * Tests
 
 ## Changelog
+* 0.6.6: Fix ticks rendering over bar chart
 * 0.6.5:
     * Add tickDirection property to Axis
     * Add hideLabels property to PieChart
