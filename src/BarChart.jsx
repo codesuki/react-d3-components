@@ -41,6 +41,7 @@ const DataSet = React.createClass({
             y0,
             onMouseEnter,
             onMouseLeave,
+            onMouseClick,
             groupedBars,
             colorByLabel
         } = this.props;
@@ -58,6 +59,7 @@ const DataSet = React.createClass({
                     data={e}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
+                    onMouseClick={onMouseClick}
                 />
             ));
         } else {
@@ -74,6 +76,7 @@ const DataSet = React.createClass({
                         data={e}
                         onMouseEnter={onMouseEnter}
                         onMouseLeave={onMouseLeave}
+                        onMouseClick={onMouseClick}
                     />
                 );
             }));
@@ -144,7 +147,8 @@ const BarChart = React.createClass({
             x,
             groupedBars,
             colorByLabel,
-            tickFormat
+            tickFormat,
+            onMouseClick
         } = this.props;
 
         const data = this._data;
@@ -186,6 +190,7 @@ const BarChart = React.createClass({
                         x={x}
                         onMouseEnter={this.onMouseEnter}
                         onMouseLeave={this.onMouseLeave}
+                        onMouseClick={onMouseClick}
                         groupedBars={groupedBars}
                         colorByLabel={colorByLabel}
                     />

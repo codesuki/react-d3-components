@@ -18,7 +18,7 @@ const Wedge = React.createClass({
     },
 
     render() {
-        const {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
+        const {fill, d, data, onMouseEnter, onMouseLeave, onMouseClick} = this.props;
 
         return (
             <path
@@ -26,6 +26,7 @@ const Wedge = React.createClass({
                 d={d}
                 onMouseMove={evt => onMouseEnter(evt, data)}
                 onMouseLeave={evt => onMouseLeave(evt)}
+                onClick={evt => onMouseClick(evt, data)}
             />
         );
     }
@@ -104,6 +105,7 @@ const DataSet = React.createClass({
             y,
             onMouseEnter,
             onMouseLeave,
+            onMouseClick,
             hideLabels
         } = this.props;
 
@@ -115,6 +117,7 @@ const DataSet = React.createClass({
                     d={arc(e)}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
+                    onMouseClick={onMouseClick}
                 />
                 {!hideLabels && !!e.value && this.renderLabel(e)}
             </g>
@@ -177,7 +180,8 @@ const PieChart = React.createClass({
             x,
             y,
             values,
-            hideLabels
+            hideLabels,
+            onMouseClick
         } = this.props;
 
         let {
@@ -239,6 +243,7 @@ const PieChart = React.createClass({
                             y={y}
                             onMouseEnter={this.onMouseEnter}
                             onMouseLeave={this.onMouseLeave}
+                            onMouseClick={onMouseClick}
                             hideLabels={hideLabels}
                         />
                     </g>
