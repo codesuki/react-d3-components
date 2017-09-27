@@ -107,18 +107,22 @@ const DataSet = React.createClass({
             hideLabels
         } = this.props;
 
-        const wedges = pie.map((e, index) =>
-            <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
-                <Wedge
-                    data={e.data}
-                    fill={colorScale(x(e.data))}
-                    d={arc(e)}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                />
-                {!hideLabels && !!e.value && this.renderLabel(e)}
-            </g>
+      const wedges = pie.map((e, index) => {
+        const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180
+
+        return (
+          <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
+            <Wedge
+              data={e.data}
+              fill={colorScale(x(e.data))}
+              d={arc(e)}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              />
+            {!hideLabels && !!e.value && labelFits && this.renderLabel(e)}
+          </g>
         );
+      });
 
         return <g>{wedges}</g>;
     },
