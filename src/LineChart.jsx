@@ -259,7 +259,7 @@ const LineChart = React.createClass({
             <div>
                 <Chart height={height} width={width} margin={margin}>
                     <Axis
-                        className="'x axis'"
+                        className="x axis"
                         orientation="bottom"
                         scale={xScale}
                         height={innerHeight}
