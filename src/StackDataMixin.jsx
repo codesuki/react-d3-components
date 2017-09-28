@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import d3 from 'd3';
 
 const { string } = PropTypes;

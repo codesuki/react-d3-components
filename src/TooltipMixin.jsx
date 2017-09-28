@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 const { func, oneOf, bool, objectOf, number } = PropTypes;
