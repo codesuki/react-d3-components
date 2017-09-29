@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import d3 from 'd3';
 
 import Chart from './Chart';
@@ -15,7 +17,7 @@ import TooltipMixin from './TooltipMixin';
 
 const { array, func, string } = PropTypes;
 
-const DataSet = React.createClass({
+const DataSet = createReactClass({
     propTypes: {
         data: array.isRequired,
         line: func.isRequired,
@@ -80,7 +82,7 @@ const DataSet = React.createClass({
     }
 });
 
-const LineChart = React.createClass({
+const LineChart = createReactClass({
     mixins: [
         DefaultPropsMixin,
         HeightWidthMixin,

@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 const { number, string, array, object, func, oneOfType } = PropTypes;
 
-const Bar = React.createClass({
+const Bar = createReactClass({
     propTypes: {
         width: number.isRequired,
         height: number.isRequired,

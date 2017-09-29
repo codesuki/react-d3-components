@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 const { array, func, oneOf, number, string } = PropTypes;
 
-const Axis = React.createClass({
+const Axis = createReactClass({
     propTypes: {
         tickArguments: array,
         tickValues: array,

@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 const { number, node } = PropTypes;
 
-const Tooltip = React.createClass({
+const Tooltip = createReactClass({
     propTypes: {
         top: number.isRequired,
         left: number.isRequired,

@@ -22,11 +22,13 @@
   },
   "homepage": "https://github.com/codesuki/react-d3-components",
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0"
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "d3": "^3.5.3"
+    "create-react-class": "^15.6.2",
+    "d3": "^3.5.3",
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

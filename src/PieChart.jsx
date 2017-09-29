@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import d3 from 'd3';
 
 import Chart from './Chart';
@@ -11,7 +13,7 @@ import TooltipMixin from './TooltipMixin';
 
 const { string, array, number, bool, func, any } = PropTypes;
 
-const Wedge = React.createClass({
+const Wedge = createReactClass({
     propTypes: {
         d: string.isRequired,
         fill: string.isRequired
@@ -31,7 +33,7 @@ const Wedge = React.createClass({
     }
 });
 
-const DataSet = React.createClass({
+const DataSet = createReactClass({
     propTypes: {
         pie: array.isRequired,
         arc: func.isRequired,
@@ -132,7 +134,7 @@ const DataSet = React.createClass({
     }
 });
 
-const PieChart = React.createClass({
+const PieChart = createReactClass({
     mixins: [
         DefaultPropsMixin,
         HeightWidthMixin,

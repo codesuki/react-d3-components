@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 const { string, array } = PropTypes;
 
-const Path = React.createClass({
+const Path = createReactClass({
     propTypes: {
         className: string,
         stroke: string.isRequired,

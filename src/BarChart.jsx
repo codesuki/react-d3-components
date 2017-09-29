@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -15,7 +17,7 @@ import TooltipMixin from './TooltipMixin';
 
 const { array, func } = PropTypes;
 
-const DataSet = React.createClass({
+const DataSet = createReactClass({
     propTypes: {
         data: array.isRequired,
         xScale: func.isRequired,
@@ -87,7 +89,7 @@ const DataSet = React.createClass({
     }
 });
 
-const BarChart = React.createClass({
+const BarChart = createReactClass({
     mixins: [
         DefaultPropsMixin,
         HeightWidthMixin,

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import createReactClass from 'create-react-class';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -27,7 +28,7 @@ const _d3SvgBrushResizes = [
 ];
 
 // TODO: add y axis support
-const Brush = React.createClass({
+const Brush = createReactClass({
     mixins: [HeightWidthMixin],
 
     getInitialState() {
