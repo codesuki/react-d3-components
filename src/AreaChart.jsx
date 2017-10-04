@@ -53,7 +53,7 @@ const DataSet = createReactClass({
     }
 });
 
-const AreaChart = React.createClass({
+const AreaChart = createReactClass({
     mixins: [
         DefaultPropsMixin,
         HeightWidthMixin,
