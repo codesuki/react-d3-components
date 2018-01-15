@@ -264,24 +264,25 @@ const LineChart = createReactClass({
                     onMouseLeave={evt => this.onMouseLeave(evt)}
                 />;
         }
+
         if (showCustomLine) {
             let translatePoints = function(point) {
-            return `translate(${xScale(x(point))}, ${yScale(y(point))})`;
-       };
- 
-        points = data.map((d, dataIndex) =>
-             d.values.map((p, i) => (
-                <path
-                    key={i}
-                    className={lineStructureClassName}
-                    d={d3.svg.symbol().type(customPointShape)()}
-                    transform={translatePoints(p)}
-                    fill={customPointColor}
-                    onMouseEnter={evt => this.onMouseEnter(evt, data)}
-                    onMouseLeave={evt => this.onMouseLeave(evt)}
-                />
-            ))
-        );
+                return `translate(${xScale(x(point))}, ${yScale(y(point))})`;
+            };
+
+            points = data.map((d, dataIndex) =>
+                          d.values.map((p, i) => (
+                              <path
+                                  key={i}
+                                  className={lineStructureClassName}
+                                  d={d3.svg.symbol().type(customPointShape)()}
+                                  transform={translatePoints(p)}
+                                  fill={customPointColor}
+                                  onMouseEnter={evt => this.onMouseEnter(evt, data)}
+                                  onMouseLeave={evt => this.onMouseLeave(evt)}
+                                  />
+                          )));
+        }
 
         return (
             <div>
