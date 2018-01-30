@@ -328,7 +328,7 @@ React.render(<ScatterPlot
 All Charts provide defaults for scales, colors, etc...
 If you want to use your own scale just pass it to the charts constructor.
 
-The scales are normal D3 objects, their documentation can be found [here](https://github.com/mbostock/d3/wiki/Ordinal-Scales) and [here](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
+The scales are normal D3 objects, their documentation can be found [here](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md) and [here](https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md).
 
 There are more parameters like barPadding, strokeWidth, fill, opacity, etc. please check the documentation for details.
 
