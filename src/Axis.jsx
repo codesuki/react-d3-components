@@ -112,7 +112,7 @@ const Axis = React.createClass({
                 y = -innerTickSize;
                 textAnchor = 'end';
             } else if (tickDirection === 'diagonal') {
-                tickRotation = -60;
+                tickRotation = -45;
                 x = -tickSpacing;
                 y = 0;
                 textAnchor = 'end';
@@ -134,7 +134,7 @@ const Axis = React.createClass({
                 y = -(tickSpacing + innerTickSize);
                 textAnchor = 'middle';
             } else if (tickDirection === 'diagonal') {
-                tickRotation = -60;
+                tickRotation = -45;
                 x -= sign * tickSpacing;
                 y = -(tickSpacing + innerTickSize);
                 textAnchor = 'middle';
