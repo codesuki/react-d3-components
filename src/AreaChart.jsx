@@ -121,6 +121,8 @@ const AreaChart = createReactClass({
             height,
             width,
             margin,
+            viewBox,
+            preserveAspectRatio,
             colorScale,
             interpolate,
             stroke,
@@ -153,7 +155,7 @@ const AreaChart = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin}>
+                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
                     <DataSet
                         data={data}
                         line={line}

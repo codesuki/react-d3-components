@@ -113,9 +113,17 @@ const Brush = createReactClass({
             />
         </g>);
 
+        const {
+            height,
+            width,
+            margin,
+            viewBox,
+            preserveAspectRatio,
+        } = this.props;
+
         return (
             <div>
-                <Chart height={this.props.height} width={this.props.width} margin={this.props.margin}>
+                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
                     <g
                         style={{ pointerEvents: 'all' }}
                         onMouseUp={this._onMouseUp}

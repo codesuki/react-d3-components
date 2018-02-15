@@ -97,6 +97,8 @@ const ScatterPlot = createReactClass({
             height,
             width,
             margin,
+            viewBox,
+            preserveAspectRatio,
             colorScale,
             rScale,
             shape,
@@ -124,7 +126,7 @@ const ScatterPlot = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin}>
+                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
                     <Axis
                         className="x axis"
                         orientation="bottom"

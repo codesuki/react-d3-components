@@ -142,6 +142,8 @@ const BarChart = createReactClass({
         height,
         width,
         margin,
+        viewBox,
+        preserveAspectRatio,
         colorScale,
         values,
         label,
@@ -162,7 +164,7 @@ const BarChart = createReactClass({
 
       return (
         <div>
-          <Chart height={height} width={width} margin={margin}>
+          <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
             <DataSet
               data={data}
               xScale={xScale}
