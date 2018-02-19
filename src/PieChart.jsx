@@ -176,6 +176,8 @@ const PieChart = createReactClass({
             width,
             height,
             margin,
+            viewBox,
+            preserveAspectRatio,
             colorScale,
             padRadius,
             cornerRadius,
@@ -231,7 +233,7 @@ const PieChart = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin}>
+                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
                     <g transform={translation}>
                         <DataSet
                             width={innerWidth}
