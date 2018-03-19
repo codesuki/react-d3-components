@@ -77,7 +77,7 @@ const AreaChart = createReactClass({
     },
 
     _tooltipHtml(d, position) {
-        const {x, y0, y, values} = this.props;
+        const {x, y0, y, values, label} = this.props;
         const xScale = this._xScale;
         const yScale = this._yScale;
 
@@ -113,7 +113,7 @@ const AreaChart = createReactClass({
         const xPos = xScale(xValue);
         const yPos = yScale(y0(values(d[yIndex])[xIndex]) + yValue);
 
-        return [this.props.tooltipHtml(yValue, yValueCumulative, xValue), xPos, yPos];
+        return [this.props.tooltipHtml(yValue, yValueCumulative, xValue, label(d[yIndex])), xPos, yPos];
     },
 
     render() {

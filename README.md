@@ -236,7 +236,7 @@ Depending on the type of chart the callback will receive different parameters th
 * Bar Chart: x, y0, y of the hovered bar and the total bar height in case of a stacked bar chart.
 * Scatter Plot: x, y of the hovered point.
 * Pie Chart: x, y, of the hovered wedge.
-* Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart. x value is the third parameter.
+* Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart. x value is the third parameter. label is the fourth parameter.
 
 Example Scatter Plot:
 ```javascript
