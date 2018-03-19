@@ -233,9 +233,9 @@ var SomeComponent = React.createClass({
 You can provide a callback to every chart that will return html for the tooltip.
 Depending on the type of chart the callback will receive different parameters that are useful.
 
-* Bar Chart: x, y0, y of the hovered bar and the total bar height in case of a stacked bar chart.
+* Bar Chart: label is the first parameter. y0, y of the hovered bar and the total bar height in case of a stacked bar chart.
 * Scatter Plot: x, y of the hovered point.
-* Pie Chart: x, y, of the hovered wedge.
+* Pie Chart: label is the first parameter. y of the hovered wedge.
 * Area Chart: closest y value to the cursor of the area under the mouse and the cumulative y value in case of a stacked area chart. x value is the third parameter. label is the fourth parameter.
 
 Example Scatter Plot:
