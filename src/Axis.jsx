@@ -145,17 +145,7 @@ const Axis = createReactClass({
             labelElement = <text className={`${className} label`} textAnchor="end" y={6} dy={orientation === 'left' ? '.75em' : '-1.25em'} transform="rotate(-90)">{label}</text>;
         }
 
-        const tickElements = ticks.map((tick, index) => {
-            const position = activeScale(tick);
-            const translate = transform.replace('{}', position);
-            return (
-                <g key={`${tick}.${index}`} className="tick" transform={translate}>
-                    <line x2={x2} y2={y2} stroke="#aaa"/>
-                    <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
-                    {tickFormat(tick)}</text>
-                </g>
-            );
-        });
+        const tickElements = ticks.map((tick, index) => this.getTickElement(tick, index));
 
         const pathElement = <path className="domain" d={d} fill="none" stroke="#aaa"/>;
 
@@ -167,6 +157,18 @@ const Axis = createReactClass({
                 {tickElements}
                 {pathElement}
                 {labelElement}
+            </g>
+        );
+    },
+
+    getTickElement(tick, index) {
+        const position = activeScale(tick);
+        const translate = transform.replace('{}', position);
+        return (
+            <g key={`${tick}.${index}`} className="tick" transform={translate}>
+                <line x2={x2} y2={y2} stroke="#aaa"/>
+                <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
+                {tickFormat(tick)}</text>
             </g>
         );
     },
