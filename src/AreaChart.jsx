@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import { schemeCategory20 } from 'd3-scale-chromatic';
+import { schemeCategory10 } from 'd3-scale-chromatic';
+import { scaleOrdinal } from 'd3-scale';
 import { bisector } from 'd3-array';
 import { line as d3Line, area as d3Area } from 'd3-shape';
 
@@ -74,7 +75,7 @@ const AreaChart = createReactClass({
     getDefaultProps() {
         return {
             interpolate: 'linear',
-            stroke: schemeCategory20()
+            stroke: scaleOrdinal(schemeCategory10)
         };
     },
 
