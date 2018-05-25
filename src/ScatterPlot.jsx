@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import d3 from 'd3';
+import { symbol as d3Symbol } from 'd3-shape';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -118,7 +118,7 @@ const ScatterPlot = createReactClass({
         const xIntercept = this._xIntercept;
         const yIntercept = this._yIntercept;
 
-        let symbol = d3.svg.symbol().type(shape);
+        let symbol = d3Symbol().type(shape);
 
         if (rScale) {
             symbol = symbol.size(rScale);

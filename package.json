@@ -23,11 +23,11 @@
   "homepage": "https://github.com/codesuki/react-d3-components",
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0",
+    "d3": "^5.0.0"
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "d3": "^3.5.3",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
@@ -46,6 +46,10 @@
     "prepublish": "babel -c -d ./lib ./src/",
     "postpublish": "rm -r ./lib",
     "build:js": "webpack && webpack --config webpack.config.min.js",
-    "lint": "node_modules/.bin/eslint src/**; exit 0"
-  }
+    "lint": "eslint src/** --fix; exit 0"
+  },
+  "files":[
+    "lib",
+    "dist"
+  ]
 }

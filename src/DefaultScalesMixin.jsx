@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import d3 from 'd3';
+import { extent as d3Extent, max as d3Max, min as d3Min } from 'd3-array';
+import { scaleTime, scaleOrdinal, scaleLinear } from 'd3-scale';
 
 const { number } = PropTypes;
 
@@ -56,13 +57,13 @@ const DefaultScalesMixin = {
         const data = this._data;
 
         const extentsData = data.map(stack => values(stack).map(e => x(e)));
-        const extents = d3.extent(Array.prototype.concat.apply([], extentsData));
+        const extents = d3Extent(Array.prototype.concat.apply([], extentsData));
 
-        const scale = d3.scale.linear()
+        const scale = scaleLinear()
             .domain(extents)
             .range([0, this._innerWidth]);
 
-        const zero = d3.max([0, scale.domain()[0]]);
+        const zero = d3Max([0, scale.domain()[0]]);
         const xIntercept = scale(zero);
 
         return [scale, xIntercept];
@@ -71,7 +72,7 @@ const DefaultScalesMixin = {
     _makeOrdinalXScale(props) {
         const {x, values, barPadding} = props;
 
-        const scale = d3.scale.ordinal()
+        const scale = scaleOrdinal()
             .domain(values(this._data[0]).map(e => x(e)))
             .rangeRoundBands([0, this._innerWidth], barPadding);
 
@@ -81,10 +82,10 @@ const DefaultScalesMixin = {
     _makeTimeXScale(props) {
         const {x, values} = props;
 
-        const minDate = d3.min(values(this._data[0]), x);
-        const maxDate = d3.max(values(this._data[0]), x);
+        const minDate = d3Min(values(this._data[0]), x);
+        const maxDate = d3Max(values(this._data[0]), x);
 
-        const scale = d3.time.scale()
+        const scale = scaleTime()
             .domain([minDate, maxDate])
             .range([0, this._innerWidth]);
 
@@ -106,22 +107,22 @@ const DefaultScalesMixin = {
         const {y, y0, values, groupedBars} = props;
 
         const extentsData = this._data.map(stack => values(stack).map(e => groupedBars ? y(e) : y0(e) + y(e)));
-        let extents = d3.extent(Array.prototype.concat.apply([], extentsData));
+        let extents = d3Extent(Array.prototype.concat.apply([], extentsData));
 
-        extents = [d3.min([0, extents[0]]), extents[1]];
+        extents = [d3Min([0, extents[0]]), extents[1]];
 
-        const scale = d3.scale.linear()
+        const scale = scaleLinear()
             .domain(extents)
             .range([this._innerHeight, 0]);
 
-        const zero = d3.max([0, scale.domain()[0]]);
+        const zero = d3Max([0, scale.domain()[0]]);
         const yIntercept = scale(zero);
 
         return [scale, yIntercept];
     },
 
     _makeOrdinalYScale() {
-        const scale = d3.scale.ordinal()
+        const scale = scaleOrdinal()
             .range([this._innerHeight, 0]);
 
         const yIntercept = scale(0);

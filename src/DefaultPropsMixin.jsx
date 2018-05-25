@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import d3 from 'd3';
+import { schemeCategory20 } from 'd3-scale-chromatic';
 
 const { oneOfType, object, array, shape, func, number } = PropTypes;
 
@@ -28,7 +28,7 @@ const DefaultPropsMixin = {
             margin: {top: 0, bottom: 0, left: 0, right: 0},
             xScale: null,
             yScale: null,
-            colorScale: d3.scale.category20()
+            colorScale: schemeCategory20()
         };
     }
 };

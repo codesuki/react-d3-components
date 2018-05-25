@@ -120,7 +120,7 @@ const Axis = createReactClass({
                 textAnchor = 'end';
             }
 
-            labelElement = <text className={`${className} label`} textAnchor={"end"} x={width} y={-6}>{label}</text>;
+            labelElement = <text className={`${className} label`} textAnchor={'end'} x={width} y={-6}>{label}</text>;
         } else {
             transform = 'translate(0, {})';
             x = sign * tickSpacing;
@@ -152,7 +152,7 @@ const Axis = createReactClass({
                 <g key={`${tick}.${index}`} className="tick" transform={translate}>
                     <line x2={x2} y2={y2} stroke="#aaa"/>
                     <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
-                    {tickFormat(tick)}</text>
+                        {tickFormat(tick)}</text>
                 </g>
             );
         });

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import d3 from 'd3';
+import { line as d3Line, symbol as d3Symbol } from 'd3-shape';
+import { bisector as d3Bisector } from 'd3-array';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -104,9 +105,9 @@ const LineChart = createReactClass({
             shape: 'circle',
             shapeColor: null,
             showCustomLine: false,
-            lineStructureClassName: "dot",
-            customPointColor: "blue",
-            customPointShape: "circle"
+            lineStructureClassName: 'dot',
+            customPointColor: 'blue',
+            customPointShape: 'circle'
         };
     },
 
@@ -123,7 +124,7 @@ const LineChart = createReactClass({
         const xValueCursor = xScale.invert(position[0]);
         const yValueCursor = yScale.invert(position[1]);
 
-        const xBisector = d3.bisector(e => x(e)).left;
+        const xBisector = d3Bisector(e => x(e)).left;
         const valuesAtX = data.map(stack => {
             const idx = xBisector(values(stack), xValueCursor);
 
@@ -145,7 +146,7 @@ const LineChart = createReactClass({
 
         valuesAtX.sort((a, b) => y(a.value) - y(b.value));
 
-        const yBisector = d3.bisector(e => y(e.value)).left;
+        const yBisector = d3Bisector(e => y(e.value)).left;
         const yIndex = yBisector(valuesAtX, yValueCursor);
 
         const yIndexRight = yIndex === valuesAtX.length ? yIndex - 1 : yIndex;
@@ -244,7 +245,7 @@ const LineChart = createReactClass({
         const xIntercept = this._xIntercept;
         const yIntercept = this._yIntercept;
 
-        const line = d3.svg.line()
+        const line = d3Line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y(e)))
             .interpolate(interpolate)
@@ -252,38 +253,38 @@ const LineChart = createReactClass({
 
         let tooltipSymbol = null, points = null;
         if (!this.state.tooltip.hidden) {
-            const symbol = d3.svg.symbol().type(shape);
+            const symbol = d3Symbol().type(shape);
             const symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
 
             const translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : '';
             tooltipSymbol = this.state.tooltip.hidden ? null :
-                <path
-                    className="dot"
-                    d={symbol()}
-                    transform={translate}
-                    fill={symbolColor}
-                    onMouseEnter={evt => this.onMouseEnter(evt, data)}
-                    onMouseLeave={evt => this.onMouseLeave(evt)}
+            <path
+                className="dot"
+                d={symbol()}
+                transform={translate}
+                fill={symbolColor}
+                onMouseEnter={evt => this.onMouseEnter(evt, data)}
+                onMouseLeave={evt => this.onMouseLeave(evt)}
                 />;
         }
 
         if (showCustomLine) {
-            let translatePoints = function(point) {
+            const translatePoints = function (point) {
                 return `translate(${xScale(x(point))}, ${yScale(y(point))})`;
             };
 
-            points = data.map((d, dataIndex) =>
-                          d.values.map((p, i) => (
-                              <path
-                                  key={i}
-                                  className={lineStructureClassName}
-                                  d={d3.svg.symbol().type(customPointShape)()}
-                                  transform={translatePoints(p)}
-                                  fill={customPointColor}
-                                  onMouseEnter={evt => this.onMouseEnter(evt, data)}
-                                  onMouseLeave={evt => this.onMouseLeave(evt)}
-                                  />
-                          )));
+            points = data.map(d =>
+              d.values.map((p, i) =>
+                  <path
+                      key={i}
+                      className={lineStructureClassName}
+                      d={d3Symbol().type(customPointShape)()}
+                      transform={translatePoints(p)}
+                      fill={customPointColor}
+                      onMouseEnter={evt => this.onMouseEnter(evt, data)}
+                      onMouseLeave={evt => this.onMouseLeave(evt)}
+                      />
+              ));
         }
 
         return (

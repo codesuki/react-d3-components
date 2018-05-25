@@ -56,7 +56,7 @@ const TooltipMixin = {
         } else {
             const rect = svg.getBoundingClientRect();
             position = [e.clientX - rect.left - svg.clientLeft - margin.left,
-                        e.clientY - rect.top - svg.clientTop - margin.top];
+                e.clientY - rect.top - svg.clientTop - margin.top];
         }
 
         const [html, xPos, yPos] = this._tooltipHtml(data, position);

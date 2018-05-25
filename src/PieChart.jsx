@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import d3 from 'd3';
+import { pie as d3Pie, arc as d3Arc } from 'd3-shape';
 
 import Chart from './Chart';
 import Tooltip from './Tooltip';
@@ -109,22 +109,22 @@ const DataSet = createReactClass({
             hideLabels
         } = this.props;
 
-      const wedges = pie.map((e, index) => {
-        const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180
+        const wedges = pie.map((e, index) => {
+            const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180;
 
-        return (
-          <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
-            <Wedge
-              data={e.data}
-              fill={colorScale(x(e.data))}
-              d={arc(e)}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
+            return (
+                <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
+                    <Wedge
+                        data={e.data}
+                        fill={colorScale(x(e.data))}
+                        d={arc(e)}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
               />
-            {!hideLabels && !!e.value && labelFits && this.renderLabel(e)}
-          </g>
-        );
-      });
+                    {!hideLabels && !!e.value && labelFits && this.renderLabel(e)}
+                </g>
+            );
+        });
 
         return <g>{wedges}</g>;
     },
@@ -197,7 +197,7 @@ const PieChart = createReactClass({
         const innerWidth = this._innerWidth;
         const innerHeight = this._innerHeight;
 
-        let pie = d3.layout.pie()
+        let pie = d3Pie()
             .value(e => y(e));
 
         if (typeof sort !== 'undefined') {
@@ -217,13 +217,13 @@ const PieChart = createReactClass({
             labelRadius = radius * 0.9;
         }
 
-        const arc = d3.svg.arc()
+        const arc = d3Arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius)
             .padRadius(padRadius)
             .cornerRadius(cornerRadius);
 
-        const outerArc = d3.svg.arc()
+        const outerArc = d3Arc()
             .innerRadius(labelRadius)
             .outerRadius(labelRadius);
 

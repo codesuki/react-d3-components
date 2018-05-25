@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import d3 from 'd3';
+import { schemeCategory20 } from 'd3-scale-chromatic';
+import { bisector } from 'd3-array';
+import { line as d3Line, area as d3Area } from 'd3-shape';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -72,7 +74,7 @@ const AreaChart = createReactClass({
     getDefaultProps() {
         return {
             interpolate: 'linear',
-            stroke: d3.scale.category20()
+            stroke: schemeCategory20()
         };
     },
 
@@ -83,7 +85,7 @@ const AreaChart = createReactClass({
 
         const xValueCursor = xScale.invert(position[0]);
 
-        const xBisector = d3.bisector(e => x(e)).right;
+        const xBisector = bisector(e => x(e)).right;
         let xIndex = xBisector(values(d[0]), xScale.invert(position[0]));
         xIndex = xIndex == values(d[0]).length ? xIndex - 1 : xIndex;
 
@@ -101,7 +103,7 @@ const AreaChart = createReactClass({
 
         const yValueCursor = yScale.invert(position[1]);
 
-        const yBisector = d3.bisector(e => y0(values(e)[xIndex]) + y(values(e)[xIndex])).left;
+        const yBisector = bisector(e => y0(values(e)[xIndex]) + y(values(e)[xIndex])).left;
         let yIndex = yBisector(d, yValueCursor);
         yIndex = yIndex == d.length ? yIndex - 1 : yIndex;
 
@@ -142,12 +144,12 @@ const AreaChart = createReactClass({
         const xScale = this._xScale;
         const yScale = this._yScale;
 
-        const line = d3.svg.line()
+        const line = d3Line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y0(e) + y(e)))
             .interpolate(interpolate);
 
-        const area = d3.svg.area()
+        const area = d3Area()
             .x(e => xScale(x(e)))
             .y0(e => yScale(yScale.domain()[0] + y0(e)))
             .y1(e => yScale(y0(e) + y(e)))

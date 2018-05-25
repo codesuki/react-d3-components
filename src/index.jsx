@@ -5,4 +5,4 @@ export { default as ScatterPlot } from './ScatterPlot';
 export { default as LineChart } from './LineChart';
 export { default as AreaChart } from './AreaChart';
 export { default as Brush } from './Brush';
-export d3 from 'd3';
+
