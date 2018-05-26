@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types';
-import { stack as d3Stack } from 'd3-shape';
+import { stack as d3Stack, stackOrderNone, stackOffsetNone } from 'd3-shape';
 
-const { string } = PropTypes;
+const { func } = PropTypes;
 
 const StackDataMixin = {
     propTypes: {
-        offset: string
+        offset: func
     },
 
     getDefaultProps() {
         return {
-            offset: 'zero',
-            order: 'default'
+            offset: stackOffsetNone,
+            order: stackOrderNone
         };
     },
+
 
     componentWillMount() {
         this._stackData(this.props);
@@ -29,11 +30,9 @@ const StackDataMixin = {
         const stack = d3Stack()
             .offset(offset)
             .order(order)
-            .x(x)
-            .y(y)
-            .values(values);
+            .keys(['x', 'y']);
 
-        this._data = stack(this._data);
+        /*this._data = stack(this._data);
 
         for (let m = 0; m < values(this._data[0]).length; m++) {
             let positiveBase = 0;
@@ -48,7 +47,7 @@ const StackDataMixin = {
                     positiveBase += value;
                 }
             }
-        }
+        }*/
     }
 };
 
