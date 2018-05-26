@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { scaleOrdinal } from 'd3-scale';
 import { bisector } from 'd3-array';
-import { line as d3Line, area as d3Area } from 'd3-shape';
+import { line as d3Line, area as d3Area, curveLinear } from 'd3-shape';
 
 import Chart from './Chart';
 import Axis from './Axis';
@@ -19,7 +19,7 @@ import StackDataMixin from './StackDataMixin';
 import DefaultScalesMixin from './DefaultScalesMixin';
 import TooltipMixin from './TooltipMixin';
 
-const { array, func, string } = PropTypes;
+const { array, func } = PropTypes;
 
 const DataSet = createReactClass({
     propTypes: {
@@ -68,13 +68,13 @@ const AreaChart = createReactClass({
     ],
 
     propTypes: {
-        interpolate: string,
+        interpolate: func,
         stroke: func
     },
 
     getDefaultProps() {
         return {
-            interpolate: 'linear',
+            interpolate: curveLinear,
             stroke: scaleOrdinal(schemeCategory10)
         };
     },
@@ -148,13 +148,13 @@ const AreaChart = createReactClass({
         const line = d3Line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y0(e) + y(e)))
-            .interpolate(interpolate);
+            .curve(interpolate);
 
         const area = d3Area()
             .x(e => xScale(x(e)))
             .y0(e => yScale(yScale.domain()[0] + y0(e)))
             .y1(e => yScale(y0(e) + y(e)))
-            .interpolate(interpolate);
+            .curve(interpolate);
 
         return (
             <div>
