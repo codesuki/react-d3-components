@@ -1,7 +1,5 @@
-import PropTypes from 'prop-types';
+import { func, oneOf, bool, objectOf, number } from 'prop-types';
 import ReactDOM from 'react-dom';
-
-const { func, oneOf, bool, objectOf, number } = PropTypes;
 
 const TooltipMixin = {
     propTypes: {
@@ -22,14 +20,16 @@ const TooltipMixin = {
     getDefaultProps() {
         return {
             tooltipMode: 'mouse',
-            tooltipOffset: {top: -35, left: 0},
+            tooltipOffset: { top: -35, left: 0 },
             tooltipHtml: null,
             tooltipContained: false
         };
     },
 
     componentDidMount() {
-        this._svgNode = ReactDOM.findDOMNode(this).getElementsByTagName('svg')[0];
+        this._svgNode = ReactDOM.findDOMNode(this).getElementsByTagName(
+            'svg'
+        )[0];
     },
 
     onMouseEnter(e, data) {
@@ -55,8 +55,10 @@ const TooltipMixin = {
             position = [point.x - margin.left, point.y - margin.top];
         } else {
             const rect = svg.getBoundingClientRect();
-            position = [e.clientX - rect.left - svg.clientLeft - margin.left,
-                e.clientY - rect.top - svg.clientTop - margin.top];
+            position = [
+                e.clientX - rect.left - svg.clientLeft - margin.left,
+                e.clientY - rect.top - svg.clientTop - margin.top
+            ];
         }
 
         const [html, xPos, yPos] = this._tooltipHtml(data, position);
@@ -73,7 +75,8 @@ const TooltipMixin = {
         } else if (tooltipMode === 'element') {
             top = svgTop + yPos + tooltipOffset.top;
             left = svgLeft + xPos + tooltipOffset.left;
-        } else { // mouse
+        } else {
+            // mouse
             top = e.clientY + tooltipOffset.top;
             left = e.clientX + tooltipOffset.left;
         }

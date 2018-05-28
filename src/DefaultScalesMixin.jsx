@@ -1,8 +1,6 @@
-import PropTypes from 'prop-types';
+import { number } from 'prop-types';
 import { extent as d3Extent, max as d3Max, min as d3Min } from 'd3-array';
 import { scaleTime, scaleOrdinal, scaleLinear } from 'd3-scale';
-
-const { number } = PropTypes;
 
 const DefaultScalesMixin = {
     propTypes: {
@@ -24,7 +22,7 @@ const DefaultScalesMixin = {
     },
 
     _makeScales(props) {
-        const {xScale, xIntercept, yScale, yIntercept} = props;
+        const { xScale, xIntercept, yScale, yIntercept } = props;
 
         if (!xScale) {
             [this._xScale, this._xIntercept] = this._makeXScale(props);
@@ -40,7 +38,7 @@ const DefaultScalesMixin = {
     },
 
     _makeXScale(props) {
-        const {x, values} = props;
+        const { x, values } = props;
         const data = this._data;
 
         if (typeof x(values(data[0])[0]) === 'number') {
@@ -53,7 +51,7 @@ const DefaultScalesMixin = {
     },
 
     _makeLinearXScale(props) {
-        const {x, values} = props;
+        const { x, values } = props;
         const data = this._data;
 
         const extentsData = data.map(stack => values(stack).map(e => x(e)));
@@ -70,7 +68,7 @@ const DefaultScalesMixin = {
     },
 
     _makeOrdinalXScale(props) {
-        const {x, values, barPadding} = props;
+        const { x, values, barPadding } = props;
 
         const scale = scaleOrdinal()
             .domain(values(this._data[0]).map(e => x(e)))
@@ -80,7 +78,7 @@ const DefaultScalesMixin = {
     },
 
     _makeTimeXScale(props) {
-        const {x, values} = props;
+        const { x, values } = props;
 
         const minDate = d3Min(values(this._data[0]), x);
         const maxDate = d3Max(values(this._data[0]), x);
@@ -93,7 +91,7 @@ const DefaultScalesMixin = {
     },
 
     _makeYScale(props) {
-        const {y, values} = props;
+        const { y, values } = props;
         const data = this._data;
 
         if (typeof y(values(data[0])[0]) === 'number') {
@@ -104,9 +102,11 @@ const DefaultScalesMixin = {
     },
 
     _makeLinearYScale(props) {
-        const {y, y0, values, groupedBars} = props;
+        const { y, y0, values, groupedBars } = props;
 
-        const extentsData = this._data.map(stack => values(stack).map(e => groupedBars ? y(e) : y0(e) + y(e)));
+        const extentsData = this._data.map(stack =>
+            values(stack).map(e => groupedBars ? y(e) : y0(e) + y(e))
+        );
         let extents = d3Extent(Array.prototype.concat.apply([], extentsData));
 
         extents = [d3Min([0, extents[0]]), extents[1]];
@@ -122,8 +122,7 @@ const DefaultScalesMixin = {
     },
 
     _makeOrdinalYScale() {
-        const scale = scaleOrdinal()
-            .range([this._innerHeight, 0]);
+        const scale = scaleOrdinal().range([this._innerHeight, 0]);
 
         const yIntercept = scale(0);
 

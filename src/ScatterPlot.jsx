@@ -1,48 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import { symbol as d3Symbol } from 'd3-shape';
+import { array, func, string } from 'prop-types';
 
-import Chart from './Chart';
 import Axis from './Axis';
+import Chart from './Chart';
 import Tooltip from './Tooltip';
 
-import DefaultPropsMixin from './DefaultPropsMixin';
-import HeightWidthMixin from './HeightWidthMixin';
-import ArrayifyMixin from './ArrayifyMixin';
 import AccessorMixin from './AccessorMixin';
+import ArrayifyMixin from './ArrayifyMixin';
+import DefaultPropsMixin from './DefaultPropsMixin';
 import DefaultScalesMixin from './DefaultScalesMixin';
+import HeightWidthMixin from './HeightWidthMixin';
 import TooltipMixin from './TooltipMixin';
 
-const { array, func, string } = PropTypes;
-
-const DataSet = createReactClass({
-    propTypes: {
-        data: array.isRequired,
-        symbol: func.isRequired,
-        xScale: func.isRequired,
-        yScale: func.isRequired,
-        colorScale: func.isRequired,
-        onMouseEnter: func,
-        onMouseLeave: func
-    },
-
-    render() {
-        const {
-            data,
-            symbol,
-            xScale,
-            yScale,
-            colorScale,
-            label,
-            values,
-            x,
-            y,
-            onMouseEnter,
-            onMouseLeave
-        } = this.props;
-
-        const circles = data.map(stack => values(stack).map((e, index) => {
+const DataSet = ({
+    data,
+    symbol,
+    xScale,
+    yScale,
+    colorScale,
+    label,
+    values,
+    x,
+    y,
+    onMouseEnter,
+    onMouseLeave
+}) => {
+    const circles = data.map(stack =>
+        values(stack).map((e, index) => {
             const translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
             return (
                 <path
@@ -55,11 +41,21 @@ const DataSet = createReactClass({
                     onMouseLeave={evt => onMouseLeave(evt)}
                 />
             );
-        }));
+        })
+    );
 
-        return <g>{circles}</g>;
-    }
-});
+    return <g>{circles}</g>;
+};
+
+DataSet.propTypes = {
+    data: array.isRequired,
+    symbol: func.isRequired,
+    xScale: func.isRequired,
+    yScale: func.isRequired,
+    colorScale: func.isRequired,
+    onMouseEnter: func,
+    onMouseLeave: func
+};
 
 const ScatterPlot = createReactClass({
     mixins: [
@@ -126,7 +122,13 @@ const ScatterPlot = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <Axis
                         className="x axis"
                         orientation="bottom"
@@ -160,7 +162,7 @@ const ScatterPlot = createReactClass({
                     />
                     {this.props.children}
                 </Chart>
-                <Tooltip {...this.state.tooltip}/>
+                <Tooltip {...this.state.tooltip} />
             </div>
         );
     }

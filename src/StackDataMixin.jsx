@@ -1,7 +1,5 @@
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import { stack as d3Stack, stackOrderNone, stackOffsetNone } from 'd3-shape';
-
-const { func } = PropTypes;
 
 const StackDataMixin = {
     propTypes: {
@@ -15,7 +13,6 @@ const StackDataMixin = {
         };
     },
 
-
     componentWillMount() {
         this._stackData(this.props);
     },
@@ -25,7 +22,7 @@ const StackDataMixin = {
     },
 
     _stackData(props) {
-        const {offset, order, x, y, values} = props;
+        const { offset, order, x, y, values } = props;
 
         const stack = d3Stack()
             .offset(offset)

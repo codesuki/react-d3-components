@@ -1,37 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
+import { number, shape } from 'prop-types';
 
-const { number, shape } = PropTypes;
+const Chart = ({
+    width,
+    height,
+    margin,
+    viewBox,
+    preserveAspectRatio,
+    children
+}) =>
+    <svg
+        ref="svg"
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        preserveAspectRatio={preserveAspectRatio}
+    >
+        <g transform={`translate(${margin.left}, ${margin.top})`}>{children}</g>
+    </svg>
+;
 
-const Chart = createReactClass({
-    propTypes: {
-        height: number.isRequired,
-        width: number.isRequired,
-        margin: shape({
-            top: number,
-            bottom: number,
-            left: number,
-            right: number
-        }).isRequired
-    },
-
-    render() {
-        const {
-            width,
-            height,
-            margin,
-            viewBox,
-            preserveAspectRatio,
-            children
-        } = this.props;
-
-        return (
-            <svg ref="svg" width={width} height={height} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio} >
-                <g transform={`translate(${margin.left}, ${margin.top})`}>{children}</g>
-            </svg>
-        );
-    }
-});
+Chart.propTypes = {
+    height: number.isRequired,
+    width: number.isRequired,
+    margin: shape({
+        top: number,
+        bottom: number,
+        left: number,
+        right: number
+    }).isRequired
+};
 
 export default Chart;

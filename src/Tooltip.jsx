@@ -1,40 +1,35 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
+import { number, node } from 'prop-types';
 
-const { number, node } = PropTypes;
+const Tooltip = ({ top, left, hidden, html, translate }) => {
+    const style = {
+        display: hidden ? 'none' : 'block',
+        position: 'fixed',
+        top,
+        left,
+        transform: `translate(-${translate}%, 0)`,
+        pointerEvents: 'none'
+    };
 
-const Tooltip = createReactClass({
-    propTypes: {
-        top: number.isRequired,
-        left: number.isRequired,
-        html: node,
-        translate: number
-    },
+    return (
+        <div className="tooltip" style={style}>
+            {html}
+        </div>
+    );
+};
 
-    getDefaultProps() {
-        return {
-            top: 150,
-            left: 100,
-            html: '',
-            translate: 50
-        };
-    },
+Tooltip.propTypes = {
+    top: number.isRequired,
+    left: number.isRequired,
+    html: node,
+    translate: number
+};
 
-    render() {
-        const {top, left, hidden, html, translate} = this.props;
-
-        const style = {
-            display: hidden ? 'none' : 'block',
-            position: 'fixed',
-            top,
-            left,
-            transform: `translate(-${translate}%, 0)`,
-            pointerEvents: 'none'
-        };
-
-        return <div className="tooltip" style={style}>{html}</div>;
-    }
-});
+Tooltip.defaultProps = {
+    top: 150,
+    left: 100,
+    html: '',
+    translate: 50
+};
 
 export default Tooltip;
