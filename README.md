@@ -29,7 +29,11 @@ Let React have complete control over the DOM even when using D3. This way we can
 
 ## Installation
 ```
-npm install react-d3-components
+# for d3 version 5
+npm install react-d3-components d3@5
+
+# for d3 version 3
+npm install react-d3-components@0
 ```
 
 ## Development
