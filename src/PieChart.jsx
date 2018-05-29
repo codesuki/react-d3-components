@@ -1,40 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import createReactClass from 'create-react-class';
-import d3 from 'd3';
+import { pie as d3Pie, arc as d3Arc } from 'd3-shape';
+import { string, array, number, bool, func, any } from 'prop-types';
 
 import Chart from './Chart';
 import Tooltip from './Tooltip';
 
+import AccessorMixin from './AccessorMixin';
 import DefaultPropsMixin from './DefaultPropsMixin';
 import HeightWidthMixin from './HeightWidthMixin';
-import AccessorMixin from './AccessorMixin';
 import TooltipMixin from './TooltipMixin';
 
-const { string, array, number, bool, func, any } = PropTypes;
+const Wedge = ({ fill, d, data, onMouseEnter, onMouseLeave }) =>
+    <path
+        fill={fill}
+        d={d}
+        onMouseMove={evt => onMouseEnter(evt, data)}
+        onMouseLeave={evt => onMouseLeave(evt)}
+    />
+;
 
-const Wedge = createReactClass({
-    propTypes: {
-        d: string.isRequired,
-        fill: string.isRequired
-    },
+Wedge.propTypes = {
+    d: string.isRequired,
+    fill: string.isRequired
+};
 
-    render() {
-        const {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
-
-        return (
-            <path
-                fill={fill}
-                d={d}
-                onMouseMove={evt => onMouseEnter(evt, data)}
-                onMouseLeave={evt => onMouseLeave(evt)}
-            />
-        );
-    }
-});
-
-const DataSet = createReactClass({
-    propTypes: {
+class DataSet extends Component {
+    static propTypes = {
         pie: array.isRequired,
         arc: func.isRequired,
         outerArc: func.isRequired,
@@ -46,17 +38,15 @@ const DataSet = createReactClass({
         opacity: number,
         x: func.isRequired,
         hideLabels: bool
-    },
+    };
 
-    getDefaultProps() {
-        return {
-            strokeWidth: 2,
-            stroke: '#000',
-            fill: 'none',
-            opacity: 0.3,
-            hideLabels: false
-        };
-    },
+    static defaultProps = {
+        strokeWidth: 2,
+        stroke: '#000',
+        fill: 'none',
+        opacity: 0.3,
+        hideLabels: false
+    };
 
     renderLabel(wedge) {
         const {
@@ -71,12 +61,13 @@ const DataSet = createReactClass({
         } = this.props;
 
         const labelPos = outerArc.centroid(wedge);
-        labelPos[0] = radius * (this.midAngle(wedge) < Math.PI ? 1 : -1);
+        labelPos[0] = radius * (DataSet.midAngle(wedge) < Math.PI ? 1 : -1);
 
         const linePos = outerArc.centroid(wedge);
-        linePos[0] = radius * 0.95 * (this.midAngle(wedge) < Math.PI ? 1 : -1);
+        linePos[0] =
+            radius * 0.95 * (DataSet.midAngle(wedge) < Math.PI ? 1 : -1);
 
-        const textAnchor = this.midAngle(wedge) < Math.PI ? 'start' : 'end';
+        const textAnchor = DataSet.midAngle(wedge) < Math.PI ? 'start' : 'end';
 
         return (
             <g>
@@ -85,17 +76,23 @@ const DataSet = createReactClass({
                     strokeWidth={strokeWidth}
                     stroke={stroke}
                     fill={fill}
-                    points={[arc.centroid(wedge), outerArc.centroid(wedge), linePos]}
+                    points={[
+                        arc.centroid(wedge),
+                        outerArc.centroid(wedge),
+                        linePos
+                    ]}
                 />
                 <text
                     dy=".35em"
                     x={labelPos[0]}
                     y={labelPos[1]}
-                    textAnchor={textAnchor}>{x(wedge.data)}
+                    textAnchor={textAnchor}
+                >
+                    {x(wedge.data)}
                 </text>
             </g>
         );
-    },
+    }
 
     render() {
         const {
@@ -109,38 +106,36 @@ const DataSet = createReactClass({
             hideLabels
         } = this.props;
 
-      const wedges = pie.map((e, index) => {
-        const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180
+        const wedges = pie.map((e, index) => {
+            const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180;
 
-        return (
-          <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
-            <Wedge
-              data={e.data}
-              fill={colorScale(x(e.data))}
-              d={arc(e)}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
-              />
-            {!hideLabels && !!e.value && labelFits && this.renderLabel(e)}
-          </g>
-        );
-      });
+            return (
+                <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
+                    <Wedge
+                        data={e.data}
+                        fill={colorScale(x(e.data))}
+                        d={arc(e)}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                    />
+                    {!hideLabels &&
+                        !!e.value &&
+                        labelFits &&
+                        this.renderLabel(e)}
+                </g>
+            );
+        });
 
         return <g>{wedges}</g>;
-    },
+    }
 
-    midAngle(d) {
+    static midAngle(d) {
         return d.startAngle + (d.endAngle - d.startAngle) / 2;
     }
-});
+}
 
 const PieChart = createReactClass({
-    mixins: [
-        DefaultPropsMixin,
-        HeightWidthMixin,
-        AccessorMixin,
-        TooltipMixin
-    ],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin, TooltipMixin],
 
     propTypes: {
         innerRadius: number,
@@ -188,17 +183,12 @@ const PieChart = createReactClass({
             hideLabels
         } = this.props;
 
-        let {
-            innerRadius,
-            outerRadius,
-            labelRadius
-        } = this.props;
+        let { innerRadius, outerRadius, labelRadius } = this.props;
 
         const innerWidth = this._innerWidth;
         const innerHeight = this._innerHeight;
 
-        let pie = d3.layout.pie()
-            .value(e => y(e));
+        let pie = d3Pie().value(e => y(e));
 
         if (typeof sort !== 'undefined') {
             pie = pie.sort(sort);
@@ -217,13 +207,13 @@ const PieChart = createReactClass({
             labelRadius = radius * 0.9;
         }
 
-        const arc = d3.svg.arc()
+        const arc = d3Arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius)
             .padRadius(padRadius)
             .cornerRadius(cornerRadius);
 
-        const outerArc = d3.svg.arc()
+        const outerArc = d3Arc()
             .innerRadius(labelRadius)
             .outerRadius(labelRadius);
 
@@ -233,7 +223,13 @@ const PieChart = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <g transform={translation}>
                         <DataSet
                             width={innerWidth}

@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-
-const { func } = PropTypes;
+import { func } from 'prop-types';
 
 const StackAccessorMixin = {
     propTypes: {

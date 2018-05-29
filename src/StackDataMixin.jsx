@@ -1,17 +1,15 @@
-import PropTypes from 'prop-types';
-import d3 from 'd3';
-
-const { string } = PropTypes;
+import { func } from 'prop-types';
+import { stack as d3Stack, stackOrderNone, stackOffsetNone } from 'd3-shape';
 
 const StackDataMixin = {
     propTypes: {
-        offset: string
+        offset: func
     },
 
     getDefaultProps() {
         return {
-            offset: 'zero',
-            order: 'default'
+            offset: stackOffsetNone,
+            order: stackOrderNone
         };
     },
 
@@ -24,31 +22,36 @@ const StackDataMixin = {
     },
 
     _stackData(props) {
-        const {offset, order, x, y, values} = props;
+        const { offset, order, x, y, values } = props;
 
-        const stack = d3.layout.stack()
+/*
+        const stack = d3Stack()
             .offset(offset)
             .order(order)
-            .x(x)
-            .y(y)
-            .values(values);
+            .keys(['x', 'y']);
 
-      this._data = stack(this._data);
+        this._data = stack(this._data);
+*/
 
-      for (let m = 0; m < values(this._data[0]).length; m++) {
-        let positiveBase = 0;
-        let negativeBase = 0;
-        for (let n = 0; n < this._data.length; n++) {
-          let value = y(values(this._data[n])[m]);
-          if (value < 0) {
-            values(this._data[n])[m].y0 = negativeBase;
-            negativeBase += value;
-          } else {
-            values(this._data[n])[m].y0 = positiveBase;
-            positiveBase += value;
-          }
+        this._data = this._data.map(elm => ({
+            ...elm,
+            values: elm.values.map(e => ({ ...e, y0: 0 }))
+        }));
+
+        for (let m = 0; m < values(this._data[0]).length; m++) {
+            let positiveBase = 0;
+            let negativeBase = 0;
+            for (let n = 0; n < this._data.length; n++) {
+                const value = y(values(this._data[n])[m]);
+                if (value < 0) {
+                    values(this._data[n])[m].y0 = negativeBase;
+                    negativeBase += value;
+                } else {
+                    values(this._data[n])[m].y0 = positiveBase;
+                    positiveBase += value;
+                }
+            }
         }
-      }
     }
 };
 

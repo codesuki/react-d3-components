@@ -1,14 +1,10 @@
-import PropTypes from 'prop-types';
-import d3 from 'd3';
-
-const { oneOfType, object, array, shape, func, number } = PropTypes;
+import { oneOfType, object, array, shape, func, number } from 'prop-types';
+import { scaleOrdinal } from 'd3-scale';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 
 const DefaultPropsMixin = {
     propTypes: {
-        data: oneOfType([
-            object,
-            array
-        ]).isRequired,
+        data: oneOfType([object, array]).isRequired,
         height: number.isRequired,
         width: number.isRequired,
         margin: shape({
@@ -24,11 +20,14 @@ const DefaultPropsMixin = {
 
     getDefaultProps() {
         return {
-            data: {label: 'No data available', values: [{x: 'No data available', y: 1}]},
-            margin: {top: 0, bottom: 0, left: 0, right: 0},
+            data: {
+                label: 'No data available',
+                values: [{ x: 'No data available', y: 1 }]
+            },
+            margin: { top: 0, bottom: 0, left: 0, right: 0 },
             xScale: null,
             yScale: null,
-            colorScale: d3.scale.category20()
+            colorScale: scaleOrdinal(schemeCategory10)
         };
     }
 };
