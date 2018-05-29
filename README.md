@@ -30,7 +30,7 @@ Let React have complete control over the DOM even when using D3. This way we can
 ## Installation
 ```
 # for d3 version 5
-npm install react-d3-components d3@5
+npm install react-d3-components d3-array@1 d3-scale@2 d3-scale-chromatic@1 d3-shape@1
 
 # for d3 version 3
 npm install react-d3-components@0
