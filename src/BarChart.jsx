@@ -38,11 +38,11 @@ const DataSet = ({
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
-                        width={xScale.rangeBand() / data.length}
+                        width={xScale.bandwidth() / data.length}
                         height={Math.abs(yScale(0) - yScale(y(e)))}
                         x={
                             xScale(x(e)) +
-                            xScale.rangeBand() * serieIndex / data.length
+                            xScale.bandwidth() * serieIndex / data.length
                         }
                         y={yVal}
                         fill={colorScale(label(stack))}
@@ -63,7 +63,7 @@ const DataSet = ({
                 return (
                     <Bar
                         key={`${label(stack)}.${index}`}
-                        width={xScale.rangeBand()}
+                        width={xScale.bandwidth()}
                         height={Math.abs(yScale(y0(e) + y(e)) - yScale(y0(e)))}
                         x={xScale(x(e))}
                         y={yVal}
@@ -119,7 +119,7 @@ const BarChart = createReactClass({
             this.props.y(d)
         );
 
-        const midPoint = xScale.rangeBand() / 2;
+        const midPoint = xScale.bandwidth() / 2;
         const xPos = midPoint + xScale(this.props.x(d));
 
         const topStack = this._data[this._data.length - 1].values;

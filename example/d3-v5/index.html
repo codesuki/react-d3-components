@@ -1,144 +1,142 @@
 <!doctype html>
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <title>React D3 Components Examples</title>
-<link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <script defer src="https://unpkg.com/@babel/standalone@7.0.0-beta.49/babel.min.js"></script>
-    <script defer src="https://unpkg.com/react@16.0.0/umd/react.production.min.js"></script>
-    <script defer src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.production.min.js"></script>
-    <script defer src="https://unpkg.com/d3@5.4.0/dist/d3.min.js"></script>
+    <script defer src="https://unpkg.com/react@16.0.0/umd/react.development.js"></script>
+    <script defer src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.development.js"></script>
+    <script defer src="https://unpkg.com/d3@5.4.0/dist/d3.js"></script>
     <script defer src="../../dist/react-d3-components.js"></script>
-    </head>
-    <body>
-    <div id="brush" class="brush"></div>
-    <div id="barchart"></div>
-    <div id="barchart2"></div>
-    <div id="stackedbarchart"></div>
-    <div id="groupedbarchart"></div>
-    <div id="scatterplot"></div>
-    <div id="scatterplot2"></div>
-    <div id="scatterplot3"></div>
-    <div id="scatterplot4"></div>
-    <div id="linechart"></div>
-    <div id="linechart2"></div>
-    <div id="areachart"></div>
-    <div id="areachart2"></div>
-    <div id="stackedareachart"></div>
-    <div id="piechart"></div>
-    <div id="waveformchart"></div>
+</head>
+<body>
+<div id="brush" class="brush"></div>
+<div id="barchart"></div>
+<div id="barchart2"></div>
+<div id="stackedbarchart"></div>
+<div id="groupedbarchart"></div>
+<div id="scatterplot"></div>
+<div id="scatterplot2"></div>
+<div id="scatterplot3"></div>
+<div id="scatterplot4"></div>
+<div id="linechart"></div>
+<div id="linechart2"></div>
+<div id="areachart"></div>
+<div id="areachart2"></div>
+<div id="stackedareachart"></div>
+<div id="piechart"></div>
+<div id="waveformchart"></div>
 
-    <script type="text/babel" data-presets="react">
-const {
-    Waveform,
-    BarChart,
-    PieChart,
-    AreaChart,
-    ScatterPlot,
-    LineChart,
-    Brush,
-} = ReactD3;
+<script type="text/babel" data-presets="react">
+    const {Component} = React;
+    const {
+        Waveform,
+        BarChart,
+        PieChart,
+        AreaChart,
+        ScatterPlot,
+        LineChart,
+        Brush,
+    } = ReactD3;
 
-const tooltipLine = function (label, data) {
-    return label + " x: " + data.x + " y: " + data.y;
-};
-
-class SomeComponent extends React.Component {
-    state = {
-        data: {
-            label: '',
-            values: [
-                {x: new Date(2015, 2, 5), y: 1},
-                {x: new Date(2015, 2, 6), y: 2},
-                {x: new Date(2015, 2, 7), y: 0},
-                {x: new Date(2015, 2, 8), y: 3},
-                {x: new Date(2015, 2, 9), y: 2},
-                {x: new Date(2015, 2, 10), y: 3},
-                {x: new Date(2015, 2, 11), y: 4},
-                {x: new Date(2015, 2, 12), y: 4},
-                {x: new Date(2015, 2, 13), y: 1},
-                {x: new Date(2015, 2, 14), y: 5},
-                {x: new Date(2015, 2, 15), y: 0},
-                {x: new Date(2015, 2, 16), y: 1},
-                {x: new Date(2015, 2, 16), y: 1},
-                {x: new Date(2015, 2, 18), y: 4},
-                {x: new Date(2015, 2, 19), y: 4},
-                {x: new Date(2015, 2, 20), y: 5},
-                {x: new Date(2015, 2, 21), y: 5},
-                {x: new Date(2015, 2, 22), y: 5},
-                {x: new Date(2015, 2, 23), y: 1},
-                {x: new Date(2015, 2, 24), y: 0},
-                {x: new Date(2015, 2, 25), y: 1},
-                {x: new Date(2015, 2, 26), y: 1}
-            ]
-        },
-        xScale: d3.scaleTime().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70]),
-        xScaleBrush: d3.scaleTime().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70])
-
+    const tooltipLine = function (label, data) {
+        return label + " x: " + data.x + " y: " + data.y;
     };
 
-    render() {
+    class SomeComponent extends Component {
+        state = {
+            data: {
+                label: '',
+                values: [
+                    {x: new Date(2015, 2, 5), y: 1},
+                    {x: new Date(2015, 2, 6), y: 2},
+                    {x: new Date(2015, 2, 7), y: 0},
+                    {x: new Date(2015, 2, 8), y: 3},
+                    {x: new Date(2015, 2, 9), y: 2},
+                    {x: new Date(2015, 2, 10), y: 3},
+                    {x: new Date(2015, 2, 11), y: 4},
+                    {x: new Date(2015, 2, 12), y: 4},
+                    {x: new Date(2015, 2, 13), y: 1},
+                    {x: new Date(2015, 2, 14), y: 5},
+                    {x: new Date(2015, 2, 15), y: 0},
+                    {x: new Date(2015, 2, 16), y: 1},
+                    {x: new Date(2015, 2, 16), y: 1},
+                    {x: new Date(2015, 2, 18), y: 4},
+                    {x: new Date(2015, 2, 19), y: 4},
+                    {x: new Date(2015, 2, 20), y: 5},
+                    {x: new Date(2015, 2, 21), y: 5},
+                    {x: new Date(2015, 2, 22), y: 5},
+                    {x: new Date(2015, 2, 23), y: 1},
+                    {x: new Date(2015, 2, 24), y: 0},
+                    {x: new Date(2015, 2, 25), y: 1},
+                    {x: new Date(2015, 2, 26), y: 1}
+                ]
+            },
+            xScale: d3.scaleTime().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70]),
+            xScaleBrush: d3.scaleTime().domain([new Date(2015, 2, 5), new Date(2015, 2, 26)]).range([0, 400 - 70])
 
-        return (
+        };
+
+        render = () => (
             <div>
-            <LineChart
-        data={this.state.data}
-        width={400}
-        height={400}
-        margin={{top: 10, bottom: 50, left: 50, right: 20}}
-        xScale={this.state.xScale}
-        xAxis={{
-            tickValues: this.state.xScale.ticks(d3.timeDay, 2),
-                tickFormat: d3.timeFormat("%m/%d")
-        }}
-        tooltipHtml={tooltipLine}
-        />
-        <div className="brush" style={{float: 'none'}}>
-    <Brush
-        width={400}
-        height={50}
-        margin={{top: 0, bottom: 30, left: 50, right: 20}}
-        xScale={this.state.xScaleBrush}
-        extent={[new Date(2015, 2, 10), new Date(2015, 2, 12)]}
-        onChange={this._onChange}
-        xAxis={{
-            tickValues: this.state.xScaleBrush.ticks(d3.timeDay, 2),
-                tickFormat: d3.timeFormat("%m/%d")
-        }}
-        />
-        </div>
-        </div>
+                <LineChart
+                    data={this.state.data}
+                    width={400}
+                    height={400}
+                    margin={{top: 10, bottom: 50, left: 50, right: 20}}
+                    xScale={this.state.xScale}
+                    xAxis={{
+                        tickValues: this.state.xScale.ticks(d3.timeDay, 2),
+                        tickFormat: d3.timeFormat("%m/%d")
+                    }}
+                    tooltipHtml={tooltipLine}
+                />
+                <div className="brush" style={{float: 'none'}}>
+                    <Brush
+                        width={400}
+                        height={50}
+                        margin={{top: 0, bottom: 30, left: 50, right: 20}}
+                        xScale={this.state.xScaleBrush}
+                        extent={[new Date(2015, 2, 10), new Date(2015, 2, 12)]}
+                        onChange={this._onChange}
+                        xAxis={{
+                            tickValues: this.state.xScaleBrush.ticks(d3.timeDay, 2),
+                            tickFormat: d3.timeFormat("%m/%d")
+                        }}
+                    />
+                </div>
+            </div>
+        );
+
+
+        _onChange = (extent) => {
+            this.setState({xScale: d3.scaleTime().domain([extent[0], extent[1]]).range([0, 400 - 70])});
+        };
+    }
+
+
+    ReactDOM.render(
+        <SomeComponent/>,
+        document.getElementById('brush')
     );
-    }
 
-    _onChange = (extent) => {
-        this.setState({xScale: d3.scaleTime().domain([extent[0], extent[1]]).range([0, 400 - 70])});
-    }
-}
-
-
-ReactDOM.render(
-<SomeComponent/>,
-    document.getElementById('brush')
-);
-/*
-
-    var tooltip = function (x, y0, y, total) {
+    const tooltip = function (x, y0, y) {
         return x + " " + y.toString();
     };
 
-    var tooltipScatter = function (x, y) {
+    const tooltipScatter = function (x, y) {
         return "x: " + x + " y: " + y;
     };
 
-    var tooltipPie = function (x, y) {
+    const tooltipPie = function (x, y) {
         return x + ": " + y.toString();
     };
 
-    var tooltipArea = function (y, cumulative, x, label) {
+    const tooltipArea = function (y, cumulative, x, label) {
         return label + " Total: " + cumulative + " X: " + x + " Y: " + y;
-    }
+    };
 
-    var data = [{
+    let data = [{
         label: 'somethingA',
         values: [{x: 'SomethingA', y: 10}, {x: 'SomethingB', y: 4}, {x: 'SomethingC', y: 3}, {x: 'SomethingD', y: -3}]
     }];
@@ -157,12 +155,12 @@ ReactDOM.render(
     );
 
 
-    var data = [{
+    data = [{
         label: 'somethingA',
         values: []
     }];
-    /!* Absolute values of a sin waveform. We do expect only values within [0,1] *!/
-    for (var i = 0; i < 320; i++) {
+    /* Absolute values of a sin waveform. We do expect only values within [0,1] */
+    for (let i = 0; i < 320; i++) {
         data[0].values.push({x: '' + i, y: Math.abs(Math.sin(i / 20))});
     }
 
@@ -172,38 +170,13 @@ ReactDOM.render(
             data={data}
             width={1400}
             height={200}
-            colorScale={d3.scale.linear()
+            colorScale={d3.scaleLinear()
                 .domain([0, 1400])
                 .range(['#eb1785', '#ff7b16'])}
         />,
         document.getElementById('waveformchart')
     );
 
-    /!*
-    data = [{
-    customLabel: 'somethingA',
-    customValues: [['SomethingA', 10], ['SomethingB', 4], ['SomethingC', 3]]
-    }];
-    var labelAccessor = function(stack) { return stack.customLabel; };
-    var valuesAccessor = function(stack) { return stack.customValues; };
-    var xAccessor = function(element) { return element[0]; };
-    var yAccessor = function(element) { return element[1]; };
-
-    ReactDOM.render(
-    <BarChart
-        data={data}
-        width={400}
-        height={400}
-        margin={{top: 10, bottom: 50, left: 50, right: 10}}
-        tooltipHtml={tooltip}
-        label={labelAccessor}
-        x={xAccessor}
-        y={yAccessor}
-        values={valuesAccessor}
-    />,
-    document.getElementById('barchart2')
-    );
-    *!/
     data = [
         {
             label: 'somethingA',
@@ -255,6 +228,7 @@ ReactDOM.render(
         />,
         document.getElementById('groupedbarchart')
     );
+
 
     data = {
         label: 'somethingA',
@@ -344,29 +318,29 @@ ReactDOM.render(
             width={400}
             height={400}
             margin={{top: 10, bottom: 50, left: 50, right: 10}}
-            interpolate={"basis"}
+            interpolate={d3.curveBasis}
             tooltipHtml={tooltipArea}
         />,
         document.getElementById('stackedareachart')
     );
 
-    var dashFunc = function (label) {
-        if (label == "somethingA") {
+    const dashFunc = function (label) {
+        if (label === "somethingA") {
             return "4 4 4";
         }
-        if (label == "somethingB") {
+        if (label === "somethingB") {
             return "3 4 3";
         }
-    }
+    };
 
-    var widthFunc = function (label) {
-        if (label == "somethingA") {
+    const widthFunc = function (label) {
+        if (label === "somethingA") {
             return "4";
         }
-        if (label == "somethingB") {
+        if (label === "somethingB") {
             return "2";
         }
-    }
+    };
 
     ReactDOM.render(<LineChart
             data={data}
@@ -390,17 +364,8 @@ ReactDOM.render(
             y: 7.8
         }, {x: 5.5, y: 9}]
     }];
-    /!*
-    ReactDOM.render(<ScatterPlot
-                        data={data}
-                        width={400}
-                        height={400}
-                        margin={{top: 10, bottom: 50, left: 50, right: 10}}
-                        tooltipHtml={tooltipScatter}
-                    />,
-    document.getElementById('scatterplot')
-    );
-    *!/
+
+
     ReactDOM.render(<AreaChart
             data={data}
             width={400}
@@ -451,58 +416,6 @@ ReactDOM.render(
         document.getElementById('linechart2')
     );
 
-    /!*
-    data = [{
-    customLabel: 'somethingA',
-    customValues: [[0, 3], [1.3, 4], [3, 7], [3.5, 8], [4, 7], [4.5, 7],  [5, 7.8]]
-    }];
-
-    var labelAccessor = function(stack) { return stack.customLabel; };
-    var valuesAccessor = function(stack) { return stack.customValues; };
-    var xAccessor = function(element) { return element[0]; };
-    var yAccessor = function(element) { return element[1]; };
-
-    ReactDOM.render(<ScatterPlot
-                        data={data}
-                        width={400}
-                        height={400}
-                        margin={{top: 10, bottom: 50, left: 50, right: 10}}
-                        label={labelAccessor}
-                        x={xAccessor}
-                        y={yAccessor}
-                        values={valuesAccessor}
-                        tooltipHtml={tooltipScatter}/>,
-    document.getElementById('scatterplot4')
-    );
-
-    ReactDOM.render(<AreaChart
-                        data={data}
-                        width={400}
-                        height={400}
-                        margin={{top: 10, bottom: 50, left: 50, right: 10}}
-                        interpolate={"basis"}
-                        label={labelAccessor}
-                        x={xAccessor}
-                        y={yAccessor}
-                        values={valuesAccessor}
-                        tooltipHtml={tooltipArea}/>,
-    document.getElementById('areachart2')
-    );
-
-    ReactDOM.render(<LineChart
-                        data={data}
-                        width={400}
-                        height={400}
-                        margin={{top: 10, bottom: 50, left: 50, right: 10}}
-                        label={labelAccessor}
-                        x={xAccessor}
-                        y={yAccessor}
-                        values={valuesAccessor}
-                        tooltipHtml={tooltipLine}/>,
-    document.getElementById('linechart2')
-);
-*!/
-*/
 
 </script>
 </body>

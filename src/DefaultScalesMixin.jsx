@@ -1,6 +1,6 @@
 import { number } from 'prop-types';
 import { extent as d3Extent, max as d3Max, min as d3Min } from 'd3-array';
-import { scaleTime, scaleOrdinal, scaleLinear } from 'd3-scale';
+import { scaleTime, scaleBand, scaleLinear } from 'd3-scale';
 
 const DefaultScalesMixin = {
     propTypes: {
@@ -70,9 +70,9 @@ const DefaultScalesMixin = {
     _makeOrdinalXScale(props) {
         const { x, values, barPadding } = props;
 
-        const scale = scaleOrdinal()
+        const scale = scaleBand()
             .domain(values(this._data[0]).map(e => x(e)))
-            .rangeRoundBands([0, this._innerWidth], barPadding);
+            .range([0, this._innerWidth], barPadding);
 
         return [scale, 0];
     },
@@ -122,7 +122,7 @@ const DefaultScalesMixin = {
     },
 
     _makeOrdinalYScale() {
-        const scale = scaleOrdinal().range([this._innerHeight, 0]);
+        const scale = scaleBand().range([this._innerHeight, 0]);
 
         const yIntercept = scale(0);
 

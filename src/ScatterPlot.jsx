@@ -1,7 +1,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
-import { symbol as d3Symbol } from 'd3-shape';
-import { array, func, string } from 'prop-types';
+import { symbol as d3Symbol, symbolCircle } from 'd3-shape';
+import { array, func } from 'prop-types';
 
 import Axis from './Axis';
 import Chart from './Chart';
@@ -69,13 +69,13 @@ const ScatterPlot = createReactClass({
 
     propTypes: {
         rScale: func,
-        shape: string
+        shape: func
     },
 
     getDefaultProps() {
         return {
             rScale: null,
-            shape: 'circle'
+            shape: symbolCircle
         };
     },
 

@@ -1,6 +1,11 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
-import { line as d3Line, symbol as d3Symbol, curveLinear } from 'd3-shape';
+import {
+    line as d3Line,
+    symbol as d3Symbol,
+    curveLinear,
+    symbolCircle
+} from 'd3-shape';
 import { bisector as d3Bisector } from 'd3-array';
 import { array, func } from 'prop-types';
 
@@ -114,12 +119,12 @@ const LineChart = createReactClass({
         return {
             interpolate: curveLinear,
             defined: () => true,
-            shape: 'circle',
+            shape: symbolCircle,
             shapeColor: null,
             showCustomLine: false,
             lineStructureClassName: 'dot',
             customPointColor: 'blue',
-            customPointShape: 'circle'
+            customPointShape: symbolCircle
         };
     },
 
