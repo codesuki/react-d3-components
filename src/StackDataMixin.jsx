@@ -24,12 +24,19 @@ const StackDataMixin = {
     _stackData(props) {
         const { offset, order, x, y, values } = props;
 
+/*
         const stack = d3Stack()
             .offset(offset)
             .order(order)
             .keys(['x', 'y']);
 
-        /*this._data = stack(this._data);
+        this._data = stack(this._data);
+*/
+
+        this._data = this._data.map(elm => ({
+            ...elm,
+            values: elm.values.map(e => ({ ...e, y0: 0 }))
+        }));
 
         for (let m = 0; m < values(this._data[0]).length; m++) {
             let positiveBase = 0;
@@ -44,7 +51,7 @@ const StackDataMixin = {
                     positiveBase += value;
                 }
             }
-        }*/
+        }
     }
 };
 
