@@ -50,7 +50,7 @@
     "webpack-merge": "^4.1.2"
   },
   "scripts": {
-    "prepublish": "",
+    "prepublish": "npm run build",
     "postpublish": "rm -r ./lib",
     "build": "npm-run-all --parallel build:*",
     "build:js": "babel -c -d ./lib ./src/",
