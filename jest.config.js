@@ -1,4 +1,5 @@
 module.exports = {
+    snapshotSerializers: ['enzyme-to-json/serializer'],
     setupTestFrameworkScriptFile: '<rootDir>config/setupTests.js',
     coverageThreshold: {
         global: {
@@ -10,7 +11,9 @@ module.exports = {
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/lib/',
-        '/dist/',
-        '/config/'
+        '/config/',
+        '/__tests__/',
+        '/src/Fragment.js',
+        'src/utils/createRef.js'
     ]
 };

@@ -4,7 +4,8 @@
         [
             "@babel/preset-stage-0",
             {
-                "decoratorsLegacy": true
+                "decoratorsLegacy": true,
+                "pipelineProposal": "minimal"
             }
         ],
         "@babel/preset-react"
