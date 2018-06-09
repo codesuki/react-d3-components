@@ -20,7 +20,7 @@ const Wedge = createReactClass({
     },
 
     render() {
-        const {fill, d, data, onMouseEnter, onMouseLeave} = this.props;
+        const { fill, d, data, onMouseEnter, onMouseLeave } = this.props;
 
         return (
             <path
@@ -85,13 +85,19 @@ const DataSet = createReactClass({
                     strokeWidth={strokeWidth}
                     stroke={stroke}
                     fill={fill}
-                    points={[arc.centroid(wedge), outerArc.centroid(wedge), linePos]}
+                    points={[
+                        arc.centroid(wedge),
+                        outerArc.centroid(wedge),
+                        linePos
+                    ]}
                 />
                 <text
                     dy=".35em"
                     x={labelPos[0]}
                     y={labelPos[1]}
-                    textAnchor={textAnchor}>{x(wedge.data)}
+                    textAnchor={textAnchor}
+                >
+                    {x(wedge.data)}
                 </text>
             </g>
         );
@@ -109,22 +115,25 @@ const DataSet = createReactClass({
             hideLabels
         } = this.props;
 
-      const wedges = pie.map((e, index) => {
-        const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180
+        const wedges = pie.map((e, index) => {
+            const labelFits = e.endAngle - e.startAngle >= 10 * Math.PI / 180;
 
-        return (
-          <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
-            <Wedge
-              data={e.data}
-              fill={colorScale(x(e.data))}
-              d={arc(e)}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
-              />
-            {!hideLabels && !!e.value && labelFits && this.renderLabel(e)}
-          </g>
-        );
-      });
+            return (
+                <g key={`${x(e.data)}.${y(e.data)}.${index}`} className="arc">
+                    <Wedge
+                        data={e.data}
+                        fill={colorScale(x(e.data))}
+                        d={arc(e)}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                    />
+                    {!hideLabels &&
+                        !!e.value &&
+                        labelFits &&
+                        this.renderLabel(e)}
+                </g>
+            );
+        });
 
         return <g>{wedges}</g>;
     },
@@ -135,12 +144,7 @@ const DataSet = createReactClass({
 });
 
 const PieChart = createReactClass({
-    mixins: [
-        DefaultPropsMixin,
-        HeightWidthMixin,
-        AccessorMixin,
-        TooltipMixin
-    ],
+    mixins: [DefaultPropsMixin, HeightWidthMixin, AccessorMixin, TooltipMixin],
 
     propTypes: {
         innerRadius: number,
@@ -188,17 +192,12 @@ const PieChart = createReactClass({
             hideLabels
         } = this.props;
 
-        let {
-            innerRadius,
-            outerRadius,
-            labelRadius
-        } = this.props;
+        let { innerRadius, outerRadius, labelRadius } = this.props;
 
         const innerWidth = this._innerWidth;
         const innerHeight = this._innerHeight;
 
-        let pie = d3.layout.pie()
-            .value(e => y(e));
+        let pie = d3.layout.pie().value(e => y(e));
 
         if (typeof sort !== 'undefined') {
             pie = pie.sort(sort);
@@ -217,13 +216,15 @@ const PieChart = createReactClass({
             labelRadius = radius * 0.9;
         }
 
-        const arc = d3.svg.arc()
+        const arc = d3.svg
+            .arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius)
             .padRadius(padRadius)
             .cornerRadius(cornerRadius);
 
-        const outerArc = d3.svg.arc()
+        const outerArc = d3.svg
+            .arc()
             .innerRadius(labelRadius)
             .outerRadius(labelRadius);
 
@@ -233,7 +234,13 @@ const PieChart = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <g transform={translation}>
                         <DataSet
                             width={innerWidth}

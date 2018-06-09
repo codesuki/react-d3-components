@@ -24,31 +24,32 @@ const StackDataMixin = {
     },
 
     _stackData(props) {
-        const {offset, order, x, y, values} = props;
+        const { offset, order, x, y, values } = props;
 
-        const stack = d3.layout.stack()
+        const stack = d3.layout
+            .stack()
             .offset(offset)
             .order(order)
             .x(x)
             .y(y)
             .values(values);
 
-      this._data = stack(this._data);
+        this._data = stack(this._data);
 
-      for (let m = 0; m < values(this._data[0]).length; m++) {
-        let positiveBase = 0;
-        let negativeBase = 0;
-        for (let n = 0; n < this._data.length; n++) {
-          let value = y(values(this._data[n])[m]);
-          if (value < 0) {
-            values(this._data[n])[m].y0 = negativeBase;
-            negativeBase += value;
-          } else {
-            values(this._data[n])[m].y0 = positiveBase;
-            positiveBase += value;
-          }
+        for (let m = 0; m < values(this._data[0]).length; m++) {
+            let positiveBase = 0;
+            let negativeBase = 0;
+            for (let n = 0; n < this._data.length; n++) {
+                const value = y(values(this._data[n])[m]);
+                if (value < 0) {
+                    values(this._data[n])[m].y0 = negativeBase;
+                    negativeBase += value;
+                } else {
+                    values(this._data[n])[m].y0 = positiveBase;
+                    positiveBase += value;
+                }
+            }
         }
-      }
     }
 };
 

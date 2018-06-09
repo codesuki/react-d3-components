@@ -11,10 +11,7 @@ const Bar = createReactClass({
         x: number.isRequired,
         y: number.isRequired,
         fill: string.isRequired,
-        data: oneOfType([
-            array,
-            object
-        ]).isRequired,
+        data: oneOfType([array, object]).isRequired,
         onMouseEnter: func,
         onMouseLeave: func
     },
@@ -31,16 +28,18 @@ const Bar = createReactClass({
             onMouseLeave
         } = this.props;
 
-        return <rect
-            className="bar"
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            fill={fill}
-            onMouseMove={e => onMouseEnter(e, data)}
-            onMouseLeave={e => onMouseLeave(e)}
-        />;
+        return (
+            <rect
+                className="bar"
+                x={x}
+                y={y}
+                width={width}
+                height={height}
+                fill={fill}
+                onMouseMove={e => onMouseEnter(e, data)}
+                onMouseLeave={e => onMouseLeave(e)}
+            />
+        );
     }
 });
 

@@ -36,7 +36,7 @@ const Axis = createReactClass({
     },
 
     _getTranslateString() {
-        const {orientation, height, width, zero} = this.props;
+        const { orientation, height, width, zero } = this.props;
 
         if (orientation === 'top') {
             return `translate(0, ${zero})`;
@@ -62,22 +62,20 @@ const Axis = createReactClass({
             outerTickSize,
             scale,
             orientation,
-            zero,
+            zero
         } = this.props;
 
-        const {
-            width,
-            className,
-            label
-        } = this.props;
-        let {tickFormat} = this.props;
+        const { width, className, label } = this.props;
+        let { tickFormat } = this.props;
 
-        let ticks = tickValues == null
-            ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()
-            : tickValues;
+        let ticks =
+            tickValues == null
+                ? scale.ticks
+                    ? scale.ticks.apply(scale, tickArguments)
+                    : scale.domain()
+                : tickValues;
 
-        if (!tickFormat)
-        {
+        if (!tickFormat) {
             if (scale.tickFormat) {
                 tickFormat = scale.tickFormat.apply(scale, tickArguments);
             } else {
@@ -96,9 +94,20 @@ const Axis = createReactClass({
 
         const range = this._d3ScaleRange(scale);
 
-        const activeScale = scale.rangeBand ? e => scale(e) + scale.rangeBand() / 2 : scale;
+        const activeScale = scale.rangeBand
+            ? e => scale(e) + scale.rangeBand() / 2
+            : scale;
 
-        let transform, x, y, x2, y2, dy, textAnchor, d, labelElement, tickRotation = 0;
+        let transform,
+            x,
+            y,
+            x2,
+            y2,
+            dy,
+            textAnchor,
+            d,
+            labelElement,
+            tickRotation = 0;
         if (orientation === 'bottom' || orientation === 'top') {
             transform = 'translate({}, 0)';
             x = 0;
@@ -107,7 +116,8 @@ const Axis = createReactClass({
             y2 = sign * innerTickSize;
             dy = sign < 0 ? '0em' : '.71em';
             textAnchor = 'middle';
-            d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign * outerTickSize}`;
+            d = `M${range[0]}, ${sign * outerTickSize}V0H${range[1]}V${sign *
+                outerTickSize}`;
             if (tickDirection === 'vertical') {
                 tickRotation = -90;
                 x = -tickSpacing;
@@ -120,7 +130,16 @@ const Axis = createReactClass({
                 textAnchor = 'end';
             }
 
-            labelElement = <text className={`${className} label`} textAnchor={"end"} x={width} y={-6}>{label}</text>;
+            labelElement =
+                <text
+                    className={`${className} label`}
+                    textAnchor={'end'}
+                    x={width}
+                    y={-6}
+                >
+                    {label}
+                </text>
+            ;
         } else {
             transform = 'translate(0, {})';
             x = sign * tickSpacing;
@@ -129,7 +148,8 @@ const Axis = createReactClass({
             y2 = 0;
             dy = '.32em';
             textAnchor = sign < 0 ? 'end' : 'start';
-            d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign * outerTickSize}`;
+            d = `M${sign * outerTickSize}, ${range[0]}H0V${range[1]}H${sign *
+                outerTickSize}`;
             if (tickDirection === 'vertical') {
                 tickRotation = -90;
                 x -= sign * tickSpacing;
@@ -142,27 +162,55 @@ const Axis = createReactClass({
                 textAnchor = 'middle';
             }
 
-            labelElement = <text className={`${className} label`} textAnchor="end" y={6} dy={orientation === 'left' ? '.75em' : '-1.25em'} transform="rotate(-90)">{label}</text>;
+            labelElement =
+                <text
+                    className={`${className} label`}
+                    textAnchor="end"
+                    y={6}
+                    dy={orientation === 'left' ? '.75em' : '-1.25em'}
+                    transform="rotate(-90)"
+                >
+                    {label}
+                </text>
+            ;
         }
 
         const tickElements = ticks.map((tick, index) => {
             const position = activeScale(tick);
             const translate = transform.replace('{}', position);
             return (
-                <g key={`${tick}.${index}`} className="tick" transform={translate}>
-                    <line x2={x2} y2={y2} stroke="#aaa"/>
-                    <text x={x} y={y} dy={dy} textAnchor={textAnchor} transform={`rotate(${tickRotation})`}>
-                    {tickFormat(tick)}</text>
+                <g
+                    key={`${tick}.${index}`}
+                    className="tick"
+                    transform={translate}
+                >
+                    <line x2={x2} y2={y2} stroke="#aaa" />
+                    <text
+                        x={x}
+                        y={y}
+                        dy={dy}
+                        textAnchor={textAnchor}
+                        transform={`rotate(${tickRotation})`}
+                    >
+                        {tickFormat(tick)}
+                    </text>
                 </g>
             );
         });
 
-        const pathElement = <path className="domain" d={d} fill="none" stroke="#aaa"/>;
+        const pathElement =
+            <path className="domain" d={d} fill="none" stroke="#aaa" />
+        ;
 
-        const axisBackground = <rect className="axis-background" fill="none"/>;
+        const axisBackground = <rect className="axis-background" fill="none" />;
 
         return (
-            <g ref="axis" className={className} transform={this._getTranslateString()} style={{shapeRendering: 'crispEdges'}}>
+            <g
+                ref="axis"
+                className={className}
+                transform={this._getTranslateString()}
+                style={{ shapeRendering: 'crispEdges' }}
+            >
                 {axisBackground}
                 {tickElements}
                 {pathElement}
@@ -178,7 +226,9 @@ const Axis = createReactClass({
     },
 
     _d3ScaleRange(scale) {
-        return scale.rangeExtent ? scale.rangeExtent() : this._d3ScaleExtent(scale.range());
+        return scale.rangeExtent
+            ? scale.rangeExtent()
+            : this._d3ScaleExtent(scale.range());
     }
 });
 

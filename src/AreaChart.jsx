@@ -38,16 +38,18 @@ const DataSet = createReactClass({
             onMouseLeave
         } = this.props;
 
-        const areas = data.map((stack, index) => <Path
-            key={`${label(stack)}.${index}`}
-            className="area"
-            stroke="none"
-            fill={colorScale(label(stack))}
-            d={area(values(stack))}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            data={data}
-        />);
+        const areas = data.map((stack, index) =>
+            <Path
+                key={`${label(stack)}.${index}`}
+                className="area"
+                stroke="none"
+                fill={colorScale(label(stack))}
+                d={area(values(stack))}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                data={data}
+            />
+        );
 
         return <g>{areas}</g>;
     }
@@ -77,7 +79,7 @@ const AreaChart = createReactClass({
     },
 
     _tooltipHtml(d, position) {
-        const {x, y0, y, values, label} = this.props;
+        const { x, y0, y, values, label } = this.props;
         const xScale = this._xScale;
         const yScale = this._yScale;
 
@@ -93,7 +95,10 @@ const AreaChart = createReactClass({
         const xIndexLeft = xIndex == 0 ? xIndex : xIndex - 1;
         const xValueLeft = x(values(d[0])[xIndexLeft]);
 
-        if (Math.abs(xValueCursor - xValueRight) < Math.abs(xValueCursor - xValueLeft)) {
+        if (
+            Math.abs(xValueCursor - xValueRight) <
+            Math.abs(xValueCursor - xValueLeft)
+        ) {
             xIndex = xIndexRight;
         } else {
             xIndex = xIndexLeft;
@@ -101,19 +106,32 @@ const AreaChart = createReactClass({
 
         const yValueCursor = yScale.invert(position[1]);
 
-        const yBisector = d3.bisector(e => y0(values(e)[xIndex]) + y(values(e)[xIndex])).left;
+        const yBisector = d3.bisector(
+            e => y0(values(e)[xIndex]) + y(values(e)[xIndex])
+        ).left;
         let yIndex = yBisector(d, yValueCursor);
         yIndex = yIndex == d.length ? yIndex - 1 : yIndex;
 
         const yValue = y(values(d[yIndex])[xIndex]);
-        const yValueCumulative = y0(values(d[d.length - 1])[xIndex]) + y(values(d[d.length - 1])[xIndex]);
+        const yValueCumulative =
+            y0(values(d[d.length - 1])[xIndex]) +
+            y(values(d[d.length - 1])[xIndex]);
 
         const xValue = x(values(d[yIndex])[xIndex]);
 
         const xPos = xScale(xValue);
         const yPos = yScale(y0(values(d[yIndex])[xIndex]) + yValue);
 
-        return [this.props.tooltipHtml(yValue, yValueCumulative, xValue, label(d[yIndex])), xPos, yPos];
+        return [
+            this.props.tooltipHtml(
+                yValue,
+                yValueCumulative,
+                xValue,
+                label(d[yIndex])
+            ),
+            xPos,
+            yPos
+        ];
     },
 
     render() {
@@ -142,12 +160,14 @@ const AreaChart = createReactClass({
         const xScale = this._xScale;
         const yScale = this._yScale;
 
-        const line = d3.svg.line()
+        const line = d3.svg
+            .line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y0(e) + y(e)))
             .interpolate(interpolate);
 
-        const area = d3.svg.area()
+        const area = d3.svg
+            .area()
             .x(e => xScale(x(e)))
             .y0(e => yScale(yScale.domain()[0] + y0(e)))
             .y1(e => yScale(y0(e) + y(e)))
@@ -155,7 +175,13 @@ const AreaChart = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <DataSet
                         data={data}
                         line={line}
@@ -185,7 +211,7 @@ const AreaChart = createReactClass({
                     />
                     {this.props.children}
                 </Chart>
-                <Tooltip {...this.state.tooltip}/>
+                <Tooltip {...this.state.tooltip} />
             </div>
         );
     }

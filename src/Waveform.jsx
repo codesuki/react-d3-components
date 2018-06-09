@@ -24,7 +24,7 @@ const subSample = function (a, n) {
     const samplingRatio = m / n;
 
     //just round down for now in case of comma separated
-    for (let i = 0; i < m;) {
+    for (let i = 0; i < m; ) {
         returnArray.push(a[Math.floor(i)]);
         i += samplingRatio;
     }
@@ -58,28 +58,30 @@ const DataSet = createReactClass({
         } = this.props;
 
         const height = yScale(yScale.domain()[0]);
-        const bars = data.map(stack => values(stack).map((e, index) => {
-            // maps the range [0,1] to the range [0, yDomain]
-            const yValue = height * y(e);
-            // center vertically to have upper and lower part of the waveform
-            const vy = height / 2 - yValue / 2;
-            //position x(e) * width * 2 because we want equal sapce.
-            const vx = 2 * x0 * index;
+        const bars = data.map(stack =>
+            values(stack).map((e, index) => {
+                // maps the range [0,1] to the range [0, yDomain]
+                const yValue = height * y(e);
+                // center vertically to have upper and lower part of the waveform
+                const vy = height / 2 - yValue / 2;
+                //position x(e) * width * 2 because we want equal sapce.
+                const vx = 2 * x0 * index;
 
-            return (
-                <Bar
-                    key={`${label(stack)}.${index}`}
-                    width={x0}
-                    height={yValue}
-                    x={vx}
-                    y={vy}
-                    fill={colorScale(Math.floor(vx))}
-                    data={e}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                />
-            );
-        }));
+                return (
+                    <Bar
+                        key={`${label(stack)}.${index}`}
+                        width={x0}
+                        height={yValue}
+                        x={vx}
+                        y={vy}
+                        fill={colorScale(Math.floor(vx))}
+                        data={e}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                    />
+                );
+            })
+        );
 
         return <g>{bars}</g>;
     }
@@ -123,7 +125,9 @@ const Waveform = createReactClass({
                 break;
             }
         }
-        const yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+        const yPos = yScale(
+            this.props.y0(topElement) + this.props.y(topElement)
+        );
 
         return [html, xPos, yPos];
     },
@@ -138,7 +142,7 @@ const Waveform = createReactClass({
             label,
             y,
             y0,
-            x,
+            x
         } = this.props;
 
         const data = this._data;
@@ -160,32 +164,34 @@ const Waveform = createReactClass({
             barWidth = innerWidth / 2 / data[0].values.length;
         }
 
-        return <div>
-            <Chart
-                height={height}
-                width={width}
-                margin={margin}
-                viewBox={viewBox}
-                preserveAspectRatio={preserveAspectRatio}
-            >
-                <DataSet
-                    data={data}
-                    xScale={xScale}
-                    yScale={yScale}
-                    colorScale={colorScale}
-                    label={label}
-                    values={values}
-                    x={x}
-                    y={y}
-                    y0={y0}
-                    x0={barWidth}
-                    onMouseEnter={this.onMouseEnter}
-                    onMouseLeave={this.onMouseLeave}
+        return (
+            <div>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
                 >
-                    {this.props.children}
-                </DataSet>
-            </Chart>
-        </div>;
+                    <DataSet
+                        data={data}
+                        xScale={xScale}
+                        yScale={yScale}
+                        colorScale={colorScale}
+                        label={label}
+                        values={values}
+                        x={x}
+                        y={y}
+                        y0={y0}
+                        x0={barWidth}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                    >
+                        {this.props.children}
+                    </DataSet>
+                </Chart>
+            </div>
+        );
     }
 });
 

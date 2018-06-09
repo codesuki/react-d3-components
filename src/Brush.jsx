@@ -33,7 +33,7 @@ const Brush = createReactClass({
 
     getInitialState() {
         return {
-            resizers:  _d3SvgBrushResizes[0],
+            resizers: _d3SvgBrushResizes[0],
             xExtent: [0, 0],
             yExtent: [0, 0],
             xExtentDomain: undefined,
@@ -52,7 +52,10 @@ const Brush = createReactClass({
         this._extent(this.props.extent);
 
         this.setState({
-            resizers: _d3SvgBrushResizes[!this.props.xScale << 1 | !this.props.yScale]
+            resizers:
+                _d3SvgBrushResizes[
+                    !this.props.xScale << 1 | !this.props.yScale
+                ]
         });
     },
 
@@ -63,73 +66,101 @@ const Brush = createReactClass({
         if (nextProps.xScale !== this.props.xScale) {
             this._extent(nextProps.extent, nextProps.xScale);
             this.setState({
-                resizers: _d3SvgBrushResizes[!this.props.xScale << 1 | !this.props.yScale]
+                resizers:
+                    _d3SvgBrushResizes[
+                        !this.props.xScale << 1 | !this.props.yScale
+                    ]
             });
         }
     },
 
     render() {
         // TODO: remove this.state this.props
-        const xRange = this.props.xScale ? this._d3ScaleRange(this.props.xScale) : null;
-        const yRange = this.props.yScale ? this._d3ScaleRange(this.props.yScale) : null;
+        const xRange = this.props.xScale
+            ? this._d3ScaleRange(this.props.xScale)
+            : null;
+        const yRange = this.props.yScale
+            ? this._d3ScaleRange(this.props.yScale)
+            : null;
 
-        const background = <rect
-            className="background"
-            style={{ visibility: 'visible', cursor: 'crosshair' }}
-            x={xRange ? xRange[0] : ''}
-            width={xRange ? xRange[1] - xRange[0] : ''}
-            y={yRange ? yRange[0] : ''}
-            height={yRange ? yRange[1] - yRange[0] : this._innerHeight}
-            onMouseDown={this._onMouseDownBackground}
-        />;
+        const background =
+            <rect
+                className="background"
+                style={{ visibility: 'visible', cursor: 'crosshair' }}
+                x={xRange ? xRange[0] : ''}
+                width={xRange ? xRange[1] - xRange[0] : ''}
+                y={yRange ? yRange[0] : ''}
+                height={yRange ? yRange[1] - yRange[0] : this._innerHeight}
+                onMouseDown={this._onMouseDownBackground}
+            />
+        ;
 
         // TODO: it seems like actually we can have both x and y scales at the same time. need to find example.
 
         let extent;
         if (this.props.xScale) {
-            extent = <rect
-                className="extent"
-                style={{ cursor: 'move' }}
-                x={this.state.xExtent[0]}
-                width={this.state.xExtent[1] - this.state.xExtent[0]}
-                height={this._innerHeight}
-                onMouseDown={this._onMouseDownExtent}
-            />;
+            extent =
+                <rect
+                    className="extent"
+                    style={{ cursor: 'move' }}
+                    x={this.state.xExtent[0]}
+                    width={this.state.xExtent[1] - this.state.xExtent[0]}
+                    height={this._innerHeight}
+                    onMouseDown={this._onMouseDownExtent}
+                />
+            ;
         }
 
-        const resizers = this.state.resizers.map(e => <g
-            key={e}
-            className={`resize ${e}`}
-            style={{ cursor: _d3SvgBrushCursor[e] }}
-            transform={`translate(${this.state.xExtent[+/e$/.test(e)]}, ${this.state.yExtent[+/^s/.test(e)]})`}
-            onMouseDown={event => { this._onMouseDownResizer(event, e); }}
-        >
-            <rect
-                x={/[ew]$/.test(e) ? -3 : null}
-                y={/^[ns]/.test(e) ? -3 : null}
-                width="6"
-                height={this._innerHeight}
-                style={{ visibility: 'hidden', display: this._empty() ? 'none' : null }}
-            />
-        </g>);
+        const resizers = this.state.resizers.map(e =>
+            <g
+                key={e}
+                className={`resize ${e}`}
+                style={{ cursor: _d3SvgBrushCursor[e] }}
+                transform={`translate(${this.state.xExtent[+/e$/.test(e)]}, ${
+                    this.state.yExtent[+/^s/.test(e)]
+                })`}
+                onMouseDown={event => {
+                    this._onMouseDownResizer(event, e);
+                }}
+            >
+                <rect
+                    x={/[ew]$/.test(e) ? -3 : null}
+                    y={/^[ns]/.test(e) ? -3 : null}
+                    width="6"
+                    height={this._innerHeight}
+                    style={{
+                        visibility: 'hidden',
+                        display: this._empty() ? 'none' : null
+                    }}
+                />
+            </g>
+        );
 
         const {
             height,
             width,
             margin,
             viewBox,
-            preserveAspectRatio,
+            preserveAspectRatio
         } = this.props;
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <g
                         style={{ pointerEvents: 'all' }}
                         onMouseUp={this._onMouseUp}
                         onMouseMove={this._onMouseMove}
                     >
-                        {background}{extent}{resizers}
+                        {background}
+                        {extent}
+                        {resizers}
                     </g>
                     <Axis
                         className="x axis"
@@ -179,7 +210,7 @@ const Brush = createReactClass({
         range[1] -= size;
 
         const min = Math.max(range[0], Math.min(range[1], point[0]));
-        this.setState({xExtent: [min, min + size]});
+        this.setState({ xExtent: [min, min + size] });
     },
 
     // TODO: use constants instead of strings
@@ -207,9 +238,12 @@ const Brush = createReactClass({
 
         range[1] -= size;
 
-        const min = Math.max(range[0], Math.min(range[1], point[0] - this._startPosition));
+        const min = Math.max(
+            range[0],
+            Math.min(range[1], point[0] - this._startPosition)
+        );
 
-        this.setState({xExtent: [min, min + size], xExtentDomain: null});
+        this.setState({ xExtent: [min, min + size], xExtentDomain: null });
     },
 
     _onResize(e) {
@@ -221,17 +255,29 @@ const Brush = createReactClass({
 
         if (this._resizeDir == 'w') {
             if (min > this.state.xExtent[1]) {
-                this.setState({xExtent: [this.state.xExtent[1], min], xExtentDomain: null});
+                this.setState({
+                    xExtent: [this.state.xExtent[1], min],
+                    xExtentDomain: null
+                });
                 this._resizeDir = 'e';
             } else {
-                this.setState({xExtent: [min, this.state.xExtent[1]], xExtentDomain: null});
+                this.setState({
+                    xExtent: [min, this.state.xExtent[1]],
+                    xExtentDomain: null
+                });
             }
         } else if (this._resizeDir == 'e') {
             if (min < this.state.xExtent[0]) {
-                this.setState({xExtent: [min, this.state.xExtent[0]], xExtentDomain: null});
+                this.setState({
+                    xExtent: [min, this.state.xExtent[0]],
+                    xExtentDomain: null
+                });
                 this._resizeDir = 'w';
             } else {
-                this.setState({xExtent: [this.state.xExtent[0], min], xExtentDomain: null});
+                this.setState({
+                    xExtent: [this.state.xExtent[0], min],
+                    xExtentDomain: null
+                });
             }
         }
     },
@@ -258,7 +304,7 @@ const Brush = createReactClass({
         const x = xScale || this.props.xScale;
         const y = this.props.yScale;
 
-        let {xExtent, yExtent, xExtentDomain, yExtentDomain} = this.state;
+        let { xExtent, yExtent, xExtentDomain, yExtentDomain } = this.state;
 
         let x0, x1, y0, y1, t;
 
@@ -307,8 +353,12 @@ const Brush = createReactClass({
     },
 
     _empty() {
-        return !!this.props.xScale && this.state.xExtent[0] == this.state.xExtent[1]
-            || !!this.props.yScale && this.state.yExtent[0] == this.state.yExtent[1];
+        return (
+            !!this.props.xScale &&
+                this.state.xExtent[0] == this.state.xExtent[1] ||
+            !!this.props.yScale &&
+                this.state.yExtent[0] == this.state.yExtent[1]
+        );
     },
 
     // TODO: Code duplicated in Axis.jsx, move outside.
@@ -319,7 +369,9 @@ const Brush = createReactClass({
     },
 
     _d3ScaleRange(scale) {
-        return scale.rangeExtent ? scale.rangeExtent() : this._d3ScaleExtent(scale.range());
+        return scale.rangeExtent
+            ? scale.rangeExtent()
+            : this._d3ScaleExtent(scale.range());
     }
 });
 
