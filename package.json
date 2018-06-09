@@ -53,9 +53,9 @@
     "prepublish": "npm run build",
     "postpublish": "rm -r ./lib",
     "build": "npm-run-all --parallel build:*",
-    "build:js": "babel -c -d ./lib ./src/",
-    "build:dev": "webpack --config config/webpack.config.dev.js",
-    "build:prod": "webpack --config config/webpack.config.prod.js",
+    "build:cmj": "babel -c -d ./lib ./src/",
+    "build:umd-dev": "webpack --config config/webpack.config.dev.js",
+    "build:umd-prod": "webpack --config config/webpack.config.prod.js",
     "lint": "eslint src/*.jsx --fix",
     "precommit": "lint-staged"
   }
