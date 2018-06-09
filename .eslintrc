@@ -86,7 +86,7 @@
         "node": true
     },
     "plugins": [
-        "react"
+        "react", "prettier"
     ],
-    "extends": ["eslint:recommended"]
+    "extends": ["eslint:recommended", "prettier"]
 }
