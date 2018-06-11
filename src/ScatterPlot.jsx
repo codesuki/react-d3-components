@@ -42,20 +42,22 @@ const DataSet = createReactClass({
             onMouseLeave
         } = this.props;
 
-        const circles = data.map(stack => values(stack).map((e, index) => {
-            const translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
-            return (
-                <path
-                    key={`${label(stack)}.${index}`}
-                    className="dot"
-                    d={symbol()}
-                    transform={translate}
-                    fill={colorScale(label(stack))}
-                    onMouseOver={evt => onMouseEnter(evt, e)}
-                    onMouseLeave={evt => onMouseLeave(evt)}
-                />
-            );
-        }));
+        const circles = data.map(stack =>
+            values(stack).map((e, index) => {
+                const translate = `translate(${xScale(x(e))}, ${yScale(y(e))})`;
+                return (
+                    <path
+                        key={`${label(stack)}.${index}`}
+                        className="dot"
+                        d={symbol()}
+                        transform={translate}
+                        fill={colorScale(label(stack))}
+                        onMouseOver={evt => onMouseEnter(evt, e)}
+                        onMouseLeave={evt => onMouseLeave(evt)}
+                    />
+                );
+            })
+        );
 
         return <g>{circles}</g>;
     }
@@ -126,7 +128,13 @@ const ScatterPlot = createReactClass({
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <Axis
                         className="x axis"
                         orientation="bottom"
@@ -160,7 +168,7 @@ const ScatterPlot = createReactClass({
                     />
                     {this.props.children}
                 </Chart>
-                <Tooltip {...this.state.tooltip}/>
+                <Tooltip {...this.state.tooltip} />
             </div>
         );
     }

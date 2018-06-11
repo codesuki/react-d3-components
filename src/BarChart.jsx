@@ -49,40 +49,52 @@ const DataSet = createReactClass({
 
         let bars;
         if (groupedBars) {
-          bars = data.map((stack, serieIndex) => values(stack).map((e, index) => {
-            const yVal = y(e) < 0 ? yScale(0) : yScale(y(e));
-            return(
-              <Bar
-                key={`${label(stack)}.${index}`}
-                width={xScale.rangeBand() / data.length}
-                height={Math.abs(yScale(0) - yScale(y(e)))}
-                x={xScale(x(e)) + xScale.rangeBand() * serieIndex / data.length}
-                y={yVal}
-                fill={colorScale(label(stack))}
-                data={e}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                />
+            bars = data.map((stack, serieIndex) =>
+                values(stack).map((e, index) => {
+                    const yVal = y(e) < 0 ? yScale(0) : yScale(y(e));
+                    return (
+                        <Bar
+                            key={`${label(stack)}.${index}`}
+                            width={xScale.rangeBand() / data.length}
+                            height={Math.abs(yScale(0) - yScale(y(e)))}
+                            x={
+                                xScale(x(e)) +
+                                xScale.rangeBand() * serieIndex / data.length
+                            }
+                            y={yVal}
+                            fill={colorScale(label(stack))}
+                            data={e}
+                            onMouseEnter={onMouseEnter}
+                            onMouseLeave={onMouseLeave}
+                        />
+                    );
+                })
             );
-          }));
         } else {
-            bars = data.map(stack => values(stack).map((e, index) => {
-              const color = colorByLabel ? colorScale(label(stack)) : colorScale(x(e));
-              const yVal = y(e) < 0 ? yScale(y0(e)) : yScale(y0(e) + y(e));
-              return (
-                <Bar
-                  key={`${label(stack)}.${index}`}
-                  width={xScale.rangeBand()}
-                  height={Math.abs(yScale(y0(e) + y(e)) - yScale(y0(e)))}
-                  x={xScale(x(e))}
-                  y={yVal}
-                  fill={color}
-                  data={e}
-                  onMouseEnter={onMouseEnter}
-                  onMouseLeave={onMouseLeave}
-                  />
-              );
-            }));
+            bars = data.map(stack =>
+                values(stack).map((e, index) => {
+                    const color = colorByLabel
+                        ? colorScale(label(stack))
+                        : colorScale(x(e));
+                    const yVal =
+                        y(e) < 0 ? yScale(y0(e)) : yScale(y0(e) + y(e));
+                    return (
+                        <Bar
+                            key={`${label(stack)}.${index}`}
+                            width={xScale.rangeBand()}
+                            height={Math.abs(
+                                yScale(y0(e) + y(e)) - yScale(y0(e))
+                            )}
+                            x={xScale(x(e))}
+                            y={yVal}
+                            fill={color}
+                            data={e}
+                            onMouseEnter={onMouseEnter}
+                            onMouseLeave={onMouseLeave}
+                        />
+                    );
+                })
+            );
         }
 
         return <g>{bars}</g>;
@@ -130,80 +142,88 @@ const BarChart = createReactClass({
                 break;
             }
         }
-        const yPos = yScale(this.props.y0(topElement) + this.props.y(topElement));
+        const yPos = yScale(
+            this.props.y0(topElement) + this.props.y(topElement)
+        );
 
         return [html, xPos, yPos];
     },
 
     render() {
-      const {
-        xAxis,
-        yAxis,
-        height,
-        width,
-        margin,
-        viewBox,
-        preserveAspectRatio,
-        colorScale,
-        values,
-        label,
-        y,
-        y0,
-        x,
-        groupedBars,
-        colorByLabel,
-        tickFormat
-      } = this.props;
+        const {
+            xAxis,
+            yAxis,
+            height,
+            width,
+            margin,
+            viewBox,
+            preserveAspectRatio,
+            colorScale,
+            values,
+            label,
+            y,
+            y0,
+            x,
+            groupedBars,
+            colorByLabel,
+            tickFormat
+        } = this.props;
 
-      const data = this._data;
-      const innerWidth = this._innerWidth;
-      const innerHeight = this._innerHeight;
-      const xScale = this._xScale;
-      const yScale = this._yScale;
-      const yIntercept = this._yIntercept;
+        const data = this._data;
+        const innerWidth = this._innerWidth;
+        const innerHeight = this._innerHeight;
+        const xScale = this._xScale;
+        const yScale = this._yScale;
+        const yIntercept = this._yIntercept;
 
-      return (
-        <div>
-          <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
-            <DataSet
-              data={data}
-              xScale={xScale}
-              yScale={yScale}
-              colorScale={colorScale}
-              values={values}
-              label={label}
-              y={y}
-              y0={y0}
-              x={x}
-              onMouseEnter={this.onMouseEnter}
-              onMouseLeave={this.onMouseLeave}
-              groupedBars={groupedBars}
-              colorByLabel={colorByLabel}
-              />
-            <Axis
-              className="x axis"
-              orientation="bottom"
-              scale={xScale}
-              height={innerHeight}
-              width={innerWidth}
-              zero={yIntercept}
-              tickFormat={tickFormat}
-              {...xAxis}
-              />
-            <Axis
-              className="y axis"
-              orientation="left"
-              scale={yScale}
-              height={innerHeight}
-              width={innerWidth}
-              tickFormat={tickFormat}
-              {...yAxis}
-              />
-            {this.props.children}
-          </Chart>
-          <Tooltip {...this.state.tooltip}/>
-        </div>
-      );
+        return (
+            <div>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
+                    <DataSet
+                        data={data}
+                        xScale={xScale}
+                        yScale={yScale}
+                        colorScale={colorScale}
+                        values={values}
+                        label={label}
+                        y={y}
+                        y0={y0}
+                        x={x}
+                        onMouseEnter={this.onMouseEnter}
+                        onMouseLeave={this.onMouseLeave}
+                        groupedBars={groupedBars}
+                        colorByLabel={colorByLabel}
+                    />
+                    <Axis
+                        className="x axis"
+                        orientation="bottom"
+                        scale={xScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        zero={yIntercept}
+                        tickFormat={tickFormat}
+                        {...xAxis}
+                    />
+                    <Axis
+                        className="y axis"
+                        orientation="left"
+                        scale={yScale}
+                        height={innerHeight}
+                        width={innerWidth}
+                        tickFormat={tickFormat}
+                        {...yAxis}
+                    />
+                    {this.props.children}
+                </Chart>
+                <Tooltip {...this.state.tooltip} />
+            </div>
+        );
     }
 });
 

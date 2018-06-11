@@ -42,19 +42,33 @@ const DataSet = createReactClass({
 
         const sizeId = width + 'x' + height;
 
-        const lines = data.map((stack, index) => <Path
-            key={`${label(stack)}.${index}`}
-            className={'line'}
-            d={line(values(stack))}
-            stroke={colorScale(label(stack))}
-            strokeWidth={typeof strokeWidth === 'function' ? strokeWidth(label(stack)) : strokeWidth}
-            strokeLinecap={typeof strokeLinecap === 'function' ? strokeLinecap(label(stack)) : strokeLinecap}
-            strokeDasharray={typeof strokeDasharray === 'function' ? strokeDasharray(label(stack)) : strokeDasharray}
-            data={values(stack)}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            style={{clipPath: `url(#lineClip_${sizeId})`}}
-        />);
+        const lines = data.map((stack, index) =>
+            <Path
+                key={`${label(stack)}.${index}`}
+                className={'line'}
+                d={line(values(stack))}
+                stroke={colorScale(label(stack))}
+                strokeWidth={
+                    typeof strokeWidth === 'function'
+                        ? strokeWidth(label(stack))
+                        : strokeWidth
+                }
+                strokeLinecap={
+                    typeof strokeLinecap === 'function'
+                        ? strokeLinecap(label(stack))
+                        : strokeLinecap
+                }
+                strokeDasharray={
+                    typeof strokeDasharray === 'function'
+                        ? strokeDasharray(label(stack))
+                        : strokeDasharray
+                }
+                data={values(stack)}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                style={{ clipPath: `url(#lineClip_${sizeId})` }}
+            />
+        );
 
         /*
          The <rect> below is needed in case we want to show the tooltip no matter where on the chart the mouse is.
@@ -64,7 +78,7 @@ const DataSet = createReactClass({
             <g>
                 <defs>
                     <clipPath id={`lineClip_${sizeId}`}>
-                        <rect width={width} height={height}/>
+                        <rect width={width} height={height} />
                     </clipPath>
                 </defs>
                 {lines}
@@ -73,9 +87,13 @@ const DataSet = createReactClass({
                     height={height}
                     fill={'none'}
                     stroke={'none'}
-                    style={{pointerEvents: 'all'}}
-                    onMouseMove={evt => { onMouseEnter(evt, data); }}
-                    onMouseLeave={evt => { onMouseLeave(evt); }}
+                    style={{ pointerEvents: 'all' }}
+                    onMouseMove={evt => {
+                        onMouseEnter(evt, data);
+                    }}
+                    onMouseLeave={evt => {
+                        onMouseLeave(evt);
+                    }}
                 />
             </g>
         );
@@ -104,9 +122,9 @@ const LineChart = createReactClass({
             shape: 'circle',
             shapeColor: null,
             showCustomLine: false,
-            lineStructureClassName: "dot",
-            customPointColor: "blue",
-            customPointShape: "circle"
+            lineStructureClassName: 'dot',
+            customPointColor: 'blue',
+            customPointShape: 'circle'
         };
     },
 
@@ -116,7 +134,7 @@ const LineChart = createReactClass({
      For now I don't want to use this method.
      */
     _tooltipHtml(data, position) {
-        const {x, y, values, label} = this.props;
+        const { x, y, values, label } = this.props;
         const xScale = this._xScale;
         const yScale = this._yScale;
 
@@ -134,7 +152,10 @@ const LineChart = createReactClass({
             const valueLeft = x(values(stack)[indexLeft]);
 
             let index;
-            if (Math.abs(xValueCursor - valueRight) < Math.abs(xValueCursor - valueLeft)) {
+            if (
+                Math.abs(xValueCursor - valueRight) <
+                Math.abs(xValueCursor - valueLeft)
+            ) {
                 index = indexRight;
             } else {
                 index = indexLeft;
@@ -155,7 +176,10 @@ const LineChart = createReactClass({
         const yValueLeft = y(valuesAtX[yIndexLeft].value);
 
         let index;
-        if (Math.abs(yValueCursor - yValueRight) < Math.abs(yValueCursor - yValueLeft)) {
+        if (
+            Math.abs(yValueCursor - yValueRight) <
+            Math.abs(yValueCursor - yValueLeft)
+        ) {
             index = yIndexRight;
         } else {
             index = yIndexLeft;
@@ -244,18 +268,26 @@ const LineChart = createReactClass({
         const xIntercept = this._xIntercept;
         const yIntercept = this._yIntercept;
 
-        const line = d3.svg.line()
+        const line = d3.svg
+            .line()
             .x(e => xScale(x(e)))
             .y(e => yScale(y(e)))
             .interpolate(interpolate)
             .defined(defined);
 
-        let tooltipSymbol = null, points = null;
+        let tooltipSymbol = null,
+            points = null;
         if (!this.state.tooltip.hidden) {
             const symbol = d3.svg.symbol().type(shape);
-            const symbolColor = shapeColor ? shapeColor : colorScale(this._tooltipData.label);
+            const symbolColor = shapeColor
+                ? shapeColor
+                : colorScale(this._tooltipData.label);
 
-            const translate = this._tooltipData ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(y(this._tooltipData.value))})` : '';
+            const translate = this._tooltipData
+                ? `translate(${xScale(x(this._tooltipData.value))}, ${yScale(
+                      y(this._tooltipData.value)
+                  )})`
+                : '';
             tooltipSymbol = this.state.tooltip.hidden ? null :
                 <path
                     className="dot"
@@ -264,31 +296,39 @@ const LineChart = createReactClass({
                     fill={symbolColor}
                     onMouseEnter={evt => this.onMouseEnter(evt, data)}
                     onMouseLeave={evt => this.onMouseLeave(evt)}
-                />;
+                />
+            ;
         }
 
         if (showCustomLine) {
-            let translatePoints = function(point) {
+            const translatePoints = function (point) {
                 return `translate(${xScale(x(point))}, ${yScale(y(point))})`;
             };
 
-            points = data.map((d, dataIndex) =>
-                          d.values.map((p, i) => (
-                              <path
-                                  key={i}
-                                  className={lineStructureClassName}
-                                  d={d3.svg.symbol().type(customPointShape)()}
-                                  transform={translatePoints(p)}
-                                  fill={customPointColor}
-                                  onMouseEnter={evt => this.onMouseEnter(evt, data)}
-                                  onMouseLeave={evt => this.onMouseLeave(evt)}
-                                  />
-                          )));
+            points = data.map(d =>
+                d.values.map((p, i) =>
+                    <path
+                        key={i}
+                        className={lineStructureClassName}
+                        d={d3.svg.symbol().type(customPointShape)()}
+                        transform={translatePoints(p)}
+                        fill={customPointColor}
+                        onMouseEnter={evt => this.onMouseEnter(evt, data)}
+                        onMouseLeave={evt => this.onMouseLeave(evt)}
+                    />
+                )
+            );
         }
 
         return (
             <div>
-                <Chart height={height} width={width} margin={margin} viewBox={viewBox} preserveAspectRatio={preserveAspectRatio}>
+                <Chart
+                    height={height}
+                    width={width}
+                    margin={margin}
+                    viewBox={viewBox}
+                    preserveAspectRatio={preserveAspectRatio}
+                >
                     <Axis
                         className="x axis"
                         orientation="bottom"

@@ -9,10 +9,12 @@ const ArrayifyMixin = {
 
     _arrayify(props) {
         if (props.data === null) {
-            this._data = [{
-                label: 'No data available',
-                values: [{x: 'No data available', y: 1}]
-            }];
+            this._data = [
+                {
+                    label: 'No data available',
+                    values: [{ x: 'No data available', y: 1 }]
+                }
+            ];
         } else if (!Array.isArray(props.data)) {
             this._data = [props.data];
         } else {

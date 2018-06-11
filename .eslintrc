@@ -1,6 +1,5 @@
 {
     "rules": {
-        "indent": [2, 4],
         "quotes": [2, "single"],
         "linebreak-style": [2, "unix"],
         "semi": [2, "always"],
@@ -49,7 +48,7 @@
         "react/jsx-no-undef": 2,
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
-        "react/no-deprecated": 2,
+        "react/no-deprecated": 1,
         "react/no-direct-mutation-state": 2,
         "react/no-is-mounted": 2,
         "react/no-unknown-property": 2,
@@ -66,8 +65,6 @@
             "allowArrowFunctions": true,
             "allowBind": false
         }],
-        "react/jsx-indent-props": [2, 4],
-        "react/jsx-indent": [2, 4],
         "react/jsx-equals-spacing": [2, "never"],
         "react/jsx-curly-spacing": [2, "never"]
     },
@@ -88,5 +85,5 @@
     "plugins": [
         "react"
     ],
-    "extends": ["eslint:recommended"]
+    "extends": ["eslint:recommended", "prettier"]
 }
