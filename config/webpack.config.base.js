@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/index.jsx'),
+    entry: path.resolve(__dirname, '../src/index.js'),
     output: {
         library: 'ReactD3',
         libraryTarget: 'umd',
@@ -10,14 +10,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /.jsx$/,
+                test: /.js$/,
                 loader: 'babel-loader',
                 include: path.resolve(__dirname, '../src')
             }
         ]
-    },
-    resolve: {
-        extensions: ['.js', '.jsx']
     },
     externals: {
         d3: true,
