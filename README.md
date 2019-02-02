@@ -1,3 +1,5 @@
+# Looking for maintainers. If you are interested in maintaining this library please open an issue.
+
 # react-d3-components
 
 > D3 Components for React
