@@ -14,7 +14,7 @@ const Tooltip = createReactClass({
 
     getDefaultProps() {
         return {
-            top: 150,
+            top: 50,
             left: 100,
             html: '',
             translate: 50
