@@ -3,6 +3,7 @@
   <meta charset="utf-8">
   <title>React D3 Components Examples</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://fb.me/react-with-addons-0.14.6.js"></script>
   <script src="https://fb.me/react-dom-0.14.6.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.0/JSXTransformer.js"></script>
@@ -11,24 +12,88 @@
 </head>
 <body>
 
-    <div id="brush" class="brush"></div>
-    <div id="barchart"></div>
-    <div id="barchart2"></div>
-    <div id="stackedbarchart"></div>
-    <div id="groupedbarchart"></div>
-    <div id="scatterplot"></div>
-    <div id="scatterplot2"></div>
-    <div id="scatterplot3"></div>
-    <div id="scatterplot4"></div>
-    <div id="linechart"></div>
-    <div id="linechart2"></div>
-    <div id="areachart"></div>
-    <div id="areachart2"></div>
-    <div id="stackedareachart"></div>
-    <div id="piechart"></div>
-    <div id="waveformchart"></div>
+    <div class="d3box">
+        <div id="brush" class="brush"></div>
+    </div>
+    <div class="d3box">
+        <div id="barchart"></div>
+    </div>
+    <div class="d3box">
+        <div id="barchart2"></div>
+    </div>
+    <div class="d3box">
+        <div id="stackedbarchart"></div>
+    </div>
+    <div class="d3box">
+        <div id="groupedbarchart"></div>
+    </div>
+    <div class="d3box">
+        <div id="scatterplot"></div>
+    </div>
+    <div class="d3box">
+        <div id="scatterplot2"></div>
+    </div>
+    <div class="d3box">
+        <div id="scatterplot3"></div>
+    </div>
+    <div class="d3box">
+        <div id="scatterplot4"></div>
+    </div>
+    <div class="d3box">
+        <div id="linechart"></div>
+    </div>
+    <div class="d3box">
+        <div id="linechart2"></div>
+    </div>
+    <div class="d3box">
+        <h2>Transistors over the Years</h2>
+        <div id="areachart"></div>
+    </div>
+    <div class="d3box">
+        <div id="areachart2"></div>
+    </div>
+    <div class="d3box">
+        <div id="stackedareachart"></div>
+    </div>
+    <div class="d3box">
+        <div id="piechart"></div>
+    </div>
+    <div class="d3box">
+        <div id="waveformchart"></div>
+    </div>
 
     <script type="text/jsx;harmony=true">
+
+        d3.json('stackedAreaData.json', function(data) {
+            nv.addGraph(function() {
+              var chart = nv.models.stackedAreaChart()
+                            .margin({right: 100})
+                            .x(function(d) { return d[0] })   //We can modify the data accessor functions...
+                            .y(function(d) { return d[1] })   //...in case your data is formatted differently.
+                            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
+                            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                            .transitionDuration(500)
+                            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                            .clipEdge(true);
+          
+              //Format x-axis labels with custom function.
+              chart.xAxis
+                  .tickFormat(function(d) { 
+                    return d3.time.format('%x')(new Date(d)) 
+              });
+          
+              chart.yAxis
+                  .tickFormat(d3.format(',.2f'));
+          
+              d3.select('#chart svg')
+                .datum(data)
+                .call(chart);
+          
+              nv.utils.windowResize(chart.update);
+          
+              return chart;
+            });
+          })
         var Waveform = ReactD3.Waveform;
         var BarChart = ReactD3.BarChart;
         var PieChart = ReactD3.PieChart;
@@ -166,8 +231,9 @@
             height={200}
             colorScale={ d3.scale.linear()
             .domain([0,1400])
-            .range(['#eb1785','#ff7b16'])}
-        />,
+            .range(['#00ff00','#ff7b16'])}
+        />
+        ,
         document.getElementById('waveformchart')
         );
 
@@ -377,13 +443,20 @@
 
         data = [{
         label: 'somethingA',
-        values: [{x: 0, y: 3}, {x: 1.3, y: 4}, {x: 3, y: 7}, {x: 3.5, y: 8}, {x: 4, y: 7}, {x: 4.5, y: 7}, {x: 5, y: 7.8}, {x: 5.5, y: 9}]
+        values: [ 
+            {x: "1972", y: 4000}, 
+            {x: "1976", y: 9000}, 
+            {x: "1980", y: 40000}, 
+            {x: "1984", y: 100000}, 
+            {x: "1988", y: 300000}, 
+            {x: "1992", y: 1000000}, 
+            {x: "1996", y: 4700000}]
         }];
         /*
         ReactDOM.render(<ScatterPlot
                             data={data}
-                            width={400}
-                            height={400}
+                            width={800}
+                            height={900}
                             margin={{top: 10, bottom: 50, left: 50, right: 10}}
                             tooltipHtml={tooltipScatter}
                         />,
@@ -392,7 +465,7 @@
         */
         ReactDOM.render(<AreaChart
                             data={data}
-                            width={400}
+                            width={800}
                             height={400}
                             margin={{top: 10, bottom: 50, left: 50, right: 10}}
                             tooltipHtml={tooltipArea}
@@ -486,5 +559,6 @@
     );
     */
   </script>
+  
 </body>
 </html>

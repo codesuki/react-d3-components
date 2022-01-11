@@ -2,9 +2,13 @@ body {
 	text-align: center;
 }
 
-div {
-	float: left;
+
+.d3box{
+	margin:2%;
+	display:flexbox;
+	padding:5%;
 }
+
 #waveformchart svg {
   position: absolute;
   width: 100%;
